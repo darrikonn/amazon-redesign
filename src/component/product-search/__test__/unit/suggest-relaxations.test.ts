@@ -24,6 +24,14 @@ describe("suggestRelaxations", () => {
     ]);
   });
 
+  it("offers to drop every unknown word at once when there are several", () => {
+    const text = "gift lamp for a lover";
+
+    expect(suggestRelaxations(catalog, text, interpretQuery(text))).toEqual([
+      { droppedLabel: "“gift” and “lover”", text: "lamp for a", resultCount: 2 },
+    ]);
+  });
+
   it("never offers to drop the only term", () => {
     expect(suggestRelaxations(catalog, "purple", interpretQuery("purple"))).toEqual([]);
   });

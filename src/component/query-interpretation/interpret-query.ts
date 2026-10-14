@@ -37,7 +37,7 @@ export function interpretQuery(text: string): Interpretation {
   return { intent: draft.intent(), terms: inReadingOrder(draft.terms, text) };
 }
 
-const NUMBER = String.raw`(\d+(?:\.\d{1,2})?)`;
+const NUMBER = String.raw`(\d+(?:\.\d{1,2})?)(?:\s*(?:dollars?|bucks|usd))?`;
 const RATING_PATTERN =
   /(?:top[- ]rated|best[- ]rated|highly rated|well reviewed|(?:over |at least )?(\d(?:\.\d)?)\+?\s*stars?(?: and up| or more)?)/;
 const PRICE_RANGE_PATTERN = new RegExp(

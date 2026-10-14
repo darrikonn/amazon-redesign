@@ -93,6 +93,19 @@ describe("interpretQuery", () => {
     expect(labelsOf("lamp under $39.99")).toEqual(["Desk lamps", "Under $39.99"]);
   });
 
+  it("reads amounts written with a currency word", () => {
+    expect(labelsOf("noise canceling headphones under 100 dollars")).toEqual([
+      "Noise cancelling",
+      "Headphones",
+      "Under $100",
+    ]);
+    expect(interpretQuery("backpack 20 to 50 bucks").intent).toMatchObject({
+      minimumPriceInCents: 2000,
+      maximumPriceInCents: 5000,
+      keywords: [],
+    });
+  });
+
   it("reads a minimum price", () => {
     const interpretation = interpretQuery("headphones over 100");
 

@@ -144,6 +144,18 @@ describe("SearchCatalog", () => {
     expect(outcome.listings).toEqual([]);
   });
 
+  it("finds a way back from several unknown words", async () => {
+    const outcome = await container.searchCatalog.execute({
+      text: "gift for a coffee lover",
+      sort: "best-match",
+    });
+
+    expect(outcome.relaxations).toEqual([
+      { label: "Drop “gift” and “lover”", text: "for a coffee", resultCount: 5 },
+    ]);
+    expect(outcome.closestMatchesHeading).toBe("Closest matches, ignoring “gift” and “lover”");
+  });
+
   it("does not double quote a dropped keyword", async () => {
     const outcome = await container.searchCatalog.execute({
       text: "office lamp",
