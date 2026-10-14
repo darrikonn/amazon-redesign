@@ -6,21 +6,21 @@ export class ManualTimer implements Timer {
   private nextHandle = 1;
   private readonly scheduled = new Map<TimerHandle, { at: number; callback: () => void }>();
 
-  schedule = (callback: () => void, delayInMilliseconds: number): TimerHandle => {
+  schedule(callback: () => void, delayInMilliseconds: number): TimerHandle {
     const handle = this.nextHandle;
     this.nextHandle += 1;
     this.scheduled.set(handle, { at: this.now + delayInMilliseconds, callback });
     return handle;
-  };
+  }
 
-  cancel = (handle: TimerHandle): void => {
+  cancel(handle: TimerHandle): void {
     this.scheduled.delete(handle);
-  };
+  }
 
   advance(milliseconds: number): void {
     this.now += milliseconds;
     for (const [handle, entry] of [...this.scheduled.entries()].sort(
-      ([, a], [, b]) => a.at - b.at,
+      ([, first], [, second]) => first.at - second.at,
     )) {
       if (entry.at > this.now || !this.scheduled.has(handle)) continue;
       this.scheduled.delete(handle);

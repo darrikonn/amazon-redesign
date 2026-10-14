@@ -5,7 +5,6 @@ import { BROWSER_TIMER } from "./timer";
 export type SearchText = {
   text: string;
   searchText: string;
-  isPending: boolean;
   type: (next: string) => void;
   apply: (next: string) => void;
 };
@@ -33,5 +32,5 @@ export function useSearchText(initial: string): SearchText {
     [scheduler],
   );
 
-  return { text, searchText, isPending: text !== searchText, type, apply };
+  return { text, searchText, type, apply };
 }

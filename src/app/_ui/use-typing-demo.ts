@@ -15,13 +15,13 @@ export function useTypingDemo(examples: readonly string[], isActive: boolean): T
   useEffect(() => {
     if (!isActive || prefersReducedMotion() || examples.length === 0) return;
     const animation = new TypingAnimation(examples, exampleIndex.current);
-    const timer = window.setInterval(() => {
+    const interval = window.setInterval(() => {
       const next = animation.tick();
       if (next === null) return;
       exampleIndex.current = next.exampleIndex;
       setFrame(next);
     }, TYPING.tickInMilliseconds);
-    return () => window.clearInterval(timer);
+    return () => window.clearInterval(interval);
   }, [examples, isActive]);
 
   const example = examples[frame.exampleIndex] ?? "";
