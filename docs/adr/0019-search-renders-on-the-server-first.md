@@ -6,7 +6,7 @@ Accepted (2026-10-14)
 
 ## Context
 
-A search must be shareable and survive a reload, so the query and sort belong in the URL. The search must also react to every keystroke without waiting on the network (ADR 0017).
+A search must be shareable and survive a reload, so the query and sort belong in the URL. The search must also react to typing without waiting on the network (ADR 0017, ADR 0027).
 
 ## Decision
 

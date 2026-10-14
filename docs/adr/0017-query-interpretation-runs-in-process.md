@@ -1,14 +1,14 @@
-# 0017. Query interpretation runs in process, on every keystroke
+# 0017. Query interpretation runs in process, as the shopper types
 
 ## Status
 
-Accepted (2026-10-14)
+Accepted (2026-10-14). Amended by ADR 0027: the search now runs after a 250 ms typing pause rather than on every keystroke.
 
 ## Context
 
-The storefront is search first: the shopper describes what they need in plain language ("dimmable desk lamp under $40 that arrives tomorrow") and the filters set themselves while they type. Every keystroke must update the understood terms, the result count, and the "add a detail" suggestions. Each suggestion shows how many results it would leave, which means interpreting a dozen candidate queries per keystroke.
+The storefront is search first: the shopper describes what they need in plain language ("wireless headphones under $150") and the filters set themselves while they type. Each search, run as soon as the shopper pauses (ADR 0027), must update the understood terms, the result count, and the "add a detail" suggestions. Each suggestion shows how many results it would leave, which means interpreting a dozen candidate queries per search.
 
-A hosted language model cannot do that: a network round trip per candidate per keystroke is too slow, costs money on every character, and needs an API key, which local development must not require (ADR 0005).
+A hosted language model cannot do that: a network round trip per candidate per search is too slow, costs money on every pause, and needs an API key, which local development must not require (ADR 0005).
 
 ## Decision
 
@@ -30,7 +30,7 @@ const resultCount = filterProducts(products, interpretQuery(next).intent).length
 Bad:
 
 ```ts
-// One network call per suggestion, per keystroke.
+// One network call per suggestion, per search.
 const next = await languageModel.interpret(`${text} under $30`);
 ```
 
