@@ -1,12 +1,12 @@
 import Link from "next/link";
-import type { Department, ShopperGreeting } from "@/use-case";
+import type { Department, ShopperView } from "@/use-case";
 import { DepartmentMenu } from "./department-menu";
 import { pluralize } from "./format";
 import { Icon } from "./icon";
 import styles from "./site-header.module.css";
 
 type SiteHeaderProps = {
-  shopper: ShopperGreeting;
+  shopper: ShopperView | null;
   departments: readonly Department[];
   cartCount: number;
   onSearch: (text: string) => void;
@@ -25,15 +25,21 @@ export function SiteHeader({ shopper, departments, cartCount, onSearch }: SiteHe
         <a href="#deliver" className={styles.wideLink}>
           <Icon name="pin" size={20} />
           <span className={styles.stacked}>
-            <span className={styles.eyebrow}>Deliver to {shopper.firstName}</span>
+            <span className={styles.eyebrow}>
+              {shopper === null ? "Deliver to" : `Deliver to ${shopper.firstName}`}
+            </span>
             <span className={styles.strong}>
-              {shopper.deliveryCity} {shopper.deliveryPostalCode}
+              {shopper === null
+                ? "Choose location"
+                : [shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ")}
             </span>
           </span>
         </a>
         <a href="#account" className={styles.wideLink}>
           <span className={styles.stacked}>
-            <span className={styles.eyebrow}>Hello, {shopper.firstName}</span>
+            <span className={styles.eyebrow}>
+              {shopper === null ? "Hello, sign in" : `Hello, ${shopper.firstName}`}
+            </span>
             <span className={styles.strong}>Account &amp; Lists</span>
           </span>
         </a>

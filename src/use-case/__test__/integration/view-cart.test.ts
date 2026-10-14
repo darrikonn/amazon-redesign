@@ -1,26 +1,83 @@
-import { describe, expect, it } from "vitest";
-import { createTestContainer } from "@/composition";
-import { aShopper } from "@/test-support";
+import { beforeEach, describe, expect, it } from "vitest";
+import { type Container, createTestContainer, type TestFakes } from "@/composition";
+import { aProduct, aSession } from "@/test-support";
+
+let container: Container;
+let fakes: TestFakes;
+const SHOPPER_ID = "shopper:robin.lee@example.com";
+
+beforeEach(() => {
+  ({ container, fakes } = createTestContainer());
+  fakes.products.seedProducts([
+    aProduct({ id: "lamp", name: "Lamp", priceInCents: 2_500, deliveryDays: 3 }),
+    aProduct({ id: "bag", name: "Bag", priceInCents: 4_000 }),
+  ]);
+});
 
 describe("ViewCart", () => {
-  it("summarizes only the signed in shopper's cart", async () => {
+  it("lists only the signed in shopper's lines, with line totals and a subtotal", async () => {
     // Arrange
-    const { container, fakes } = createTestContainer();
-    fakes.identity.seedSignedInShopper(aShopper({ id: "shopper-1" }));
-    fakes.cartLines.seedLine({ ownerId: "shopper-1", productId: "lamp" });
-    fakes.cartLines.seedLine({ ownerId: "someone-else", productId: "bag" });
+    fakes.sessions.seedSession(aSession());
+    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 2 });
+    fakes.cartLines.seedLine({ ownerId: "someone-else", productId: "bag", quantity: 1 });
 
     // Act
     const cart = await container.viewCart.execute();
 
     // Assert
-    expect(cart).toEqual({ productIds: ["lamp"], itemCount: 1 });
+    expect(cart).toEqual({
+      productIds: ["lamp"],
+      itemCount: 2,
+      subtotalInCents: 5_000,
+      isSignedIn: true,
+      lines: [
+        {
+          productId: "lamp",
+          name: "Lamp",
+          category: "laptops",
+          image: null,
+          priceInCents: 2_500,
+          deliveryDays: 3,
+          quantity: 2,
+          lineTotalInCents: 5_000,
+        },
+      ],
+    });
+  });
+
+  it("shows a signed-out visitor the guest's cart", async () => {
+    // Arrange
+    fakes.cartLines.seedLine({ ownerId: "guest", productId: "bag", quantity: 1 });
+
+    // Act
+    const cart = await container.viewCart.execute();
+
+    // Assert
+    expect(cart).toMatchObject({ productIds: ["bag"], itemCount: 1, isSignedIn: false });
+  });
+
+  it("leaves out a line whose product left the catalogue", async () => {
+    // Arrange
+    fakes.sessions.seedSession(aSession());
+    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "ghost", quantity: 1 });
+    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "bag", quantity: 1 });
+
+    // Act
+    const cart = await container.viewCart.execute();
+
+    // Assert
+    expect(cart.productIds).toEqual(["bag"]);
+    expect(cart.subtotalInCents).toBe(4_000);
   });
 
   it("is empty for a new shopper", async () => {
-    const { container, fakes } = createTestContainer();
-    fakes.identity.seedSignedInShopper(aShopper());
+    fakes.sessions.seedSession(aSession());
 
-    expect(await container.viewCart.execute()).toEqual({ productIds: [], itemCount: 0 });
+    expect(await container.viewCart.execute()).toMatchObject({
+      productIds: [],
+      itemCount: 0,
+      lines: [],
+      subtotalInCents: 0,
+    });
   });
 });

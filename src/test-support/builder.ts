@@ -1,4 +1,4 @@
-import type { Product, ProductDetails, Shopper } from "@/core";
+import type { Order, OrderLine, Product, ProductDetails, Session, Shopper } from "@/core";
 
 export function aProduct(overrides: Partial<Product> = {}): Product {
   return {
@@ -39,10 +39,48 @@ export function aProductDetails(overrides: Partial<ProductDetails> = {}): Produc
 
 export function aShopper(overrides: Partial<Shopper> = {}): Shopper {
   return {
-    id: "shopper-1",
+    id: "shopper:robin.lee@example.com",
+    email: "robin.lee@example.com",
     firstName: "Robin",
-    deliveryCity: "Reykjavik",
-    deliveryPostalCode: "101",
+    fullName: "Robin Lee",
+    deliveryCity: "Minneapolis",
+    deliveryPostalCode: "55401",
+    ...overrides,
+  };
+}
+
+export function aSession(overrides: Partial<Session> = {}): Session {
+  return {
+    email: "robin.lee@example.com",
+    deliveryPostalCode: "55401",
+    ...overrides,
+  };
+}
+
+export function anOrder(overrides: Partial<Order> = {}): Order {
+  return {
+    id: "order-1",
+    ownerId: "shopper:robin.lee@example.com",
+    isSample: false,
+    placedAt: "2026-10-01T12:00:00.000Z",
+    deliveryDays: 2,
+    deliveryCity: "Minneapolis",
+    deliveryPostalCode: "55401",
+    lines: [anOrderLine()],
+    returns: [],
+    ...overrides,
+  };
+}
+
+export function anOrderLine(overrides: Partial<OrderLine> = {}): OrderLine {
+  return {
+    productId: "dummyjson-0001",
+    name: "Test laptop",
+    category: "laptops",
+    image: null,
+    priceInCents: 99_900,
+    quantity: 1,
+    returnWindowDays: 30,
     ...overrides,
   };
 }

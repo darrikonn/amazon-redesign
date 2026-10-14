@@ -1,26 +1,28 @@
-import type { CartLineRepository, IdentityProvider, ProductId, ProductRepository } from "@/core";
+import type { CartLineRepository, ProductId, ProductRepository, SessionStore } from "@/core";
 import { type CartSummary, summarizeCart } from "./cart-summary";
+import { cartOwnerOf, currentShopper } from "./session-shopper";
 
 export type ToggleCartItemRequest = {
   productId: ProductId;
 };
 
+// The card's one-tap button: adds one, or takes the product out of the cart entirely.
 export class ToggleCartItem {
   constructor(
-    private readonly identity: IdentityProvider,
+    private readonly sessions: SessionStore,
     private readonly cartLines: CartLineRepository,
     private readonly products: ProductRepository,
   ) {}
 
   async execute(request: ToggleCartItemRequest): Promise<CartSummary> {
-    const shopper = await this.identity.currentShopper();
+    const ownerId = cartOwnerOf(await currentShopper(this.sessions));
     const product = await this.products.demand(request.productId);
-    const existing = await this.cartLines.get(shopper.id, product.id);
+    const existing = await this.cartLines.get(ownerId, product.id);
     if (existing === null) {
-      await this.cartLines.save({ ownerId: shopper.id, productId: product.id });
+      await this.cartLines.save({ ownerId, productId: product.id, quantity: 1 });
     } else {
-      await this.cartLines.remove(shopper.id, product.id);
+      await this.cartLines.remove(ownerId, product.id);
     }
-    return summarizeCart(await this.cartLines.listByOwner(shopper.id));
+    return summarizeCart(await this.cartLines.listByOwner(ownerId));
   }
 }

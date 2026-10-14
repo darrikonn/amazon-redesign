@@ -6,5 +6,8 @@ export type CartSummary = {
 };
 
 export function summarizeCart(lines: readonly CartLine[]): CartSummary {
-  return { productIds: lines.map((line) => line.productId), itemCount: lines.length };
+  return {
+    productIds: lines.map((line) => line.productId),
+    itemCount: lines.reduce((count, line) => count + line.quantity, 0),
+  };
 }

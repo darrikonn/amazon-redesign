@@ -7,8 +7,8 @@ import {
 
 function seeded(): InMemoryCartLineRepository {
   const repository = new InMemoryCartLineRepository();
-  repository.seedLine({ ownerId: "owner-1", productId: "lamp" });
-  repository.seedLine({ ownerId: "owner-2", productId: "bag" });
+  repository.seedLine({ ownerId: "owner-1", productId: "lamp", quantity: 1 });
+  repository.seedLine({ ownerId: "owner-2", productId: "bag", quantity: 1 });
   return repository;
 }
 
@@ -22,7 +22,7 @@ describe("createCartLineLoader", () => {
     const loaded = await loader.loadMany(["lamp", "bag"]);
 
     // Assert
-    expect(loaded).toEqual([{ ownerId: "owner-1", productId: "lamp" }, null]);
+    expect(loaded).toEqual([{ ownerId: "owner-1", productId: "lamp", quantity: 1 }, null]);
     expect(repository.calls).toEqual([
       { method: "getMany", ownerId: "owner-1", productIds: ["lamp", "bag"] },
     ]);
@@ -40,8 +40,8 @@ describe("createCartLineListLoader", () => {
 
     // Assert
     expect(loaded).toEqual([
-      [{ ownerId: "owner-1", productId: "lamp" }],
-      [{ ownerId: "owner-2", productId: "bag" }],
+      [{ ownerId: "owner-1", productId: "lamp", quantity: 1 }],
+      [{ ownerId: "owner-2", productId: "bag", quantity: 1 }],
     ]);
     expect(repository.calls.map((call) => call.ownerId)).toEqual(["owner-1", "owner-2"]);
   });

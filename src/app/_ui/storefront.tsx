@@ -3,7 +3,12 @@
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { type Container, createContainer } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
-import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
+import type {
+  CartSummary,
+  SearchOutcome,
+  ShopperView,
+  Storefront as StorefrontData,
+} from "@/use-case";
 import { Collapsible } from "./collapsible";
 import { scrollToTop } from "./motion";
 import { ProductModal } from "./product-modal";
@@ -25,9 +30,15 @@ type StorefrontProps = {
   initialOutcome: SearchOutcome;
   initialProductId: ProductId | null;
   storefront: StorefrontData;
+  shopper: ShopperView | null;
 };
 
-export function Storefront({ initialOutcome, initialProductId, storefront }: StorefrontProps) {
+export function Storefront({
+  initialOutcome,
+  initialProductId,
+  storefront,
+  shopper,
+}: StorefrontProps) {
   const [container] = useState(createContainer);
   const { text, searchText, type, apply } = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
@@ -99,7 +110,7 @@ export function Storefront({ initialOutcome, initialProductId, storefront }: Sto
     <div className={styles.page}>
       <div className={styles.viewport}>
         <SiteHeader
-          shopper={storefront.shopper}
+          shopper={shopper}
           departments={storefront.departments}
           cartCount={cart.itemCount}
           onSearch={choose}

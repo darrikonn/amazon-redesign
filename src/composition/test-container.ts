@@ -1,8 +1,11 @@
 import {
+  FixedClock,
   InMemoryCartLineRepository,
-  InMemoryIdentityProvider,
+  InMemoryOrderRepository,
   InMemoryProductDetailsRepository,
   InMemoryProductRepository,
+  InMemorySavedItemRepository,
+  InMemorySessionStore,
 } from "@/infrastructure";
 import { assembleContainer, type Container } from "./container";
 
@@ -10,7 +13,10 @@ export type TestFakes = {
   products: InMemoryProductRepository;
   productDetails: InMemoryProductDetailsRepository;
   cartLines: InMemoryCartLineRepository;
-  identity: InMemoryIdentityProvider;
+  orders: InMemoryOrderRepository;
+  savedItems: InMemorySavedItemRepository;
+  sessions: InMemorySessionStore;
+  clock: FixedClock;
 };
 
 export function createTestContainer(): { container: Container; fakes: TestFakes } {
@@ -18,7 +24,10 @@ export function createTestContainer(): { container: Container; fakes: TestFakes 
     products: new InMemoryProductRepository(),
     productDetails: new InMemoryProductDetailsRepository(),
     cartLines: new InMemoryCartLineRepository(),
-    identity: new InMemoryIdentityProvider(),
+    orders: new InMemoryOrderRepository(),
+    savedItems: new InMemorySavedItemRepository(),
+    sessions: new InMemorySessionStore(),
+    clock: new FixedClock(),
   };
   return { container: assembleContainer(fakes), fakes };
 }

@@ -83,6 +83,12 @@ export type ProductListing = {
   image: string | null;
   isBestMatch: boolean;
   highlightLabel: string | null;
+  deal: DealPriceView | null;
+};
+
+export type DealPriceView = {
+  listPriceInCents: number;
+  discountPercent: number;
 };
 
 export class SearchCatalog {
@@ -190,6 +196,7 @@ function toProductListing(listing: Listing): ProductListing {
     image: product.image,
     isBestMatch: listing.isBestMatch,
     highlightLabel: listing.highlight === null ? null : HIGHLIGHT_LABELS[listing.highlight],
+    deal: null,
   };
 }
 

@@ -1,16 +1,6 @@
-import {
-  CatalogProductDetailsRepository,
-  CatalogProductRepository,
-  DemoIdentityProvider,
-  SessionCartLineRepository,
-} from "@/infrastructure";
 import { assembleContainer, type Container } from "./container";
+import { type RequestCookies, shopPorts } from "./shop-port";
 
-export function createProductionContainer(): Container {
-  return assembleContainer({
-    products: new CatalogProductRepository(),
-    productDetails: new CatalogProductDetailsRepository(),
-    cartLines: new SessionCartLineRepository(),
-    identity: new DemoIdentityProvider(),
-  });
+export function createProductionContainer(requestCookies: RequestCookies | null = null): Container {
+  return assembleContainer(shopPorts(requestCookies));
 }

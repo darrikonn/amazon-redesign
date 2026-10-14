@@ -1,1 +1,8 @@
-export { aProduct, aProductDetails, aShopper } from "./builder";
+export {
+  anOrder,
+  anOrderLine,
+  aProduct,
+  aProductDetails,
+  aSession,
+  aShopper,
+} from "./builder";

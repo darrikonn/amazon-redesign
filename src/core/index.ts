@@ -1,5 +1,6 @@
 export type { CartLine } from "./cart/cart-line";
 export type { CartLineRepository } from "./cart/cart-line-repository";
+export type { Clock } from "./clock/clock";
 export { NotFoundError } from "./error/not-found-error";
 export {
   isRecord,
@@ -11,6 +12,11 @@ export {
   requireString,
   requireStringArray,
 } from "./json/json-reader";
+export type { SavedItem } from "./list/saved-item";
+export type { SavedItemRepository } from "./list/saved-item-repository";
+export type { Order, OrderId, OrderLine, OrderReturn, ReturnReason } from "./order/order";
+export { isReturnReason, RETURN_REASONS } from "./order/order";
+export type { OrderRepository } from "./order/order-repository";
 export type { CategoryId } from "./product/category";
 export { CATEGORY_IDS, isCategoryId } from "./product/category";
 export type { Color } from "./product/color";
@@ -35,5 +41,6 @@ export type {
 } from "./search/search-intent";
 export type { SearchSort } from "./search/search-sort";
 export { isSearchSort, SEARCH_SORTS } from "./search/search-sort";
-export type { IdentityProvider } from "./shopper/identity-provider";
+export type { Session } from "./session/session";
+export type { SessionStore } from "./session/session-store";
 export type { Shopper, ShopperId } from "./shopper/shopper";

@@ -3,4 +3,4 @@ export {
   type CartLineRepositoryCall,
   InMemoryCartLineRepository,
 } from "./in-memory-cart-line-repository";
-export { SessionCartLineRepository } from "./session-cart-line-repository";
+export { StoredCartLineRepository } from "./stored-cart-line-repository";

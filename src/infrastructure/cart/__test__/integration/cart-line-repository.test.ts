@@ -1,18 +1,22 @@
 import { describe, expect, it } from "vitest";
 import type { CartLineRepository } from "@/core";
 import { NotFoundError } from "@/core";
-import { InMemoryCartLineRepository, SessionCartLineRepository } from "@/infrastructure";
+import {
+  InMemoryCartLineRepository,
+  InMemoryKeyValueStorage,
+  StoredCartLineRepository,
+} from "@/infrastructure";
 
 const implementations: [string, () => CartLineRepository][] = [
-  ["SessionCartLineRepository", () => new SessionCartLineRepository()],
+  ["StoredCartLineRepository", () => new StoredCartLineRepository(new InMemoryKeyValueStorage())],
   ["InMemoryCartLineRepository", () => new InMemoryCartLineRepository()],
 ];
 
 async function seeded(create: () => CartLineRepository): Promise<CartLineRepository> {
   const repository = create();
-  await repository.save({ ownerId: "owner-1", productId: "lamp" });
-  await repository.save({ ownerId: "owner-1", productId: "bag" });
-  await repository.save({ ownerId: "owner-2", productId: "lamp" });
+  await repository.save({ ownerId: "owner-1", productId: "lamp", quantity: 1 });
+  await repository.save({ ownerId: "owner-1", productId: "bag", quantity: 1 });
+  await repository.save({ ownerId: "owner-2", productId: "lamp", quantity: 1 });
   return repository;
 }
 
@@ -23,6 +27,7 @@ describe.each(implementations)("%s", (_, create) => {
     expect(await repository.get("owner-1", "bag")).toEqual({
       ownerId: "owner-1",
       productId: "bag",
+      quantity: 1,
     });
     expect(await repository.get("owner-2", "bag")).toBeNull();
   });
@@ -33,6 +38,7 @@ describe.each(implementations)("%s", (_, create) => {
     expect(await repository.demand("owner-2", "lamp")).toEqual({
       ownerId: "owner-2",
       productId: "lamp",
+      quantity: 1,
     });
     await expect(repository.demand("owner-2", "bag")).rejects.toBeInstanceOf(NotFoundError);
   });
@@ -41,7 +47,7 @@ describe.each(implementations)("%s", (_, create) => {
     const repository = await seeded(create);
 
     expect(await repository.getMany("owner-2", ["bag", "lamp"])).toEqual([
-      { ownerId: "owner-2", productId: "lamp" },
+      { ownerId: "owner-2", productId: "lamp", quantity: 1 },
     ]);
     await expect(repository.demandMany("owner-2", ["bag", "lamp"])).rejects.toBeInstanceOf(
       NotFoundError,
@@ -58,19 +64,38 @@ describe.each(implementations)("%s", (_, create) => {
 
     // Assert
     expect(await repository.listByOwner("owner-1")).toEqual([
-      { ownerId: "owner-1", productId: "bag" },
+      { ownerId: "owner-1", productId: "bag", quantity: 1 },
     ]);
     expect(await repository.listByOwner("owner-2")).toEqual([
-      { ownerId: "owner-2", productId: "lamp" },
+      { ownerId: "owner-2", productId: "lamp", quantity: 1 },
     ]);
   });
 
   it("keeps one line per owner and product", async () => {
     const repository = await seeded(create);
 
-    await repository.save({ ownerId: "owner-1", productId: "lamp" });
+    await repository.save({ ownerId: "owner-1", productId: "lamp", quantity: 1 });
 
     expect(await repository.listByOwner("owner-1")).toHaveLength(2);
+  });
+});
+
+describe("StoredCartLineRepository", () => {
+  it("keeps a changed quantity and reads a cart that no longer parses as empty", async () => {
+    // Arrange
+    const storage = new InMemoryKeyValueStorage();
+    storage.seedValue("shop:v1:cart:sam", [{ ownerId: "sam", productId: "lamp" }]);
+    const repository = new StoredCartLineRepository(storage);
+
+    // Act
+    await repository.save({ ownerId: "robin", productId: "lamp", quantity: 1 });
+    await repository.save({ ownerId: "robin", productId: "lamp", quantity: 4 });
+
+    // Assert
+    expect(await repository.listByOwner("robin")).toEqual([
+      { ownerId: "robin", productId: "lamp", quantity: 4 },
+    ]);
+    expect(await repository.listByOwner("sam")).toEqual([]);
   });
 });
 
@@ -78,7 +103,7 @@ describe("InMemoryCartLineRepository", () => {
   it("records calls with their owner and forgets everything on reset", async () => {
     // Arrange
     const repository = new InMemoryCartLineRepository();
-    repository.seedLine({ ownerId: "owner-1", productId: "lamp" });
+    repository.seedLine({ ownerId: "owner-1", productId: "lamp", quantity: 1 });
     await repository.listByOwner("owner-1");
 
     // Act

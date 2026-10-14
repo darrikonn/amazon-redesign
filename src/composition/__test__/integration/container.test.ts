@@ -5,20 +5,38 @@ describe.each([
   ["local", createLocalContainer],
   ["production", createProductionContainer],
 ])("the %s container", (_, create) => {
-  it("searches the bundled catalog as the demo shopper with no secrets", async () => {
+  it("searches the bundled catalog with no secrets", async () => {
     // Arrange
     const container = create();
 
     // Act
     const outcome = await container.searchCatalog.execute({ text: "laptops", sort: "best-match" });
-    const storefront = await container.viewStorefront.execute();
 
     // Assert
     expect(outcome.resultCount).toBe(5);
-    expect(storefront.shopper.firstName).toBe("Darri");
   });
 
-  it("keeps a cart for the life of the container", async () => {
+  it("reads the session from the request's cookie on the server", async () => {
+    // Arrange
+    const value = encodeURIComponent(
+      JSON.stringify({ email: "darri.konn@gmail.com", deliveryPostalCode: "10001" }),
+    );
+    const container = create({ get: (name) => (name === "shop-session" ? { value } : undefined) });
+
+    // Act
+    const session = await container.viewSession.execute();
+
+    // Assert
+    expect(session.shopper).toEqual({
+      email: "darri.konn@gmail.com",
+      firstName: "Darri",
+      fullName: "Darri Konn",
+      deliveryCity: "New York",
+      deliveryPostalCode: "10001",
+    });
+  });
+
+  it("is signed out without a session cookie, and keeps a guest cart for the life of the container", async () => {
     // Arrange
     const container = create();
 
@@ -26,10 +44,11 @@ describe.each([
     await container.toggleCartItem.execute({ productId: "dummyjson-0078" });
 
     // Assert
-    expect(await container.viewCart.execute()).toEqual({
+    expect((await container.viewSession.execute()).shopper).toBeNull();
+    expect(await container.viewCart.execute()).toMatchObject({
       productIds: ["dummyjson-0078"],
       itemCount: 1,
     });
-    expect(await create().viewCart.execute()).toEqual({ productIds: [], itemCount: 0 });
+    expect(await create().viewCart.execute()).toMatchObject({ productIds: [], itemCount: 0 });
   });
 });
