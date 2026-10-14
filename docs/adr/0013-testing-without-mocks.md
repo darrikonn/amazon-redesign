@@ -16,7 +16,7 @@ No mocking libraries, spies, or call-count assertions: no `vi.mock`, `vi.fn`, `v
 2. Act: run the real use case with real components.
 3. Assert: check the returned value and the resulting state in the fakes (`calls`, stored entities).
 
-Unit tests cover pure functions directly. Infrastructure adapters that talk to a real external system get narrow integration tests against a sandbox, and nothing above them touches the real system.
+Unit tests cover pure functions directly. Infrastructure adapters that talk to a real external system get narrow sandbox tests against that system (ADR 0002), and nothing above them touches the real system.
 
 Good:
 
