@@ -39,7 +39,7 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
       </div>
       <div className={styles.body}>
         <h3 className={styles.title}>
-          <Link href={href} className={styles.titleLink} onClick={open}>
+          <Link href={href} className={styles.titleLink} prefetch={false} onClick={open}>
             {listing.name}
           </Link>
         </h3>

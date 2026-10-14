@@ -70,10 +70,10 @@
   right: 16px;
 }
 
-.previous:disabled,
-.next:disabled {
-  opacity: 0;
-  pointer-events: none;
+.previous[aria-disabled="true"],
+.next[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
 }
 
 .dots {

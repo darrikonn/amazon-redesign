@@ -28,6 +28,7 @@
   --color-well: #dfe4ea;
   --color-title-hover: #c7511f;
   --color-glass: rgba(255, 255, 255, 0.06);
+  --color-scrim: rgba(10, 14, 19, 0.72);
   --color-glass-hover: rgba(255, 255, 255, 0.11);
   --color-glass-border: rgba(255, 255, 255, 0.12);
   --color-glass-border-hover: rgba(255, 255, 255, 0.28);

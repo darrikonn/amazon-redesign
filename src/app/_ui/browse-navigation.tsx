@@ -25,9 +25,9 @@ type BrowseNavigationProps = {
   onOpenProduct: (preview: ProductPreview) => void;
 };
 
-// Departments open, and nothing closes by itself: the department the results move into
-// opens, and the one they left stays open, so an entry never slides away from the
-// pointer. Only the shopper's own toggle closes a department.
+// Departments open, and nothing closes or shrinks by itself: the department the results
+// move into opens, and the one they left stays open with its popular products, so an
+// entry never slides away from the pointer. Only the shopper's own toggle closes one.
 export function BrowseNavigation({
   navigation,
   sort,
@@ -35,13 +35,26 @@ export function BrowseNavigation({
   onBrowse,
   onOpenProduct,
 }: BrowseNavigationProps) {
-  const markedText =
-    navigation.departments.find((department) => department.containsResults)?.link.text ?? null;
+  const marked = navigation.departments.find((department) => department.containsResults) ?? null;
+  const markedText = marked?.link.text ?? null;
   const [openState, setOpenState] = useState<ReadonlyMap<string, boolean>>(new Map());
   const [lastMarkedText, setLastMarkedText] = useState(markedText);
   if (markedText !== lastMarkedText) {
     setLastMarkedText(markedText);
     setOpenState((current) => withOpen(current, [lastMarkedText, markedText]));
+  }
+  const [shownPopular, setShownPopular] = useState<
+    ReadonlyMap<string, readonly ProductTeaserView[]>
+  >(new Map());
+  if (marked !== null && marked.popular.length > 0) {
+    if (shownPopular.get(marked.link.text) !== marked.popular) {
+      setShownPopular((current) => new Map(current).set(marked.link.text, marked.popular));
+    }
+  }
+
+  function popularFor(department: NavigationDepartmentView): readonly ProductTeaserView[] {
+    if (department.popular.length > 0) return department.popular;
+    return shownPopular.get(department.link.text) ?? [];
   }
 
   function isOpen(department: NavigationDepartmentView): boolean {
@@ -61,6 +74,7 @@ export function BrowseNavigation({
           <DepartmentItem
             key={department.link.text}
             department={department}
+            popular={popularFor(department)}
             sort={sort}
             isOpen={isOpen(department)}
             productHref={productHref}
@@ -85,6 +99,7 @@ function withOpen(
 
 type DepartmentItemProps = {
   department: NavigationDepartmentView;
+  popular: readonly ProductTeaserView[];
   sort: SearchSort;
   isOpen: boolean;
   productHref: (productId: ProductId) => string;
@@ -95,6 +110,7 @@ type DepartmentItemProps = {
 
 function DepartmentItem({
   department,
+  popular,
   sort,
   isOpen,
   productHref,
@@ -103,7 +119,7 @@ function DepartmentItem({
   onOpenProduct,
 }: DepartmentItemProps) {
   const contentsId = useId();
-  const { link, containsResults, groups, popular } = department;
+  const { link, containsResults, groups } = department;
   const hasContents = groups.length > 0 || popular.length > 0;
   return (
     <li>
@@ -185,6 +201,7 @@ function PopularProducts({
           <li key={product.id}>
             <Link
               href={productHref(product.id)}
+              prefetch={false}
               className={styles.teaser}
               onClick={(event) => {
                 if (!isPlainClick(event)) return;
@@ -233,6 +250,7 @@ function BrowseLink({ link, sort, className, isResultDepartment, onBrowse }: Bro
   return (
     <Link
       href={searchUrl({ text: link.text, sort })}
+      prefetch={false}
       className={className}
       aria-current={currentMarker(link, isResultDepartment)}
       onClick={navigate}

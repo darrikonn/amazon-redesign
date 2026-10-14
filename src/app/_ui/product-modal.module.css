@@ -28,7 +28,7 @@
 }
 
 .dialog::backdrop {
-  background: rgba(10, 14, 19, 0.72);
+  background: var(--color-scrim);
   backdrop-filter: blur(4px);
 }
 
@@ -51,7 +51,9 @@
   background: var(--color-surface);
   overflow: hidden;
   box-shadow: var(--shadow-menu);
-  animation: open var(--duration-layout) ease both;
+  /* Backwards, not both: a transform left on the frame after the animation would make it
+     the containing block of the phone's fixed close button, which would then scroll away. */
+  animation: open var(--duration-layout) ease backwards;
 }
 
 .media {

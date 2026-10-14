@@ -1,11 +1,19 @@
 "use client";
 
-import { type ReactNode, type RefObject, useEffect, useId, useRef, useState } from "react";
+import {
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import type { ProductId } from "@/core";
 import type { ProductView, ReviewView, ViewProduct } from "@/use-case";
-import { deliveryLabel, formatReviewDate, pluralize } from "./format";
+import { deliveryLabel, formatRating, formatReviewDate, pluralize } from "./format";
 import { Icon } from "./icon";
-import { ImageCarousel } from "./image-carousel";
+import { type CarouselControl, ImageCarousel } from "./image-carousel";
 import { Price } from "./price";
 import styles from "./product-modal.module.css";
 import type { ProductPreview } from "./product-preview";
@@ -34,6 +42,7 @@ export function ProductModal({
   onClose,
 }: ProductModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const carouselRef = useRef<CarouselControl>(null);
   const titleId = useId();
   const view = useProductView(viewProduct, productId, onClose);
   useModalDialog(dialogRef, productId !== null);
@@ -47,14 +56,24 @@ export function ProductModal({
     if (productId !== null) onClose();
   }
 
+  // The arrow keys turn the photos wherever focus is in the dialog.
+  function stepPhotos(event: KeyboardEvent<HTMLDialogElement>) {
+    if (event.key === "ArrowLeft") carouselRef.current?.step(-1);
+    if (event.key === "ArrowRight") carouselRef.current?.step(1);
+  }
+
   return (
     <dialog
       ref={dialogRef}
       className={styles.dialog}
       aria-labelledby={titleId}
       onClose={closeFromBrowser}
+      onKeyDown={stepPhotos}
     >
-      {summary !== null && (
+      {/* The frame, and its close button, render as soon as a product is open, even before
+          anything about it is known (a shared link), so the dialog's first focus always
+          lands on the close button. */}
+      {productId !== null && (
         <div className={styles.frame}>
           <div className={styles.details}>
             <header className={styles.header}>
@@ -63,9 +82,9 @@ export function ProductModal({
                   <p className={styles.brand}>{view.brand}</p>
                 )}
                 <h2 id={titleId} className={styles.title}>
-                  {summary.name}
+                  {summary === null ? "Loading product" : summary.name}
                 </h2>
-                <StarRating rating={summary.rating} />
+                {summary !== null && <StarRating rating={summary.rating} />}
               </div>
               <button
                 type="button"
@@ -77,33 +96,38 @@ export function ProductModal({
               </button>
             </header>
             <div className={styles.body}>
-              {view === null ? <LoadingDetails /> : <ProductDetails view={view} />}
+              {view === null ? <LoadingDetails /> : <ProductInformation view={view} />}
             </div>
-            <footer className={styles.footer}>
-              <div>
-                <Price priceInCents={summary.priceInCents} />
-                {view !== null && (
-                  <p className={styles.delivery}>
-                    FREE delivery <strong>{deliveryLabel(view.deliveryDays)}</strong>
-                  </p>
-                )}
-              </div>
-              <CartButton
-                productId={summary.id}
-                name={summary.name}
-                canBuy={view?.availability?.canBuy ?? true}
-                isInCart={cartProductIds.includes(summary.id)}
-                onToggleCart={onToggleCart}
-              />
-            </footer>
+            {summary !== null && (
+              <footer className={styles.footer}>
+                <div>
+                  <Price priceInCents={summary.priceInCents} />
+                  {view !== null && view.availability?.canBuy !== false && (
+                    <p className={styles.delivery}>
+                      FREE delivery <strong>{deliveryLabel(view.deliveryDays)}</strong>
+                    </p>
+                  )}
+                </div>
+                <CartButton
+                  productId={summary.id}
+                  name={summary.name}
+                  availability={cartAvailability(view)}
+                  isInCart={cartProductIds.includes(summary.id)}
+                  onToggleCart={onToggleCart}
+                />
+              </footer>
+            )}
           </div>
           <div className={styles.media}>
-            <ImageCarousel
-              key={summary.id}
-              images={images}
-              name={summary.name}
-              category={summary.category}
-            />
+            {summary !== null && (
+              <ImageCarousel
+                key={summary.id}
+                ref={carouselRef}
+                images={images}
+                name={summary.name}
+                category={summary.category}
+              />
+            )}
           </div>
         </div>
       )}
@@ -168,7 +192,7 @@ function LoadingDetails() {
   );
 }
 
-function ProductDetails({ view }: { view: ProductView }) {
+function ProductInformation({ view }: { view: ProductView }) {
   return (
     <>
       {view.features.length > 0 && (
@@ -222,7 +246,7 @@ function Reviews({ rating, reviews }: ReviewsProps) {
         Ratings and reviews
       </h3>
       <div className={styles.ratingSummary}>
-        <span className={styles.ratingValue}>{rating.toFixed(1)}</span>
+        <span className={styles.ratingValue}>{formatRating(rating)}</span>
         <div>
           <StarRating rating={rating} isLarge showsValue={false} />
           <p className={styles.reviewCount}>{pluralize(reviews.length, "review", "reviews")}</p>
@@ -260,19 +284,27 @@ function initialsOf(name: string): string {
     .join("");
 }
 
+type CartAvailability = "loading" | "buyable" | "sold-out";
+
+// Until the details say whether the product is in stock, the button waits.
+function cartAvailability(view: ProductView | null): CartAvailability {
+  if (view === null) return "loading";
+  return view.availability?.canBuy === false ? "sold-out" : "buyable";
+}
+
 type CartButtonProps = {
   productId: ProductId;
   name: string;
-  canBuy: boolean;
+  availability: CartAvailability;
   isInCart: boolean;
   onToggleCart: (productId: ProductId) => void;
 };
 
-function CartButton({ productId, name, canBuy, isInCart, onToggleCart }: CartButtonProps) {
-  if (!canBuy && !isInCart) {
+function CartButton({ productId, name, availability, isInCart, onToggleCart }: CartButtonProps) {
+  if (availability !== "buyable" && !isInCart) {
     return (
       <button type="button" className={styles.cartButton} disabled>
-        Out of stock
+        {availability === "loading" ? "Add to cart" : "Out of stock"}
       </button>
     );
   }
