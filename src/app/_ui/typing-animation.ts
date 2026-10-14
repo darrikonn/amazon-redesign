@@ -11,8 +11,7 @@ export const TYPING = {
   charactersDeletedPerTick: 2,
 } as const;
 
-// Steps the placeholder demo: hold the full example, delete it, move to the next
-// example, type it out, hold again. `tick` returns null while holding.
+// Holds are counted in ticks rather than time so the whole rhythm scales with the tick.
 export class TypingAnimation {
   private hold: number = TYPING.holdBeforeFirstDelete;
   private isTyping = false;
