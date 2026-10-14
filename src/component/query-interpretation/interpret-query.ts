@@ -37,10 +37,18 @@ export function interpretQuery(text: string): Interpretation {
   return { intent: draft.intent(), terms: inReadingOrder(draft.terms, text) };
 }
 
-const NUMBER_WORD = String.raw`(?:(?:a|one)\s+hundred|hundred|(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|one|two|three|four|five|six|seven|eight|nine)(?![a-z0-9])`;
+const UNIT_WORD = "(?:one|two|three|four|five|six|seven|eight|nine)";
+const TEEN_WORD =
+  "(?:ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)";
+const TENS_WORD = `(?:(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ]${UNIT_WORD})?)`;
+const UNDER_HUNDRED_WORD = `(?:${TENS_WORD}|${TEEN_WORD}|${UNIT_WORD})`;
+const LARGE_NUMBER_WORD = String.raw`(?:(?:(?:a|one)\s+)?hundred(?:\s+(?:and\s+)?${UNDER_HUNDRED_WORD})?|${TENS_WORD}|${TEEN_WORD})(?![a-z0-9])`;
 const CURRENCY_WORD = String.raw`(?:\s*(?:dollars?|bucks|usd))?`;
+// A lone single-digit word is a price only with a currency word after it, so
+// "more than one color" stays plain text while "under five bucks" is a price.
+const SMALL_NUMBER_WORD = String.raw`${UNIT_WORD}(?=\s*(?:dollars?|bucks|usd)(?![a-z0-9]))`;
 const NUMBER = String.raw`(\d+(?:\.\d{1,2})?)${CURRENCY_WORD}`;
-const AMOUNT = String.raw`(\d+(?:\.\d{1,2})?|${NUMBER_WORD})${CURRENCY_WORD}`;
+const AMOUNT = String.raw`(\d+(?:\.\d{1,2})?|${LARGE_NUMBER_WORD}|${SMALL_NUMBER_WORD})${CURRENCY_WORD}`;
 const RATING_PATTERN =
   /(?:top[- ]rated|best[- ]rated|highly rated|well reviewed|(?:over |at least )?(\d(?:\.\d)?)\+?\s*stars?(?: and up| or more)?)/;
 const PRICE_RANGE_PATTERN = new RegExp(

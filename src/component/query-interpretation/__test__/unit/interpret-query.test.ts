@@ -121,6 +121,22 @@ describe("interpretQuery", () => {
     });
   });
 
+  it("reads a hundred and more written as words", () => {
+    expect(interpretQuery("headphones under one hundred fifty").intent).toMatchObject({
+      maximumPriceInCents: 15000,
+      keywords: [],
+    });
+    expect(
+      interpretQuery("backpack under a hundred and twenty bucks").intent.maximumPriceInCents,
+    ).toBe(12000);
+  });
+
+  it("reads a single-digit word as a price only with a currency word", () => {
+    expect(labelsOf("lamp in more than one color")).toEqual(["Desk lamps", "“color”"]);
+    expect(interpretQuery("coffee at least two").intent.minimumPriceInCents).toBeNull();
+    expect(interpretQuery("coffee under five bucks").intent.maximumPriceInCents).toBe(500);
+  });
+
   it("does not read number words without a price word in front", () => {
     expect(interpretQuery("one or two lamps").intent).toMatchObject({
       minimumPriceInCents: null,
