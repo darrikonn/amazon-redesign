@@ -1,55 +1,13 @@
+/* The panel is sticky on desktop and never taller than the window; the department list
+   scrolls inside it. Padding with a matching negative margin keeps focus rings visible. */
 .navigation {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-.heading,
-.link,
-.currentLink {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 10px;
-  padding: 6px 0;
-  color: var(--color-on-dark-muted);
-  font-size: 17px;
-  line-height: 1.3;
-}
-
-.heading {
-  margin-bottom: 8px;
-  color: var(--color-on-dark);
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.heading .label {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
-}
-
-.currentLink {
-  color: var(--color-on-dark);
-  font-weight: 700;
-}
-
-.link:hover .label,
-.heading:hover .label,
-.currentLink:hover .label {
-  color: var(--color-on-dark);
-  text-decoration: underline;
-}
-
-.count {
-  color: var(--color-on-dark-subtle);
-  font-size: 15px;
-  font-weight: 400;
+  max-height: calc(100vh - 32px);
 }
 
 .sectionHeading {
-  margin: 24px 0 8px;
+  margin: 6px 0 10px;
   color: var(--color-on-dark-subtle);
   font-size: 12px;
   font-weight: 700;
@@ -57,24 +15,122 @@
   text-transform: uppercase;
 }
 
-.navigation > .sectionHeading:first-child {
-  margin-top: 6px;
+.departments {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: -4px;
+  padding: 4px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
 }
 
-.list {
+.departmentRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.department,
+.resultDepartment,
+.group,
+.currentGroup {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  min-width: 0;
+  padding: 6px 0;
+  color: var(--color-on-dark-muted);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.resultDepartment {
+  color: var(--color-on-dark);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.resultDepartment .label {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.groups {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  margin: 0 0 8px;
+  padding-left: 14px;
+  border-left: 1px solid var(--color-glass-border);
+}
+
+.group,
+.currentGroup {
+  padding: 5px 0;
+  font-size: 15px;
+}
+
+.currentGroup {
+  color: var(--color-on-dark);
+  font-weight: 700;
+}
+
+.department:hover .label,
+.resultDepartment:hover .label,
+.group:hover .label,
+.currentGroup:hover .label {
+  color: var(--color-on-dark);
+  text-decoration: underline;
+}
+
+.count {
+  color: var(--color-on-dark-subtle);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.toggle,
+.toggleOpen {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--color-on-dark-subtle);
+  transition:
+    transform var(--duration-layout) ease,
+    background-color var(--duration-quick) ease;
+}
+
+.toggle:hover,
+.toggleOpen:hover {
+  background: var(--color-hover-on-dark);
+  color: var(--color-on-dark);
+}
+
+.toggleOpen {
+  transform: rotate(90deg);
 }
 
 @media (max-width: 760px) {
   .navigation {
+    max-height: none;
     padding: 20px;
     border: 1px solid var(--color-glass-border);
     border-radius: 16px;
     background: var(--color-glass);
   }
 
-  .heading {
-    font-size: 20px;
+  .departments {
+    overflow-y: visible;
   }
 }

@@ -1,17 +1,9 @@
 import type { CategoryId, Interpretation, Product, Tag } from "@/core";
-import {
-  CATEGORY_MAP,
-  capitalize,
-  RELATED_CATEGORIES,
-  tagLabel,
-  tagPhrase,
-} from "../catalog-vocabulary";
-import { appendPhrase } from "../query-interpretation";
+import { CATEGORY_IDS } from "@/core";
+import { CATEGORY_MAP, capitalize, tagLabel, tagPhrase } from "../catalog-vocabulary";
 
 export const NAVIGATION_RULES = {
-  maximumTagLinks: 8,
-  maximumRelatedLinks: 4,
-  maximumDepartmentLinks: 8,
+  maximumGroupLinks: 8,
 } as const;
 
 export type NavigationLink = {
@@ -19,32 +11,32 @@ export type NavigationLink = {
   productCount: number;
   text: string;
   isCurrent: boolean;
-  // True when the link adds to the current search instead of going somewhere fixed, so it
-  // is only valid for the search it was built from.
-  narrowsSearch: boolean;
+};
+
+export type NavigationDepartment = {
+  link: NavigationLink;
+  containsResults: boolean;
+  groups: readonly NavigationLink[];
 };
 
 export type BrowseNavigation = {
-  heading: NavigationLink | null;
-  headingLabel: string;
-  links: readonly NavigationLink[];
-  related: readonly NavigationLink[];
+  departments: readonly NavigationDepartment[];
 };
 
-// Department entries browse the department as a whole, like a store directory; narrowing
-// the current search is what the "Add a detail" chips are for. Results spread over several
-// departments get links that narrow the search to one of them instead.
+// A store directory: every department that has products, in a fixed order, with
+// catalogue-wide counts, so the panel reads the same on every search and clicking through
+// it never reshuffles it. Only the markers move: the department the results belong to,
+// and the entry that is exactly the current search.
 export function buildBrowseNavigation(
   catalog: readonly Product[],
-  text: string,
   interpretation: Interpretation,
   matches: readonly Product[],
-): BrowseNavigation | null {
-  if (matches.length === 0) return null;
-  const category = interpretation.intent.category ?? sharedCategory(matches);
-  return category === null
-    ? departmentsNavigation(text, matches)
-    : categoryNavigation(catalog, interpretation, category);
+): BrowseNavigation {
+  const resultCategory = interpretation.intent.category ?? sharedCategory(matches);
+  const departments = CATEGORY_IDS.map((category) =>
+    departmentEntry(catalog, interpretation, category, resultCategory),
+  ).filter((department) => department.link.productCount > 0);
+  return { departments };
 }
 
 function sharedCategory(matches: readonly Product[]): CategoryId | null {
@@ -52,48 +44,22 @@ function sharedCategory(matches: readonly Product[]): CategoryId | null {
   return matches.every((product) => product.category === first) ? first : null;
 }
 
-function departmentsNavigation(text: string, matches: readonly Product[]): BrowseNavigation {
-  const links = countBy(matches.map((product) => product.category))
-    .slice(0, NAVIGATION_RULES.maximumDepartmentLinks)
-    .map(([category, productCount]) => ({
-      label: departmentLabel(category),
-      productCount,
-      text: appendPhrase(text, CATEGORY_MAP[category].plural),
-      isCurrent: false,
-      narrowsSearch: true,
-    }));
-  return { heading: null, headingLabel: "Results by department", links, related: [] };
-}
-
-// Most common first; ties keep the order of first appearance, so the result is stable.
-function countBy<Key>(keys: readonly Key[]): [Key, number][] {
-  const counts = new Map<Key, number>();
-  for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
-  return [...counts.entries()].sort(([, first], [, second]) => second - first);
-}
-
-function departmentLabel(category: CategoryId): string {
-  return capitalize(CATEGORY_MAP[category].plural);
-}
-
-function categoryNavigation(
+function departmentEntry(
   catalog: readonly Product[],
   interpretation: Interpretation,
   category: CategoryId,
-): BrowseNavigation {
+  resultCategory: CategoryId | null,
+): NavigationDepartment {
   const inCategory = catalog.filter((product) => product.category === category);
-  const plural = CATEGORY_MAP[category].plural;
   return {
-    heading: {
-      label: departmentLabel(category),
+    link: {
+      label: capitalize(CATEGORY_MAP[category].plural),
       productCount: inCategory.length,
-      text: plural,
+      text: CATEGORY_MAP[category].plural,
       isCurrent: isExactly(interpretation, category, null),
-      narrowsSearch: false,
     },
-    headingLabel: departmentLabel(category),
-    links: tagLinks(inCategory, interpretation, category),
-    related: relatedLinks(catalog, category),
+    containsResults: category === resultCategory,
+    groups: groupLinks(inCategory, interpretation, category),
   };
 }
 
@@ -107,32 +73,25 @@ function isExactly(interpretation: Interpretation, category: CategoryId, tag: Ta
   return intent.category === category && tagsMatch && terms.length === expectedTerms;
 }
 
-function tagLinks(
+function groupLinks(
   inCategory: readonly Product[],
   interpretation: Interpretation,
   category: CategoryId,
 ): NavigationLink[] {
   const plural = CATEGORY_MAP[category].plural;
   return countBy(inCategory.flatMap((product) => product.tags))
-    .slice(0, NAVIGATION_RULES.maximumTagLinks)
+    .slice(0, NAVIGATION_RULES.maximumGroupLinks)
     .map(([tag, productCount]) => ({
       label: tagLabel(tag),
       productCount,
       text: `${tagPhrase(tag)} ${plural}`,
       isCurrent: isExactly(interpretation, category, tag),
-      narrowsSearch: false,
     }));
 }
 
-function relatedLinks(catalog: readonly Product[], category: CategoryId): NavigationLink[] {
-  return RELATED_CATEGORIES[category]
-    .map((related) => ({
-      label: departmentLabel(related),
-      productCount: catalog.filter((product) => product.category === related).length,
-      text: CATEGORY_MAP[related].plural,
-      isCurrent: false,
-      narrowsSearch: false,
-    }))
-    .filter((link) => link.productCount > 0)
-    .slice(0, NAVIGATION_RULES.maximumRelatedLinks);
+// Most common first; ties keep the order of first appearance, so the result is stable.
+function countBy<Key>(keys: readonly Key[]): [Key, number][] {
+  const counts = new Map<Key, number>();
+  for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
+  return [...counts.entries()].sort(([, first], [, second]) => second - first);
 }

@@ -29,7 +29,7 @@ export function ResultSection({
   return (
     <section
       aria-label="Results"
-      className={outcome.navigation === null ? styles.results : styles.resultsWithNavigation}
+      className={styles.results}
       data-updating={isUpdating}
       aria-busy={isUpdating}
     >
@@ -62,17 +62,13 @@ export function ResultSection({
       </div>
       {/* After the results in the DOM, so keyboard and screen reader order puts products
           first; on desktop the grid draws the panel in the left column. */}
-      {outcome.navigation !== null && (
-        <div className={styles.sidebar}>
-          <BrowseNavigation
-            navigation={outcome.navigation}
-            sort={outcome.requestedSort}
-            isUpdating={isUpdating}
-            onBrowse={onBrowse}
-            onNarrow={onSearch}
-          />
-        </div>
-      )}
+      <div className={styles.sidebar}>
+        <BrowseNavigation
+          navigation={outcome.navigation}
+          sort={outcome.requestedSort}
+          onBrowse={onBrowse}
+        />
+      </div>
     </section>
   );
 }

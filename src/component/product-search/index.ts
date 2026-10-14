@@ -2,6 +2,7 @@ export {
   type BrowseNavigation,
   buildBrowseNavigation,
   NAVIGATION_RULES,
+  type NavigationDepartment,
   type NavigationLink,
 } from "./browse-navigation";
 export { countResults } from "./count-results";

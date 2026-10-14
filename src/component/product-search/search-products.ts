@@ -19,7 +19,7 @@ export type SearchResult = {
   relaxations: readonly Relaxation[];
   closestMatchesDroppedLabel: string | null;
   listings: readonly Listing[];
-  navigation: BrowseNavigation | null;
+  navigation: BrowseNavigation;
 };
 
 export function searchProducts(
@@ -54,6 +54,6 @@ export function searchProducts(
     relaxations,
     closestMatchesDroppedLabel: closestMatches?.droppedLabel ?? null,
     listings,
-    navigation: buildBrowseNavigation(catalog, text, interpretation, matches),
+    navigation: buildBrowseNavigation(catalog, interpretation, matches),
   };
 }

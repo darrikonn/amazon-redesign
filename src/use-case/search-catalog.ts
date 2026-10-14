@@ -22,14 +22,17 @@ export type SearchOutcome = {
   emptyMessage: string | null;
   closestMatchesHeading: string | null;
   listings: readonly ProductListing[];
-  navigation: NavigationView | null;
+  navigation: NavigationView;
 };
 
 export type NavigationView = {
-  heading: NavigationLinkView | null;
-  headingLabel: string;
-  links: readonly NavigationLinkView[];
-  related: readonly NavigationLinkView[];
+  departments: readonly NavigationDepartmentView[];
+};
+
+export type NavigationDepartmentView = {
+  link: NavigationLinkView;
+  containsResults: boolean;
+  groups: readonly NavigationLinkView[];
 };
 
 export type NavigationLinkView = {
@@ -37,7 +40,6 @@ export type NavigationLinkView = {
   productCount: number;
   text: string;
   isCurrent: boolean;
-  narrowsSearch: boolean;
 };
 
 export type UnderstoodTermView = {

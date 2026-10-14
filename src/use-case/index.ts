@@ -1,5 +1,6 @@
 export type { CartSummary } from "./cart-summary";
 export {
+  type NavigationDepartmentView,
   type NavigationLinkView,
   type NavigationView,
   type ProductListing,

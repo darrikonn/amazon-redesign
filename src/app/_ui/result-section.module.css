@@ -1,26 +1,11 @@
-.results,
-.resultsWithNavigation {
+.results {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: 20px 40px;
   width: 100%;
   max-width: var(--content-width);
   margin-top: 40px;
   animation: appear var(--duration-layout) ease both;
-}
-
-.resultsWithNavigation {
-  grid-template-columns: 240px minmax(0, 1fr);
-}
-
-.results > *,
-.resultsWithNavigation > * {
-  transition: opacity var(--duration-quick) ease;
-}
-
-.results[data-updating="true"] > *,
-.resultsWithNavigation[data-updating="true"] > * {
-  opacity: 0.55;
 }
 
 .sidebar {
@@ -33,14 +18,18 @@
 
 .main {
   display: flex;
+  grid-row: 1;
+  grid-column: 2;
   flex-direction: column;
   gap: 20px;
   min-width: 0;
+  transition: opacity var(--duration-quick) ease;
 }
 
-.resultsWithNavigation .main {
-  grid-row: 1;
-  grid-column: 2;
+/* Only the results dim while a newer search is pending; the department panel goes
+   somewhere fixed, so it stays fully usable. */
+.results[data-updating="true"] .main {
+  opacity: 0.55;
 }
 
 @keyframes appear {
@@ -148,27 +137,22 @@
 }
 
 @media (max-width: 1100px) {
-  .resultsWithNavigation {
+  .results {
     grid-template-columns: 200px minmax(0, 1fr);
     gap: 20px 28px;
   }
 }
 
 @media (max-width: 760px) {
-  .results,
-  .resultsWithNavigation {
+  .results {
     grid-template-columns: minmax(0, 1fr);
     margin-top: 32px;
   }
 
   /* On a phone the browse panel follows the results, as it does in the DOM. */
-  .sidebar {
+  .sidebar,
+  .main {
     position: static;
-    grid-row: auto;
-    grid-column: auto;
-  }
-
-  .resultsWithNavigation .main {
     grid-row: auto;
     grid-column: auto;
   }

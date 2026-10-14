@@ -225,40 +225,39 @@ describe("SearchCatalog", () => {
     expect(outcome.assistantSuggestion).toBeNull();
   });
 
-  it("offers a browse panel for the department next to successful results", async () => {
+  it("offers the department directory with the results' department marked and opened", async () => {
     const outcome = await container.searchCatalog.execute({
       text: "luxury watches that arrive this week",
       sort: "best-match",
     });
+    const watches = outcome.navigation.departments.find((department) => department.containsResults);
 
-    expect(outcome.navigation?.heading).toEqual({
+    expect(outcome.navigation.departments).toHaveLength(21);
+    expect(watches?.link).toEqual({
       label: "Watches",
       productCount: 12,
       text: "watches",
       isCurrent: false,
-      narrowsSearch: false,
     });
-    expect(outcome.navigation?.links[0]).toEqual({
+    expect(watches?.groups[0]).toEqual({
       label: "Luxury",
       productCount: 9,
       text: "luxury watches",
       isCurrent: false,
-      narrowsSearch: false,
     });
-    expect(outcome.navigation?.related.map((link) => link.label)).toEqual([
-      "Jewellery",
-      "Sunglasses",
-      "Bags",
-    ]);
   });
 
-  it("offers no browse panel when nothing matched", async () => {
+  it("keeps the department directory when nothing matched", async () => {
     const outcome = await container.searchCatalog.execute({
       text: "red laptop under $1500",
       sort: "best-match",
     });
+    const marked = outcome.navigation.departments.filter(
+      (department) => department.containsResults,
+    );
 
-    expect(outcome.navigation).toBeNull();
+    expect(outcome.navigation.departments).toHaveLength(21);
+    expect(marked.map((department) => department.link.label)).toEqual(["Laptops"]);
   });
 
   it("returns an empty outcome for an empty query", async () => {
