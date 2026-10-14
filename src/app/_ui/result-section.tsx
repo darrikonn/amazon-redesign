@@ -10,15 +10,19 @@ type ResultSectionProps = {
   isUpdating: boolean;
   cartProductIds: readonly ProductId[];
   onSearch: (text: string) => void;
+  onBrowse: (text: string) => void;
   onPickSort: (sort: SearchSort, text: string) => void;
   onToggleCart: (productId: ProductId) => void;
 };
+
+export const RESULTS_HEADLINE_ID = "results-headline";
 
 export function ResultSection({
   outcome,
   isUpdating,
   cartProductIds,
   onSearch,
+  onBrowse,
   onPickSort,
   onToggleCart,
 }: ResultSectionProps) {
@@ -29,14 +33,9 @@ export function ResultSection({
       data-updating={isUpdating}
       aria-busy={isUpdating}
     >
-      {outcome.navigation !== null && (
-        <div className={styles.sidebar}>
-          <BrowseNavigation navigation={outcome.navigation} onSearch={onSearch} />
-        </div>
-      )}
       <div className={styles.main}>
         <div className={styles.heading}>
-          <h2 className={styles.headline} aria-live="polite">
+          <h2 id={RESULTS_HEADLINE_ID} className={styles.headline} aria-live="polite" tabIndex={-1}>
             {outcome.headline}
           </h2>
           {outcome.resultCount > 0 && (
@@ -61,6 +60,17 @@ export function ResultSection({
           </ul>
         )}
       </div>
+      {/* After the results in the DOM, so keyboard and screen reader order puts products
+          first; on desktop the grid draws the panel in the left column. */}
+      {outcome.navigation !== null && (
+        <div className={styles.sidebar}>
+          <BrowseNavigation
+            navigation={outcome.navigation}
+            onBrowse={onBrowse}
+            onNarrow={onSearch}
+          />
+        </div>
+      )}
     </section>
   );
 }

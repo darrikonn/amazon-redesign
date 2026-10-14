@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { type Container, createContainer } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
 import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { Collapsible } from "./collapsible";
-import { ResultSection } from "./result-section";
+import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
 import { ShortcutList } from "./shortcut-list";
@@ -39,9 +39,9 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
   const isShowingResults = outcome.hasQuery;
-  // Chips, suggestions, and sort options belong to the last search. Until the newer typed
-  // text has been searched they would throw that text away, so picking one then searches
-  // the typed text instead.
+  // Chips, suggestions, sort options, relaxations, and narrowing browse links belong to the
+  // last search. Until the newer typed text has been searched they would throw that text
+  // away, so picking one then searches the typed text instead.
   const isUpdating = search.text !== outcome.text;
 
   useEffect(() => {
@@ -50,10 +50,21 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
 
   const { apply, text } = search;
 
-  const pick = useCallback(
-    (nextText: string) => apply(isUpdating ? text : nextText),
-    [apply, isUpdating, text],
+  const chosenTextRef = useRef<string | null>(null);
+  const choose = useCallback(
+    (nextText: string) => {
+      chosenTextRef.current = nextText;
+      apply(nextText);
+    },
+    [apply],
   );
+
+  const pick = useCallback(
+    (nextText: string) => choose(isUpdating ? text : nextText),
+    [choose, isUpdating, text],
+  );
+
+  useFocusRecovery(chosenTextRef, isShowingResults, outcome, inputRef);
 
   const pickSort = useCallback(
     (nextSort: SearchSort, nextText: string) => {
@@ -77,7 +88,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
           shopper={storefront.shopper}
           departments={storefront.departments}
           cartCount={cart.itemCount}
-          onSearch={apply}
+          onSearch={choose}
         />
         <main className={isShowingResults ? styles.mainWithResults : styles.mainEmpty}>
           <Collapsible isOpen={!isShowingResults}>
@@ -93,11 +104,11 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
             onType={search.type}
             onApply={apply}
             onPick={pick}
-            onTryExample={() => apply(demo.example)}
+            onTryExample={() => choose(demo.example)}
           />
           <Collapsible isOpen={!isShowingResults}>
             <div className={styles.home}>
-              <StarterQueryList queries={storefront.starterQueries} onPick={apply} />
+              <StarterQueryList queries={storefront.starterQueries} onPick={choose} />
               <ShortcutList />
             </div>
           </Collapsible>
@@ -108,6 +119,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
                 isUpdating={isUpdating}
                 cartProductIds={cart.productIds}
                 onSearch={pick}
+                onBrowse={choose}
                 onPickSort={pickSort}
                 onToggleCart={toggleCart}
               />
@@ -120,7 +132,6 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   );
 }
 
-// Only the newest search may update the screen, so a slow early one never wins.
 type SearchOutcomes = {
   outcome: SearchOutcome;
   lastResults: SearchOutcome | null;
@@ -143,6 +154,7 @@ function useSearchOutcome(
     const request = latestRequest.current;
     window.history.replaceState(null, "", searchUrl({ text, sort }));
     container.searchCatalog.execute({ text, sort }).then((next) => {
+      // Only the newest search may update the screen, so a slow early one never wins.
       if (request !== latestRequest.current) return;
       setOutcome(next);
       if (next.hasQuery) setLastResults(next);
@@ -150,6 +162,27 @@ function useSearchOutcome(
   }, [container, text, sort]);
 
   return { outcome, lastResults };
+}
+
+// Choosing something can fold away the very control that was used (a starter query, the
+// last chip, the example arrow), which would leave keyboard focus nowhere. Focus then moves
+// to the results headline, or back to the input on the way home.
+function useFocusRecovery(
+  chosenTextRef: RefObject<string | null>,
+  isShowingResults: boolean,
+  outcome: SearchOutcome,
+  inputRef: RefObject<HTMLTextAreaElement | null>,
+) {
+  useEffect(() => {
+    if (chosenTextRef.current === null || outcome.text !== chosenTextRef.current) return;
+    chosenTextRef.current = null;
+    const active = document.activeElement;
+    if (active !== null && active !== document.body && active.closest("[inert]") === null) return;
+    const target = isShowingResults
+      ? document.getElementById(RESULTS_HEADLINE_ID)
+      : inputRef.current;
+    target?.focus({ preventScroll: true });
+  }, [chosenTextRef, isShowingResults, outcome.text, inputRef]);
 }
 
 const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };

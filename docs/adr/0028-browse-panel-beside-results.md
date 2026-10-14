@@ -15,8 +15,9 @@ A shopper who finds what they searched for has nowhere obvious to go next. Large
 - When the results span several departments, the panel splits them by department, with each count taken from the current results; a link narrows the current search to that department.
 - Department and sub-group entries browse the department as a whole, like a store directory: a sub-group link searches "<tag> <department>" and does not keep the shopper's other filters. Narrowing the current search is the job of the "Add a detail" chips.
 - An entry is marked current only when the search is exactly that entry; a narrower search marks nothing. The department heading is always shown in bold and underlined, because it names the department the results belong to.
-- Each entry is a real link to its search (`/?q=...`), so it opens in a new tab, but a plain click searches in place without a reload.
-- On desktop the panel sits in a 240 px column left of the results (200 px below 1100 px wide) and stays in view while scrolling. On a phone it follows the results, so products come first.
+- Each entry is a real link to its search (`/?q=...`), so it opens in a new tab, but a plain click searches in place without a reload and scrolls back to the top, so the new results start in view.
+- Department, sub-group, and related links go somewhere fixed, so they work even while a newer typed search is pending. Department-split links add to the current search (`narrowsSearch`), so like the chips they search the typed text instead while a search is pending (ADR 0027).
+- The panel comes after the results in the DOM, so keyboard and screen reader order reaches the products first. On desktop the grid draws it in a 240 px column left of the results (200 px below 1100 px wide), where it stays in view while scrolling. On a phone it follows the results.
 - Limits (`NAVIGATION_RULES`): at most 8 sub-groups, 8 departments, and 4 related departments.
 
 ## Consequences

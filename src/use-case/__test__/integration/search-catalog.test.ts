@@ -236,12 +236,14 @@ describe("SearchCatalog", () => {
       productCount: 12,
       text: "watches",
       isCurrent: false,
+      narrowsSearch: false,
     });
     expect(outcome.navigation?.links[0]).toEqual({
       label: "Luxury",
       productCount: 9,
       text: "luxury watches",
       isCurrent: false,
+      narrowsSearch: false,
     });
     expect(outcome.navigation?.related.map((link) => link.label)).toEqual([
       "Jewellery",

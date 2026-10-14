@@ -37,6 +37,7 @@ export type NavigationLinkView = {
   productCount: number;
   text: string;
   isCurrent: boolean;
+  narrowsSearch: boolean;
 };
 
 export type UnderstoodTermView = {

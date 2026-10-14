@@ -36,14 +36,46 @@ function navigationFor(text: string, products: readonly Product[] = catalog) {
 describe("buildBrowseNavigation", () => {
   it("shows the department, its sub-groups across the catalogue, and related departments", () => {
     expect(navigationFor("luxury watches")).toEqual({
-      heading: { label: "Watches", productCount: 3, text: "watches", isCurrent: false },
+      heading: {
+        label: "Watches",
+        productCount: 3,
+        text: "watches",
+        isCurrent: false,
+        narrowsSearch: false,
+      },
       headingLabel: "Watches",
       links: [
-        { label: "Luxury", productCount: 2, text: "luxury watches", isCurrent: true },
-        { label: "Elegant", productCount: 1, text: "elegant watches", isCurrent: false },
-        { label: "Leather", productCount: 1, text: "leather watches", isCurrent: false },
+        {
+          label: "Luxury",
+          productCount: 2,
+          text: "luxury watches",
+          isCurrent: true,
+          narrowsSearch: false,
+        },
+        {
+          label: "Elegant",
+          productCount: 1,
+          text: "elegant watches",
+          isCurrent: false,
+          narrowsSearch: false,
+        },
+        {
+          label: "Leather",
+          productCount: 1,
+          text: "leather watches",
+          isCurrent: false,
+          narrowsSearch: false,
+        },
       ],
-      related: [{ label: "Jewellery", productCount: 1, text: "jewellery", isCurrent: false }],
+      related: [
+        {
+          label: "Jewellery",
+          productCount: 1,
+          text: "jewellery",
+          isCurrent: false,
+          narrowsSearch: false,
+        },
+      ],
     });
   });
 
@@ -67,8 +99,20 @@ describe("buildBrowseNavigation", () => {
       heading: null,
       headingLabel: "Results by department",
       links: [
-        { label: "Watches", productCount: 2, text: "luxury watches", isCurrent: false },
-        { label: "Laptops", productCount: 1, text: "luxury laptops", isCurrent: false },
+        {
+          label: "Watches",
+          productCount: 2,
+          text: "luxury watches",
+          isCurrent: false,
+          narrowsSearch: true,
+        },
+        {
+          label: "Laptops",
+          productCount: 1,
+          text: "luxury laptops",
+          isCurrent: false,
+          narrowsSearch: true,
+        },
       ],
       related: [],
     });

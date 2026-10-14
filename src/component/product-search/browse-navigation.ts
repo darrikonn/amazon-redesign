@@ -19,6 +19,9 @@ export type NavigationLink = {
   productCount: number;
   text: string;
   isCurrent: boolean;
+  // True when the link adds to the current search instead of going somewhere fixed, so it
+  // is only valid for the search it was built from.
+  narrowsSearch: boolean;
 };
 
 export type BrowseNavigation = {
@@ -57,6 +60,7 @@ function departmentsNavigation(text: string, matches: readonly Product[]): Brows
       productCount,
       text: appendPhrase(text, CATEGORY_MAP[category].plural),
       isCurrent: false,
+      narrowsSearch: true,
     }));
   return { heading: null, headingLabel: "Results by department", links, related: [] };
 }
@@ -85,6 +89,7 @@ function categoryNavigation(
       productCount: inCategory.length,
       text: plural,
       isCurrent: isExactly(interpretation, category, null),
+      narrowsSearch: false,
     },
     headingLabel: departmentLabel(category),
     links: tagLinks(inCategory, interpretation, category),
@@ -115,6 +120,7 @@ function tagLinks(
       productCount,
       text: `${tagPhrase(tag)} ${plural}`,
       isCurrent: isExactly(interpretation, category, tag),
+      narrowsSearch: false,
     }));
 }
 
@@ -125,6 +131,7 @@ function relatedLinks(catalog: readonly Product[], category: CategoryId): Naviga
       productCount: catalog.filter((product) => product.category === related).length,
       text: CATEGORY_MAP[related].plural,
       isCurrent: false,
+      narrowsSearch: false,
     }))
     .filter((link) => link.productCount > 0)
     .slice(0, NAVIGATION_RULES.maximumRelatedLinks);

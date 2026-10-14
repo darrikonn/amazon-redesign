@@ -24,9 +24,11 @@
 }
 
 .sidebar {
-  align-self: start;
   position: sticky;
   top: 16px;
+  grid-row: 1;
+  grid-column: 1;
+  align-self: start;
 }
 
 .main {
@@ -34,6 +36,11 @@
   flex-direction: column;
   gap: 20px;
   min-width: 0;
+}
+
+.resultsWithNavigation .main {
+  grid-row: 1;
+  grid-column: 2;
 }
 
 @keyframes appear {
@@ -52,6 +59,7 @@
 }
 
 .headline {
+  outline: none;
   flex: 1 1 320px;
   font-size: 28px;
   font-weight: 800;
@@ -153,10 +161,16 @@
     margin-top: 32px;
   }
 
-  /* On a phone the browse panel follows the results, so products come first. */
+  /* On a phone the browse panel follows the results, as it does in the DOM. */
   .sidebar {
     position: static;
-    order: 1;
+    grid-row: auto;
+    grid-column: auto;
+  }
+
+  .resultsWithNavigation .main {
+    grid-row: auto;
+    grid-column: auto;
   }
 
   .headline {
