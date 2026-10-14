@@ -28,10 +28,15 @@ The products come from [DummyJSON](https://dummyjson.com/docs/products), a free 
 - **Fetched once, then committed.** `yarn catalog:build` fetches the source a single time and saves the response verbatim to `src/infrastructure/product/data/raw/dummyjson.json`. It then writes the app's catalogue to `src/infrastructure/product/data/catalog.json` and the search vocabulary to `src/component/catalog-vocabulary/vocabulary.json`. All three files are committed, and the app never calls the API at runtime. `yarn catalog:build --from-raw` rebuilds from the committed response with no network call, and rebuilding is byte-for-byte reproducible.
 - **Re-tagged by rules.** Shopper-facing category groups, feature tags, colours, and delivery estimates are derived by the pure rules in `src/component/catalog-enrichment/enrich.ts`. They use the dictionaries in `src/component/catalog-vocabulary/` (`category-map.ts`, `tag-rules.ts`, `color-word.ts`). Where the rules get an item wrong, `src/component/catalog-enrichment/override.json` corrects it, with a reason for each entry. Tags that fewer than two products share are dropped, so a suggestion never leads to a dead end.
 - **Ratings and review counts are the source's own.** Ratings are rounded to one decimal. DummyJSON ships exactly three sample reviews per product, so cards hide the review count rather than show a number that means nothing. No counts are invented.
+- **Product details are a separate file.** The build also writes `src/infrastructure/product/data/product-details.json`: each product's description, photos, stock, shipping, warranty, and return policy, and its three sample reviews (reviewer name, rating, comment, and date; reviewer email addresses are dropped). The browser loads it only when a product is first opened, so search never downloads it. ADR 0029 records the decision.
 - **Images are the source's placeholders.** They are DummyJSON's thumbnails, loaded from its CDN through `next/image`. When an image is missing or fails to load, the card shows a drawn category glyph instead.
 - **Delivery estimates are derived.** They come from DummyJSON's shipping text ("Ships overnight" means tomorrow, "Ships in 1 week" means 7 days, and so on).
 
 None of this is real retail data: the products, prices, ratings, stock, and images are DummyJSON's sample data.
+
+## Product details
+
+Clicking a product opens it in a modal over the results, laid out like Instagram's post view: a photo carousel on the left (swipe, arrows, arrow keys, or dots) and the details on the right, with the description, availability, shipping, warranty, returns, and the ratings and reviews. The price and the cart button stay in view at the bottom. The open product is in the address (`?product=...`), so it can be shared, and Back closes it. On a phone it fills the screen, photos first.
 
 ## Search assistant
 
