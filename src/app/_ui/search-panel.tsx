@@ -10,6 +10,7 @@ import { Collapsible } from "./collapsible";
 import { resultCountLabel } from "./format";
 import { Icon } from "./icon";
 import styles from "./search-panel.module.css";
+import { useRetained } from "./use-retained";
 
 type SearchPanelProps = {
   inputRef: RefObject<HTMLTextAreaElement | null>;
@@ -89,9 +90,7 @@ export function SearchPanel({
         {results !== null && (
           <div className={isUpdating ? styles.rowsUpdating : styles.rows} aria-busy={isUpdating}>
             <UnderstoodRow outcome={results} onPick={onPick} />
-            {results.assistantSuggestion !== null && (
-              <AssistantRow suggestion={results.assistantSuggestion} onPick={onPick} />
-            )}
+            <AssistantRow suggestion={results.assistantSuggestion} onPick={onPick} />
             <RefinementRow outcome={results} onPick={onPick} />
           </div>
         )}
@@ -162,34 +161,55 @@ type RowProps = {
 };
 
 type AssistantRowProps = {
-  suggestion: SuggestionView;
+  suggestion: SuggestionView | null;
   onPick: (text: string) => void;
 };
 
+// The assistant and refinement rows come and go between searches; they fold rather than
+// pop, so the results below them slide instead of jumping.
 function AssistantRow({ suggestion, onPick }: AssistantRowProps) {
+  const shown = useRetained(suggestion);
   return (
-    <div className={styles.assistantRow}>
-      <span className={styles.rowLabel}>Assistant</span>
-      <button
-        type="button"
-        className={styles.assistantSuggestion}
-        onClick={() => onPick(suggestion.text)}
-      >
-        <Icon name="sparkle" size={16} strokeWidth={2.2} className={styles.assistantIcon} />
-        {suggestion.label}
-        <span className={styles.refinementCount}>{resultCountLabel(suggestion.resultCount)}</span>
-      </button>
-    </div>
+    <Collapsible isOpen={suggestion !== null}>
+      {shown !== null && (
+        <div className={styles.assistantRow}>
+          <span className={styles.rowLabel}>Assistant</span>
+          <button
+            type="button"
+            className={styles.assistantSuggestion}
+            onClick={() => onPick(shown.text)}
+          >
+            <Icon name="sparkle" size={16} strokeWidth={2.2} className={styles.assistantIcon} />
+            {shown.label}
+            <span className={styles.refinementCount}>{resultCountLabel(shown.resultCount)}</span>
+          </button>
+        </div>
+      )}
+    </Collapsible>
   );
 }
 
 function RefinementRow({ outcome, onPick }: RowProps) {
-  if (outcome.refinements.length === 0) return null;
+  const hasRefinements = outcome.refinements.length > 0;
+  const refinements = useRetained(hasRefinements ? outcome.refinements : null);
+  return (
+    <Collapsible isOpen={hasRefinements}>
+      {refinements !== null && <RefinementChips refinements={refinements} onPick={onPick} />}
+    </Collapsible>
+  );
+}
+
+type RefinementChipsProps = {
+  refinements: readonly SuggestionView[];
+  onPick: (text: string) => void;
+};
+
+function RefinementChips({ refinements, onPick }: RefinementChipsProps) {
   return (
     <div className={styles.refinementRow}>
       <span className={styles.refinementLabel}>Add a detail</span>
       <div className={styles.refinementScroller}>
-        {outcome.refinements.map((refinement) => (
+        {refinements.map((refinement) => (
           <button
             type="button"
             key={refinement.label}

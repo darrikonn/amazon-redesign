@@ -125,6 +125,7 @@
 .understoodRow,
 .refinementRow {
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
@@ -180,6 +181,7 @@
 
 .assistantRow {
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
