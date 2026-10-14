@@ -97,7 +97,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
             text={text}
             results={lastResults}
             isShowingResults={isShowingResults}
-            isUpdating={isUpdating}
+            isUpdating={keepsTypedText}
             placeholder={demo.placeholder}
             onType={type}
             onApply={apply}

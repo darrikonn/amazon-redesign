@@ -5,36 +5,38 @@ import type { NavigationDepartmentView, NavigationLinkView, NavigationView } fro
 import styles from "./browse-navigation.module.css";
 import { Collapsible } from "./collapsible";
 import { Icon } from "./icon";
-import { scrollToTop } from "./motion";
 import { searchUrl } from "./search-url";
 
 type BrowseNavigationProps = {
   navigation: NavigationView;
   sort: SearchSort;
-  onBrowse: (text: string) => void;
+  onBrowse: (text: string, anchor: HTMLElement) => void;
 };
 
-// The department holding the results opens by itself; any department can be opened or
-// closed by hand, and that choice is kept while the shopper clicks through the panel.
+// Departments open, and nothing closes by itself: the department the results move into
+// opens, and the one they left stays open, so an entry never slides away from the
+// pointer. Only the shopper's own toggle closes a department.
 export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigationProps) {
-  const [openedByHand, setOpenedByHand] = useState<ReadonlyMap<string, boolean>>(new Map());
+  const markedText =
+    navigation.departments.find((department) => department.containsResults)?.link.text ?? null;
+  const [openState, setOpenState] = useState<ReadonlyMap<string, boolean>>(new Map());
+  const [lastMarkedText, setLastMarkedText] = useState(markedText);
+  if (markedText !== lastMarkedText) {
+    setLastMarkedText(markedText);
+    setOpenState((current) => withOpen(current, [lastMarkedText, markedText]));
+  }
 
   function isOpen(department: NavigationDepartmentView): boolean {
-    return openedByHand.get(department.link.text) ?? department.containsResults;
+    return openState.get(department.link.text) ?? department.containsResults;
   }
 
   function toggle(department: NavigationDepartmentView) {
     const next = !isOpen(department);
-    setOpenedByHand((current) => new Map(current).set(department.link.text, next));
-  }
-
-  function browse(link: NavigationLinkView) {
-    onBrowse(link.text);
-    scrollToTop();
+    setOpenState((current) => new Map(current).set(department.link.text, next));
   }
 
   return (
-    <nav aria-label="Departments" className={styles.navigation}>
+    <nav aria-label="Shop by department" className={styles.navigation}>
       <h2 className={styles.sectionHeading}>Departments</h2>
       <ul className={styles.departments}>
         {navigation.departments.map((department) => (
@@ -44,7 +46,7 @@ export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigatio
             sort={sort}
             isOpen={isOpen(department)}
             onToggle={() => toggle(department)}
-            onBrowse={browse}
+            onBrowse={onBrowse}
           />
         ))}
       </ul>
@@ -52,12 +54,21 @@ export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigatio
   );
 }
 
+function withOpen(
+  openState: ReadonlyMap<string, boolean>,
+  departmentTexts: readonly (string | null)[],
+): ReadonlyMap<string, boolean> {
+  const next = new Map(openState);
+  for (const text of departmentTexts) if (text !== null) next.set(text, true);
+  return next;
+}
+
 type DepartmentItemProps = {
   department: NavigationDepartmentView;
   sort: SearchSort;
   isOpen: boolean;
   onToggle: () => void;
-  onBrowse: (link: NavigationLinkView) => void;
+  onBrowse: (text: string, anchor: HTMLElement) => void;
 };
 
 function DepartmentItem({ department, sort, isOpen, onToggle, onBrowse }: DepartmentItemProps) {
@@ -79,7 +90,7 @@ function DepartmentItem({ department, sort, isOpen, onToggle, onBrowse }: Depart
             className={isOpen ? styles.toggleOpen : styles.toggle}
             aria-expanded={isOpen}
             aria-controls={groupsId}
-            aria-label={`${link.label} sub-groups`}
+            aria-label={`${link.label} categories`}
             onClick={onToggle}
           >
             <Icon name="chevron-right" size={16} strokeWidth={2.6} />
@@ -112,7 +123,7 @@ type BrowseLinkProps = {
   sort: SearchSort;
   className: string | undefined;
   isResultDepartment: boolean;
-  onBrowse: (link: NavigationLinkView) => void;
+  onBrowse: (text: string, anchor: HTMLElement) => void;
 };
 
 // A real link, so it can open in a new tab, but a plain click searches in place instead
@@ -122,7 +133,7 @@ function BrowseLink({ link, sort, className, isResultDepartment, onBrowse }: Bro
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
       return;
     event.preventDefault();
-    onBrowse(link);
+    onBrowse(link.text, event.currentTarget);
   }
 
   return (

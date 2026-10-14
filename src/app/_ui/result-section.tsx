@@ -1,7 +1,9 @@
+import { useRef } from "react";
 import type { ProductId, SearchSort } from "@/core";
 import type { SearchOutcome, SortOptionView } from "@/use-case";
 import { BrowseNavigation } from "./browse-navigation";
 import { resultCountLabel } from "./format";
+import { scrollToTop } from "./motion";
 import { ProductCard } from "./product-card";
 import styles from "./result-section.module.css";
 
@@ -26,6 +28,13 @@ export function ResultSection({
   onPickSort,
   onToggleCart,
 }: ResultSectionProps) {
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  function browse(text: string, anchor: HTMLElement) {
+    onBrowse(text);
+    if (shouldReturnToTop(mainRef.current, anchor)) scrollToTop();
+  }
+
   return (
     <section
       aria-label="Results"
@@ -33,7 +42,7 @@ export function ResultSection({
       data-updating={isUpdating}
       aria-busy={isUpdating}
     >
-      <div className={styles.main}>
+      <div ref={mainRef} className={styles.main}>
         <div className={styles.heading}>
           <h2 id={RESULTS_HEADLINE_ID} className={styles.headline} aria-live="polite" tabIndex={-1}>
             {outcome.headline}
@@ -66,11 +75,20 @@ export function ResultSection({
         <BrowseNavigation
           navigation={outcome.navigation}
           sort={outcome.requestedSort}
-          onBrowse={onBrowse}
+          onBrowse={browse}
         />
       </div>
     </section>
   );
+}
+
+// On a phone the panel follows the results, so the new results are above it and the page
+// goes back to the top. Beside the results, it goes to the top only when the clicked entry
+// stays in view there, so the entry never jumps away from the pointer.
+function shouldReturnToTop(main: HTMLElement | null, anchor: HTMLElement): boolean {
+  const anchorBox = anchor.getBoundingClientRect();
+  const isBelowResults = main !== null && anchorBox.top > main.getBoundingClientRect().bottom;
+  return isBelowResults || anchorBox.bottom + window.scrollY <= window.innerHeight;
 }
 
 function SortControl({
