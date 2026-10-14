@@ -104,7 +104,7 @@ describe.each(implementations)("%s", (_, create) => {
 describe("StoredOrderRepository", () => {
   it("reads stored orders that no longer parse as none", async () => {
     const storage = new InMemoryKeyValueStorage();
-    storage.seedValue("shop:v1:orders:robin", [{ ...first, returns: [{ reason: "bored" }] }]);
+    storage.seedValue("shop:v2:orders:robin", [{ ...first, returns: [{ reason: "bored" }] }]);
 
     expect(await new StoredOrderRepository(storage, new FixedClock()).listByOwner("robin")).toEqual(
       [],

@@ -36,9 +36,27 @@ export class StoredCollection<Item extends Owned> {
     this.storage.write(this.keyFor(ownerId), items);
   }
 
+  // Saving over a record keeps its place in the list, so a changed line does not move.
+  upsert(
+    item: Item,
+    isSame: (stored: Item) => boolean,
+    stamp: (existing: Item | undefined) => Item,
+  ): void {
+    const stored = this.list(item.ownerId);
+    const existing = stored.find(isSame);
+    const saved = stamp(existing);
+    const next =
+      existing === undefined
+        ? [...stored, saved]
+        : stored.map((candidate) => (candidate === existing ? saved : candidate));
+    this.replace(item.ownerId, next);
+  }
+
   private keyFor(ownerId: ShopperId): string {
     return `${KEY_PREFIX}:${this.name}:${ownerId}`;
   }
 }
 
-const KEY_PREFIX = "shop:v1";
+// Version 2 added created and modified to every record (ADR 0030). Version 1 rows are left
+// where they are and never read, rather than read as empty and overwritten.
+const KEY_PREFIX = "shop:v2";

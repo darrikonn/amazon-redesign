@@ -36,16 +36,12 @@ export class StoredCartLineRepository implements CartLineRepository {
     return this.lines.list(ownerId);
   }
 
-  // Saving over a record keeps its place, so a changed line does not move in the list.
   async save(line: CartLine): Promise<void> {
-    const stored = this.lines.list(line.ownerId);
-    const existing = stored.find((candidate) => candidate.productId === line.productId);
-    const saved = stampModified(line, existing, this.clock.now());
-    const next =
-      existing === undefined
-        ? [...stored, saved]
-        : stored.map((candidate) => (candidate === existing ? saved : candidate));
-    this.lines.replace(line.ownerId, next);
+    this.lines.upsert(
+      line,
+      (stored) => stored.productId === line.productId,
+      (existing) => stampModified(line, existing, this.clock.now()),
+    );
   }
 
   async remove(ownerId: ShopperId, productId: ProductId): Promise<void> {

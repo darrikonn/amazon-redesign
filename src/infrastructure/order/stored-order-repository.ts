@@ -36,16 +36,12 @@ export class StoredOrderRepository implements OrderRepository {
     return this.orders.list(ownerId);
   }
 
-  // Saving over a record keeps its place, so a changed line does not move in the list.
   async save(order: Order): Promise<void> {
-    const stored = this.orders.list(order.ownerId);
-    const existing = stored.find((candidate) => candidate.id === order.id);
-    const saved = stampModified(order, existing, this.clock.now());
-    const next =
-      existing === undefined
-        ? [...stored, saved]
-        : stored.map((candidate) => (candidate === existing ? saved : candidate));
-    this.orders.replace(order.ownerId, next);
+    this.orders.upsert(
+      order,
+      (stored) => stored.id === order.id,
+      (existing) => stampModified(order, existing, this.clock.now()),
+    );
   }
 
   private find(ownerId: ShopperId, orderId: OrderId): Order | undefined {

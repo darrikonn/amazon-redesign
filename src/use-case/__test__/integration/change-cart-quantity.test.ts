@@ -12,7 +12,14 @@ beforeEach(() => {
   ({ container, fakes } = createTestContainer());
   fakes.sessions.seedSession(aSession());
   fakes.products.seedProduct(aProduct({ id: "lamp", priceInCents: 2_000 }));
-  fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
+  fakes.cartLines.seedLine(
+    aCartLine({
+      ownerId: SHOPPER_ID,
+      productId: "lamp",
+      quantity: 1,
+      created: "2026-10-01T00:00:00.000Z",
+    }),
+  );
 });
 
 describe("ChangeCartQuantity", () => {
@@ -25,6 +32,7 @@ describe("ChangeCartQuantity", () => {
         ownerId: SHOPPER_ID,
         productId: "lamp",
         quantity: 3,
+        created: "2026-10-01T00:00:00.000Z",
         modified: "2026-10-14T12:00:00.000Z",
       }),
     ]);
@@ -38,6 +46,12 @@ describe("ChangeCartQuantity", () => {
 
     expect(held).toBe(CART_RULES.maximumQuantity);
     expect(emptied).toMatchObject({ itemCount: 0, lines: [] });
+  });
+
+  it("leaves the line untouched when the quantity does not change", async () => {
+    await container.changeCartQuantity.execute({ productId: "lamp", quantity: 1 });
+
+    expect(fakes.cartLines.storedLines()[0]?.modified).toBeNull();
   });
 
   it("rejects a product that does not exist", async () => {

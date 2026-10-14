@@ -1,3 +1,4 @@
+import { newCartLine } from "@/component";
 import type { CartLineRepository, Clock, ProductId, ProductRepository, SessionStore } from "@/core";
 import { type CartSummary, summarizeCart } from "./cart-summary";
 import { cartOwnerOf, currentShopper } from "./session-shopper";
@@ -20,13 +21,7 @@ export class ToggleCartItem {
     const product = await this.products.demand(request.productId);
     const existing = await this.cartLines.get(ownerId, product.id);
     if (existing === null) {
-      await this.cartLines.save({
-        ownerId,
-        productId: product.id,
-        quantity: 1,
-        created: this.clock.now().toISOString(),
-        modified: null,
-      });
+      await this.cartLines.save(newCartLine(ownerId, product.id, 1, this.clock.now()));
     } else {
       await this.cartLines.remove(ownerId, product.id);
     }

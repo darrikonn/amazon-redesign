@@ -5,6 +5,7 @@ import {
   mergeIntoCart,
   newOrder,
   normaliseEmail,
+  normalisePostalCode,
   orderIdFor,
   pickSamplePurchases,
   type SamplePurchase,
@@ -48,7 +49,9 @@ export class SignIn {
     const previous = await this.sessions.current();
     const session = {
       email,
-      deliveryPostalCode: previous?.deliveryPostalCode ?? DEFAULT_POSTAL_CODE,
+      // A cookie the browser handed back may hold anything; only a real ZIP code is kept.
+      deliveryPostalCode:
+        normalisePostalCode(previous?.deliveryPostalCode ?? "") ?? DEFAULT_POSTAL_CODE,
     };
     await this.sessions.save(session);
     const shopper = shopperFromSession(session);

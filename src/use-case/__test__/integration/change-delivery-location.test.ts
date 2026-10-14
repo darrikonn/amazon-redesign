@@ -32,4 +32,12 @@ describe("ChangeDeliveryLocation", () => {
     expect(invalid).toEqual({ status: "invalid-postal-code" });
     expect(fakes.sessions.storedSession()?.deliveryPostalCode).toBe("55401");
   });
+
+  it("treats a session SignIn could not have made as signed out", async () => {
+    fakes.sessions.seedSession(aSession({ email: "not-an-email" }));
+
+    expect(await container.changeDeliveryLocation.execute({ postalCode: "98101" })).toEqual({
+      status: "signed-out",
+    });
+  });
 });

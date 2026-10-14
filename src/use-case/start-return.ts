@@ -42,7 +42,7 @@ export class StartReturn {
       returns: [...order.returns, { productIds, reason, requestedAt: now.toISOString() }],
     };
     await this.orders.save(updated);
-    const saved = (await this.orders.get(shopper.id, updated.id)) ?? updated;
+    const saved = await this.orders.demand(shopper.id, updated.id);
     return {
       status: "started",
       order: toOrderView(saved, now, await photosFor(this.products, [saved])),

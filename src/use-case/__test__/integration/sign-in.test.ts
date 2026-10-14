@@ -54,11 +54,24 @@ describe("SignIn", () => {
     });
   });
 
+  it("starts from the default ZIP code when the old session's is not a real one", async () => {
+    fakes.sessions.seedSession(aSession({ deliveryPostalCode: "abc" }));
+
+    const result = await container.signIn.execute({ email: "darri.konn@gmail.com" });
+
+    expect(result).toMatchObject({ shopper: { deliveryPostalCode: "55401" } });
+  });
+
   it("moves the guest's cart into the shopper's, adding up shared products", async () => {
     // Arrange
     fakes.cartLines.seedLine(aCartLine({ ownerId: "guest", productId: "product-1", quantity: 2 }));
     fakes.cartLines.seedLine(
-      aCartLine({ ownerId: SHOPPER_ID, productId: "product-1", quantity: 1 }),
+      aCartLine({
+        ownerId: SHOPPER_ID,
+        productId: "product-1",
+        quantity: 1,
+        created: "2026-10-01T00:00:00.000Z",
+      }),
     );
     fakes.cartLines.seedLine(aCartLine({ ownerId: "guest", productId: "product-2", quantity: 1 }));
 
@@ -71,6 +84,7 @@ describe("SignIn", () => {
         ownerId: SHOPPER_ID,
         productId: "product-1",
         quantity: 3,
+        created: "2026-10-01T00:00:00.000Z",
         modified: "2026-10-14T12:00:00.000Z",
       }),
       aCartLine({ ownerId: SHOPPER_ID, productId: "product-2", quantity: 1 }),

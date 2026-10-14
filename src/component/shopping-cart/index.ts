@@ -1,1 +1,7 @@
-export { CART_RULES, clampQuantity, mergeIntoCart } from "./cart-quantity";
+export {
+  CART_RULES,
+  clampQuantity,
+  mergeIntoCart,
+  newCartLine,
+  newSavedItem,
+} from "./cart-quantity";

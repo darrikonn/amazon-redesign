@@ -1,4 +1,4 @@
-import { clampQuantity } from "@/component";
+import { clampQuantity, newCartLine } from "@/component";
 import type { CartLineRepository, Clock, ProductId, ProductRepository, SessionStore } from "@/core";
 import { cartOwnerOf, currentShopper } from "./session-shopper";
 import { type CartView, toCartView } from "./view-cart";
@@ -24,15 +24,10 @@ export class ChangeCartQuantity {
     const quantity = clampQuantity(request.quantity);
     const existing = await this.cartLines.get(ownerId, product.id);
     if (quantity === 0) await this.cartLines.remove(ownerId, product.id);
-    else if (existing !== null) await this.cartLines.save({ ...existing, quantity });
-    else {
-      await this.cartLines.save({
-        ownerId,
-        productId: product.id,
-        quantity,
-        created: this.clock.now().toISOString(),
-        modified: null,
-      });
+    else if (existing === null) {
+      await this.cartLines.save(newCartLine(ownerId, product.id, quantity, this.clock.now()));
+    } else if (existing.quantity !== quantity) {
+      await this.cartLines.save({ ...existing, quantity });
     }
     return toCartView(await this.cartLines.listByOwner(ownerId), this.products, shopper !== null);
   }

@@ -122,8 +122,8 @@ describe.each(implementations)("%s, saving again", (_, create) => {
 describe("StoredCartLineRepository", () => {
   it("reads a cart that no longer parses, or names another owner, as empty", async () => {
     const storage = new InMemoryKeyValueStorage();
-    storage.seedValue("shop:v1:cart:sam", [{ ownerId: "sam", productId: "lamp" }]);
-    storage.seedValue("shop:v1:cart:robin", [aCartLine({ ownerId: "sam", productId: "lamp" })]);
+    storage.seedValue("shop:v2:cart:sam", [{ ownerId: "sam", productId: "lamp" }]);
+    storage.seedValue("shop:v2:cart:robin", [aCartLine({ ownerId: "sam", productId: "lamp" })]);
     const repository = new StoredCartLineRepository(storage, new FixedClock());
 
     expect(await repository.listByOwner("sam")).toEqual([]);

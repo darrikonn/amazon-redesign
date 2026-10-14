@@ -32,4 +32,15 @@ describe("ViewSession", () => {
       },
     });
   });
+
+  it("counts a session SignIn could not have made as signed out", async () => {
+    for (const session of [
+      aSession({ email: "not-an-email" }),
+      aSession({ deliveryPostalCode: "abc" }),
+    ]) {
+      fakes.sessions.seedSession(session);
+
+      expect(await container.viewSession.execute()).toEqual({ shopper: null });
+    }
+  });
 });

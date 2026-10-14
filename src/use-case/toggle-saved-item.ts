@@ -1,3 +1,4 @@
+import { newSavedItem } from "@/component";
 import type {
   Clock,
   ProductId,
@@ -33,12 +34,7 @@ export class ToggleSavedItem {
     const product = await this.products.demand(request.productId);
     const existing = await this.savedItems.get(shopper.id, product.id);
     if (existing === null) {
-      await this.savedItems.save({
-        ownerId: shopper.id,
-        productId: product.id,
-        created: this.clock.now().toISOString(),
-        modified: null,
-      });
+      await this.savedItems.save(newSavedItem(shopper.id, product.id, this.clock.now()));
     } else {
       await this.savedItems.remove(shopper.id, product.id);
     }
