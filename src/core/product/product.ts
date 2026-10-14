@@ -17,6 +17,9 @@ export type Product = {
   categoryLabel: string;
   categoryPlural: string;
   priceInCents: number;
+  // How far below its list price the product sells, as a whole percentage; 0 when it is
+  // not discounted. The price above is what the shopper pays (ADR 0030).
+  discountPercent: number;
   rating: number;
   reviewCount: number;
   deliveryDays: number;

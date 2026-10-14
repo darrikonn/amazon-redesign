@@ -14,6 +14,7 @@ const dummyJsonProduct: RawDummyJsonProduct = {
   description: "  A classic watch with a genuine leather strap.  ",
   category: "mens-watches",
   priceInDollars: 89.99,
+  discountPercentage: 12.6,
   rating: 4.19,
   tags: ["watches"],
   brand: "Fashion Timepieces",

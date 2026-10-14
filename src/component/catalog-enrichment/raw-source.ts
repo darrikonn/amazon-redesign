@@ -14,6 +14,7 @@ export type RawDummyJsonProduct = {
   category: string;
   // The source states prices in decimal dollars; normalisation converts them to cents.
   priceInDollars: number;
+  discountPercentage: number;
   rating: number;
   tags: readonly string[];
   brand: string | null;
@@ -57,6 +58,7 @@ export function parseDummyJsonResponse(json: unknown): RawDummyJsonProduct[] {
       description: requireString(record, "description", context),
       category: requireString(record, "category", context),
       priceInDollars: requireNumber(record, "price", context),
+      discountPercentage: requireNumber(record, "discountPercentage", context),
       rating: requireNumber(record, "rating", context),
       tags: requireStringArray(record, "tags", context),
       brand: optionalString(record, "brand", context),

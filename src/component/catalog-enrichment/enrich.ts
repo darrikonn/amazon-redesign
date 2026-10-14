@@ -63,6 +63,7 @@ export function normaliseDummyJsonProduct(raw: RawDummyJsonProduct): Product {
     sourceCategory: raw.category,
     sourceTags: raw.tags,
     priceInDollars: raw.priceInDollars,
+    discountPercent: Math.round(raw.discountPercentage),
     rating: raw.rating,
     reviewCount: raw.reviews.length,
     deliveryDays: deliveryDaysFrom(raw.shippingInformation),
@@ -78,6 +79,7 @@ export function normaliseFakeStoreProduct(raw: RawFakeStoreProduct): Product {
     sourceCategory: raw.category,
     sourceTags: [],
     priceInDollars: raw.priceInDollars,
+    discountPercent: 0,
     rating: raw.rating,
     reviewCount: raw.reviewCount,
     deliveryDays: ENRICHMENT_RULES.fakeStoreDeliveryDays,
@@ -169,6 +171,7 @@ type SourceFacts = {
   sourceCategory: string;
   sourceTags: readonly string[];
   priceInDollars: number;
+  discountPercent: number;
   rating: number;
   reviewCount: number;
   deliveryDays: number;
@@ -189,6 +192,7 @@ function productFrom(source: ProductSource, sourceId: number, facts: SourceFacts
     categoryLabel: CATEGORY_MAP[category].label,
     categoryPlural: CATEGORY_MAP[category].plural,
     priceInCents: Math.round(facts.priceInDollars * CENTS_PER_DOLLAR),
+    discountPercent: facts.discountPercent,
     rating:
       Math.round(facts.rating * ENRICHMENT_RULES.ratingPrecision) /
       ENRICHMENT_RULES.ratingPrecision,

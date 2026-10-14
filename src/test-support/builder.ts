@@ -10,6 +10,7 @@ export function aProduct(overrides: Partial<Product> = {}): Product {
     categoryLabel: "laptop",
     categoryPlural: "laptops",
     priceInCents: 99_900,
+    discountPercent: 0,
     rating: 4.2,
     reviewCount: 3,
     deliveryDays: 2,
