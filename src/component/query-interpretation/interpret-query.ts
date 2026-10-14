@@ -203,7 +203,7 @@ function readCategory(scanner: QueryScanner, draft: IntentDraft): void {
 
 function readKeywords(scanner: QueryScanner, draft: IntentDraft): void {
   for (const word of scanner.leftoverWords()) {
-    if (!isKeyword(word)) continue;
+    if (!isKeyword(word) || draft.keywords.includes(word)) continue;
     draft.keywords.push(word);
     draft.understand("keyword", `“${word}”`, word);
   }

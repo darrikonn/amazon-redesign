@@ -166,6 +166,10 @@ describe("interpretQuery", () => {
     ]);
   });
 
+  it("understands a repeated keyword once", () => {
+    expect(labelsOf("office lamp for the office")).toEqual(["“office”", "Desk lamps"]);
+  });
+
   it("ignores bare numbers and single letters", () => {
     expect(interpretQuery("lamp 3 x").intent.keywords).toEqual([]);
   });
