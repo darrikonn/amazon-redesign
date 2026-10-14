@@ -23,8 +23,7 @@ type SearchPanelProps = {
 
 export type AssistantState =
   | { forText: string; status: "thinking"; words: readonly string[] }
-  | { forText: string; status: "suggested"; suggestion: AssistantSuggestion }
-  | { forText: string; status: "nothing" };
+  | { forText: string; status: "suggested"; suggestion: AssistantSuggestion };
 
 export function SearchPanel({
   inputRef,
@@ -149,13 +148,12 @@ type RowProps = {
   onTextChange: (text: string) => void;
 };
 
-function AssistantRow({
-  assistant,
-  onTextChange,
-}: {
+type AssistantRowProps = {
   assistant: AssistantState;
   onTextChange: (text: string) => void;
-}) {
+};
+
+function AssistantRow({ assistant, onTextChange }: AssistantRowProps) {
   return (
     <div className={styles.assistantRow} aria-live="polite">
       <span className={styles.rowLabel}>Assistant</span>
@@ -164,39 +162,27 @@ function AssistantRow({
   );
 }
 
-function AssistantContent({
-  assistant,
-  onTextChange,
-}: {
-  assistant: AssistantState;
-  onTextChange: (text: string) => void;
-}) {
-  switch (assistant.status) {
-    case "thinking":
-      return (
-        <span className={styles.assistantNote}>
-          Thinking about {assistant.words.map((word) => `“${word}”`).join(", ")}…
-        </span>
-      );
-    case "nothing":
-      return (
-        <span className={styles.assistantNote}>No clearer way to say that. Try other words.</span>
-      );
-    case "suggested":
-      return (
-        <button
-          type="button"
-          className={styles.assistantSuggestion}
-          onClick={() => onTextChange(assistant.suggestion.text)}
-        >
-          <Icon name="sparkle" size={16} strokeWidth={2.2} className={styles.assistantIcon} />
-          Try “{assistant.suggestion.text}”
-          <span className={styles.refinementCount}>
-            {resultCountLabel(assistant.suggestion.resultCount)}
-          </span>
-        </button>
-      );
+function AssistantContent({ assistant, onTextChange }: AssistantRowProps) {
+  if (assistant.status === "thinking") {
+    return (
+      <span className={styles.assistantNote}>
+        Thinking about {assistant.words.map((word) => `“${word}”`).join(", ")}…
+      </span>
+    );
   }
+  return (
+    <button
+      type="button"
+      className={styles.assistantSuggestion}
+      onClick={() => onTextChange(assistant.suggestion.text)}
+    >
+      <Icon name="sparkle" size={16} strokeWidth={2.2} className={styles.assistantIcon} />
+      Try “{assistant.suggestion.text}”
+      <span className={styles.refinementCount}>
+        {resultCountLabel(assistant.suggestion.resultCount)}
+      </span>
+    </button>
+  );
 }
 
 function RefinementRow({ outcome, onTextChange }: RowProps) {
