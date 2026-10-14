@@ -14,7 +14,6 @@ export type LocalServer = {
   close: () => Promise<void>;
 };
 
-// A real HTTP server on a random local port that stands in for a remote API.
 export async function startLocalServer(): Promise<LocalServer> {
   const requests: RecordedRequest[] = [];
   let reply: { status: number; body: unknown } = { status: 200, body: {} };

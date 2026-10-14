@@ -19,6 +19,10 @@ const request = {
 };
 
 describe("HttpQueryAssistant", () => {
+  it("reports itself available, leaving the decision to the server", () => {
+    expect(new HttpQueryAssistant(server.url).isAvailable()).toBe(true);
+  });
+
   it("posts only the text and returns the endpoint's query", async () => {
     // Arrange
     server.respondWith(200, { query: "lamp" });

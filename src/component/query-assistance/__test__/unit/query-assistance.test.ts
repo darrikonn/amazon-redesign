@@ -41,9 +41,15 @@ describe("requestAssistance", () => {
     expect(requestAssistance(catalog, "lamp with touch")).toBeNull();
   });
 
-  it("does not ask when every word was understood, the text is empty, or it is too long", () => {
+  it("does not ask when every word was understood", () => {
     expect(requestAssistance(catalog, "headphones")).toBeNull();
+  });
+
+  it("does not ask about empty text", () => {
     expect(requestAssistance(catalog, "   ")).toBeNull();
+  });
+
+  it("does not send text longer than the limit", () => {
     expect(
       requestAssistance(catalog, `gift ${"x".repeat(ASSISTANCE_RULES.maximumTextLength)}`),
     ).toBeNull();
@@ -65,10 +71,19 @@ describe("acceptRewrite", () => {
     });
   });
 
-  it("drops a missing, repeated, no better, or empty rewrite", () => {
+  it("drops a missing rewrite", () => {
     expect(acceptRewrite(catalog, request, null)).toBeNull();
+  });
+
+  it("drops a rewrite that only repeats the text", () => {
     expect(acceptRewrite(catalog, request, "Gift for a coffee lover")).toBeNull();
+  });
+
+  it("drops a rewrite that understands no more than the original", () => {
     expect(acceptRewrite(catalog, request, "coffee for a friend lover")).toBeNull();
+  });
+
+  it("drops a rewrite that finds nothing", () => {
     expect(acceptRewrite(catalog, request, "red coffee maker")).toBeNull();
   });
 });

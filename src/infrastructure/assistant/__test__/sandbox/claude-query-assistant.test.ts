@@ -1,6 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { interpretQuery, requestAssistance } from "@/component";
-import { CATALOG, ClaudeQueryAssistant } from "@/infrastructure";
+import { ClaudeQueryAssistant } from "@/infrastructure";
 
 // Calls the real Messages API with the developer's key. Run with `yarn test:sandbox`.
 const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -11,7 +10,7 @@ beforeAll(() => {
 });
 
 describe("ClaudeQueryAssistant against the Messages API", () => {
-  it("rewrites a gift request into words the interpreter understands", async () => {
+  it("rewrites a gift request into the shop's vocabulary", async () => {
     // Arrange
     const assistant = new ClaudeQueryAssistant({
       apiKey,
@@ -19,19 +18,21 @@ describe("ClaudeQueryAssistant against the Messages API", () => {
       timeoutInMilliseconds: 30_000,
       maximumRetries: 1,
     });
-    const request = requestAssistance(
-      CATALOG,
-      "something for my dad who loves espresso, max sixty bucks",
-    );
-    if (request === null) throw new Error("Expected the text to need assistance");
 
     // Act
-    const rewritten = await assistant.rephrase(request);
+    const rewritten = await assistant.rephrase({
+      text: "something for my dad who loves espresso, max sixty bucks",
+      unrecognizedWords: ["something", "dad", "loves"],
+      vocabulary: {
+        categories: ["desk lamps", "headphones", "backpacks", "coffee makers"],
+        features: ["espresso", "drip", "grinder", "compact", "programmable"],
+        colors: ["black", "white", "red"],
+      },
+    });
 
     // Assert
-    expect(rewritten).not.toBeNull();
-    const intent = interpretQuery(rewritten ?? "").intent;
-    expect(intent.category).toBe("coffee-maker");
-    expect(intent.keywords).toEqual([]);
+    expect(rewritten?.toLowerCase()).toMatch(/coffee|espresso/);
+    expect(rewritten).toMatch(/\$60/);
+    expect(rewritten?.toLowerCase()).not.toContain("dad");
   });
 });
