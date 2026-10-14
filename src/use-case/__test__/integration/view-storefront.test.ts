@@ -22,7 +22,16 @@ describe("ViewStorefront", () => {
         { label: "Backpacks", query: "backpacks" },
         { label: "Coffee makers", query: "coffee makers" },
       ],
+      isAssistantAvailable: true,
     });
+  });
+
+  it("says when the assistant is unavailable", async () => {
+    const { container, fakes } = createTestContainer();
+    fakes.identity.seedSignedInShopper(aShopper());
+    fakes.assistant.seedAvailability(false);
+
+    expect((await container.viewStorefront.execute()).isAssistantAvailable).toBe(false);
   });
 
   it("fails when nobody is signed in", async () => {

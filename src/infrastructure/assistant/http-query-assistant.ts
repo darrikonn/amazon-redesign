@@ -3,6 +3,11 @@ import type { QueryAssistant, RephraseRequest } from "@/core";
 export class HttpQueryAssistant implements QueryAssistant {
   constructor(private readonly endpoint: string) {}
 
+  // The server decides whether the assistant runs; the browser learns it from the storefront.
+  isAvailable(): boolean {
+    return true;
+  }
+
   async rephrase(request: RephraseRequest): Promise<string | null> {
     const response = await fetch(this.endpoint, {
       method: "POST",

@@ -11,5 +11,6 @@ export type RephraseRequest = {
 };
 
 export interface QueryAssistant {
+  isAvailable(): boolean;
   rephrase(request: RephraseRequest): Promise<string | null>;
 }

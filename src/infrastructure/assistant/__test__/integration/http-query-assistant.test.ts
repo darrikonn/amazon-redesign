@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { HttpQueryAssistant } from "@/infrastructure";
-import {
-  type LocalServer,
-  startLocalServer,
-} from "@/infrastructure/assistant/__test__/integration/local-server";
+import { type LocalServer, startLocalServer } from "@/test-support";
 
 let server: LocalServer;
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { handleAssistantRequest } from "@/app/api/assistant/handle-assistant-request";
 import { createTestContainer } from "@/composition";
+import { CATALOG } from "@/infrastructure";
 
 function post(body: string): Request {
   return new Request("http://localhost/api/assistant", { method: "POST", body });
@@ -10,6 +11,7 @@ describe("handleAssistantRequest", () => {
   it("answers with the rewritten query", async () => {
     // Arrange
     const { container, fakes } = createTestContainer();
+    fakes.products.seedProducts(CATALOG);
     fakes.assistant.seedRewrite("gift lamp", "lamp");
 
     // Act
@@ -34,6 +36,7 @@ describe("handleAssistantRequest", () => {
 
   it("answers no rewrite when the assistant fails", async () => {
     const { container, fakes } = createTestContainer();
+    fakes.products.seedProducts(CATALOG);
     fakes.assistant.seedFailure(new Error("model unavailable"));
 
     const response = await handleAssistantRequest(

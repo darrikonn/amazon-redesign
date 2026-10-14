@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { RephraseRequest } from "@/core";
 import { ClaudeQueryAssistant } from "@/infrastructure";
-import {
-  type LocalServer,
-  startLocalServer,
-} from "@/infrastructure/assistant/__test__/integration/local-server";
+import { type LocalServer, startLocalServer } from "@/test-support";
 
 let server: LocalServer;
 
@@ -46,6 +43,14 @@ function messageReply(text: string, stopReason = "end_turn") {
 }
 
 describe("ClaudeQueryAssistant", () => {
+  it("is available only with an API key", () => {
+    const settings = { model: "claude-opus-5-5", timeoutInMilliseconds: 1, maximumRetries: 0 };
+
+    expect(new ClaudeQueryAssistant({ ...settings, apiKey: "key" }).isAvailable()).toBe(true);
+    expect(new ClaudeQueryAssistant({ ...settings, apiKey: "" }).isAvailable()).toBe(false);
+    expect(new ClaudeQueryAssistant({ ...settings, apiKey: undefined }).isAvailable()).toBe(false);
+  });
+
   it("returns the rewritten query from the structured reply", async () => {
     server.respondWith(200, messageReply('{"query": " coffee maker under $40 "}'));
 

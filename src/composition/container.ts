@@ -35,10 +35,10 @@ export function assembleContainer(ports: Ports): Container {
   return {
     searchCatalog: new SearchCatalog(ports.products),
     previewQuery: new PreviewQuery(),
-    viewStorefront: new ViewStorefront(ports.identity),
+    viewStorefront: new ViewStorefront(ports.identity, ports.assistant),
     viewCart: new ViewCart(ports.identity, ports.cartLines),
     toggleCartItem: new ToggleCartItem(ports.identity, ports.cartLines, ports.products),
     askAssistant: new AskAssistant(ports.assistant, ports.products),
-    rephraseQuery: new RephraseQuery(ports.assistant),
+    rephraseQuery: new RephraseQuery(ports.assistant, ports.products),
   };
 }

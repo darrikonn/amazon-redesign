@@ -1,11 +1,12 @@
 import { STARTER_QUERIES } from "@/component";
-import type { Category, IdentityProvider } from "@/core";
+import type { Category, IdentityProvider, QueryAssistant } from "@/core";
 import { CATEGORIES } from "@/core";
 
 export type Storefront = {
   shopper: ShopperGreeting;
   starterQueries: readonly string[];
   departments: readonly Department[];
+  isAssistantAvailable: boolean;
 };
 
 export type ShopperGreeting = {
@@ -20,7 +21,10 @@ export type Department = {
 };
 
 export class ViewStorefront {
-  constructor(private readonly identity: IdentityProvider) {}
+  constructor(
+    private readonly identity: IdentityProvider,
+    private readonly assistant: QueryAssistant,
+  ) {}
 
   async execute(): Promise<Storefront> {
     const shopper = await this.identity.currentShopper();
@@ -32,6 +36,7 @@ export class ViewStorefront {
       },
       starterQueries: STARTER_QUERIES,
       departments: CATEGORIES.map(toDepartment),
+      isAssistantAvailable: this.assistant.isAvailable(),
     };
   }
 }

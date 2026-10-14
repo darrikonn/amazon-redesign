@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { ASSISTANCE_RULES } from "@/component";
 import { type Container, createTestContainer, type TestFakes } from "@/composition";
 import { CATALOG } from "@/infrastructure";
-import { ASSISTANT_RULES } from "@/use-case";
 
 let container: Container;
 let fakes: TestFakes;
@@ -44,6 +44,13 @@ describe("AskAssistant", () => {
     expect(fakes.assistant.calls[0]?.vocabulary.features).toContain("noise cancelling");
   });
 
+  it("does not ask when the unknown words still find products", async () => {
+    const suggestion = await container.askAssistant.execute({ text: "lamp with touch" });
+
+    expect(suggestion).toBeNull();
+    expect(fakes.assistant.calls).toEqual([]);
+  });
+
   it("does not ask when every word was understood", async () => {
     const suggestion = await container.askAssistant.execute({ text: "dimmable lamp under $40" });
 
@@ -52,7 +59,7 @@ describe("AskAssistant", () => {
   });
 
   it("does not send text longer than the limit", async () => {
-    const text = `gift ${"x".repeat(ASSISTANT_RULES.maximumTextLength)}`;
+    const text = `gift ${"x".repeat(ASSISTANCE_RULES.maximumTextLength)}`;
 
     expect(await container.askAssistant.execute({ text })).toBeNull();
     expect(fakes.assistant.calls).toEqual([]);

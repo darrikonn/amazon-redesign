@@ -4,6 +4,15 @@ export class InMemoryQueryAssistant implements QueryAssistant {
   readonly calls: RephraseRequest[] = [];
   private readonly rewrites = new Map<string, string | null>();
   private failure: Error | null = null;
+  private available = true;
+
+  seedAvailability(available: boolean): void {
+    this.available = available;
+  }
+
+  isAvailable(): boolean {
+    return this.available;
+  }
 
   seedRewrite(text: string, rewritten: string | null): void {
     this.rewrites.set(text, rewritten);
@@ -23,5 +32,6 @@ export class InMemoryQueryAssistant implements QueryAssistant {
     this.calls.length = 0;
     this.rewrites.clear();
     this.failure = null;
+    this.available = true;
   }
 }

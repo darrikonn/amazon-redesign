@@ -14,6 +14,10 @@ export class ClaudeQueryAssistant implements QueryAssistant {
 
   constructor(private readonly settings: ClaudeQueryAssistantSettings) {}
 
+  isAvailable(): boolean {
+    return this.settings.apiKey !== undefined && this.settings.apiKey !== "";
+  }
+
   async rephrase(request: RephraseRequest): Promise<string | null> {
     const response = await this.anthropic().beta.messages.create({
       model: this.settings.model,
