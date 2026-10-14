@@ -148,6 +148,18 @@ def count_entries(text, kind):
     return len(re.findall(rf"^\[LOG_ENTRY type={kind} num=\d+ session=", text, re.M))
 
 
+ENTRY_RE = re.compile(r"^\[LOG_ENTRY type=(PROMPT|RESPONSE) num=(\d+) session=", re.M)
+
+
+def last_entry(text):
+    found = ENTRY_RE.findall(text)
+    return (found[-1][0], int(found[-1][1])) if found else (None, 0)
+
+
+def max_entry_num(text):
+    return max((int(n) for _, n in ENTRY_RE.findall(text)), default=0)
+
+
 def load_or_init(path, is_new, session_id, model, ts):
     short = session_id[:8]
     project = os.path.basename(project_dir())
@@ -219,8 +231,11 @@ def handle_stop(data):
     path, is_new = session_file(session_id)
     fm, body = load_or_init(path, is_new, session_id, model, ts)
     prompts = count_entries(body, "PROMPT")
-    responses = count_entries(body, "RESPONSE")
-    num = prompts if prompts > responses else responses + 1
+    # Pair with the PROMPT entry directly before this response. If the last
+    # entry is already a RESPONSE (a Stop with no logged prompt, e.g. the hook
+    # was installed mid-session), record an orphan with the next free number.
+    last_kind, last_num = last_entry(body)
+    num = last_num if last_kind == "PROMPT" else max_entry_num(body) + 1
     # Backfill the model on this exchange's PROMPT entry if it was unknown then.
     if model != "unknown":
         body = re.sub(
