@@ -16,11 +16,11 @@ Bindings per container (ADR 0005):
 
 | Port | Production and local | Test |
 | --- | --- | --- |
-| `ProductRepository` | `CatalogProductRepository`, reading the bundled catalog in `src/infrastructure/product/catalog.ts` | `InMemoryProductRepository`, empty until seeded |
+| `ProductRepository` | `CatalogProductRepository`, reading the generated `catalog.json` (ADR 0025) | `InMemoryProductRepository`, empty until seeded |
 | `CartLineRepository` | `SessionCartLineRepository`, one per container | `InMemoryCartLineRepository` |
 | `IdentityProvider` | `DemoIdentityProvider`, always signed in as the demo shopper | `InMemoryIdentityProvider`, seeded per test |
 
-The query assistant is a real external service, not a fake; its bindings are in ADR 0024.
+The search assistant is simulated in process and needs no binding (ADR 0026).
 
 The production and local containers are identical today. They stay separate factories so a real adapter replaces one line in one factory.
 

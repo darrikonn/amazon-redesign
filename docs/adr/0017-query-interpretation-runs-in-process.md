@@ -12,9 +12,9 @@ A hosted language model cannot do that: a network round trip per candidate per k
 
 ## Decision
 
-Query interpretation is a pure business component in `src/component/query-interpretation`. It turns text into a `SearchIntent` (category, price range, delivery window, rating floor, colour, features, leftover keywords) plus the list of understood terms, each with the exact phrase it came from so the term can be removed from the text again.
+Query interpretation is a pure business component in `src/component/query-interpretation`. It turns text into a `SearchIntent` (category, price range, delivery window, rating floor, colour, tags, leftover keywords) plus the list of understood terms, each with the exact phrase it came from so the term can be removed from the text again.
 
-The vocabulary (category synonyms, feature synonyms, colours, stop words) lives next to the interpreter as constants. Adding a synonym is a code change with a test.
+The vocabulary (category synonyms, tag keywords, colour words) lives in the `catalog-vocabulary` component module, and the stop words live next to the interpreter. Adding a synonym is a code change with a test.
 
 Rating phrases set a floor: "top rated", "best rated", and "highly rated" mean 4.5 and up, and an explicit star count ("4 stars", "4+ stars") means that count and up. The reference prototype mapped every rating phrase to 4.5; taking the shopper's number literally is deliberate.
 
@@ -36,4 +36,6 @@ const next = await languageModel.interpret(`${text} under $30`);
 
 ## Consequences
 
-Interpretation is instant, free, deterministic, and unit tested against the reference screens. Phrasing outside the vocabulary falls through to keyword matching on product text, which is less clever than a model. A language model handles leftover keywords after the shopper pauses, behind a core port and never on the per-keystroke path (ADR 0024); the in-process interpreter stays the source of truth for what a query means.
+Interpretation is instant, free, deterministic, and unit tested against the reference screens. Phrasing outside the vocabulary falls through to keyword matching on product text, which is less clever than a model. A simulated assistant suggests spelling corrections for leftover keywords (ADR 0026); the interpreter stays the source of truth for what a query means.
+
+The vocabulary is data-driven (ADR 0025): category synonyms come from `category-map.ts`, tag keywords from `tag-rules.ts`, and only the categories and tags that the generated `vocabulary.json` lists as present are recognised. Tags and categories are matched in one pass, longest phrase first, so the category "sports gear" is read before the tag "sports" can take half of it.

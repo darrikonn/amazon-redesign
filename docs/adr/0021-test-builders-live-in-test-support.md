@@ -12,20 +12,20 @@ Unit tests for components need realistic entities, and integration tests need th
 
 Builders for test data live in `src/test-support`, exported from its `index.ts`, and are named `a<Entity>` (`aProduct`, `aShopper`). Each returns a complete, valid entity and takes a `Partial` of overrides, so a test states only the fields its assertion depends on.
 
-Only test files import `@/test-support`. Production code never does. Besides builders, `src/test-support` holds shared test infrastructure: `startLocalServer`, a real HTTP server on a random local port that stands in for a remote API in adapter tests, and `empty-module.ts`, which the test runner substitutes for `server-only`. Builders import only `@/core` types; test infrastructure may also use Node built-ins.
+Only test files import `@/test-support`. Production code never does. Builders import only `@/core` types. Shared test infrastructure, such as a local stand-in server for an external API, may live here too and may use Node built-ins.
 
-Exception: acceptance tests that pin the reference screens (the result counts, suggestions, and headlines the designs show) seed the fake with the bundled `CATALOG` from `@/infrastructure`, because those screens were drawn from exactly that catalog. Every other test builds the products it needs.
+Exception: acceptance tests of the search use cases seed the fake with the bundled `CATALOG` from `@/infrastructure`, because what they pin (result counts, suggestions, headlines, and the screens in `docs/screenshots/`) is the behaviour of that real catalogue. Every other test builds the products it needs.
 
 Good:
 
 ```ts
-const lamp = aProduct({ priceInCents: 1999, features: ["dimmable"] });
+const bag = aProduct({ priceInCents: 1999, tags: ["leather"] });
 ```
 
 Bad:
 
 ```ts
-const lamp = { id: "x", title: "x", category: "desk-lamp", priceInCents: 1999 } as Product;
+const bag = { id: "x", name: "x", category: "bags", priceInCents: 1999 } as Product;
 ```
 
 ## Consequences

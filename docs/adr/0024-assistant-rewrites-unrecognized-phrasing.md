@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (2026-10-14)
+Superseded by ADR 0026 (2026-10-14). Accepted earlier the same day.
 
 ## Context
 

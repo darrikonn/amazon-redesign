@@ -18,15 +18,15 @@ Good:
 
 ```ts
 // src/component/product-search/filter-products.ts
-import { demandCategory } from "@/core";
-import { featurePhrase } from "../query-interpretation";
+import type { Product, SearchIntent } from "@/core";
+import { tagPhrase } from "../catalog-vocabulary";
 ```
 
 Bad:
 
 ```ts
-import { featurePhrase } from "@/component";
-import { featurePhrase } from "../query-interpretation/vocabulary";
+import { tagPhrase } from "@/component";
+import { tagPhrase } from "../catalog-vocabulary/label";
 ```
 
 ## Consequences
