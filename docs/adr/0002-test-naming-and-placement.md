@@ -15,7 +15,7 @@ Tests sit in a `__test__` directory next to the code under test, split by kind:
 - `__test__/unit/<name>.test.ts`: pure logic only. No container, no fakes, no I/O. The subject is a function with inputs and outputs.
 - `__test__/integration/<name>.test.ts`: anything with a dependency. The subject is wired through the test container from `src/composition` (see ADR 0005), with in-memory fakes at the infrastructure boundary (see ADR 0013).
 
-`<name>` matches the file under test. Test files use absolute imports (ADR 0010). The runner is Vitest, invoked only through `yarn test`.
+`<name>` matches the file under test, with the extension `.test.ts`, or `.test.tsx` when the subject renders JSX. Test files use absolute imports (ADR 0010). The runner is Vitest, invoked only through `yarn test`. `passWithNoTests` is enabled only until the first test exists and is removed with it.
 
 Good:
 

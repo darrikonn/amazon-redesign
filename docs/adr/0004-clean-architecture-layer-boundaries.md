@@ -18,7 +18,7 @@ Dependencies point inward. Infrastructure implements core interfaces and is inje
 | Business component | `src/component` | `src/core` | Use cases, delivery, infrastructure, composition. |
 | Use case | `src/use-case` | `src/core`, `src/component` | Delivery, infrastructure, composition. |
 | Infrastructure | `src/infrastructure` | `src/core`, external packages | Components, use cases, delivery, composition. |
-| Delivery | `src/app` (Next.js routes, server actions, pages) | `src/use-case` (via the container), `src/core` types | Components, repositories, data loaders, infrastructure. |
+| Delivery | `src/app` (Next.js routes, server actions, pages) | `src/composition` (only to obtain the container), `src/use-case` types, `src/core` types | Components, repositories, data loaders, infrastructure. |
 | Composition root | `src/composition` and the test bootstrap | Every layer | Nothing is forbidden; this is the only wiring point. |
 
 Use cases and components contain no raw SQL and no raw external API calls. Custom queries live in a dedicated data service port in core, implemented in infrastructure, and injected. Pure calculation code has no side effects, no I/O, and depends only on the standard library.

@@ -15,6 +15,8 @@ Only a green success counts as a pass for a required check. Skipped, cancelled, 
 - Required workflows have no path filters that can skip the whole job. Format, lint, type check, and tests run on every push and pull request.
 - A job that is cancelled is re-run, never bypassed.
 - Before merging, the full list of required checks is read; a missing check is a failure.
+- `yarn lint` runs `biome check` without `--write`, so unformatted code fails the gate; CI does not need a separate format step.
+- The workflow lives in `.github/workflows/quality.yml`.
 
 Good:
 
@@ -28,7 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: yarn install --frozen-lockfile
-      - run: yarn format --check
       - run: yarn lint
       - run: yarn test
 ```

@@ -13,7 +13,7 @@ Multi-tenant data leaks happen one query at a time: a child row fetched by its o
 - Every row that belongs to an owner carries `owner_id`.
 - Child tables repeat `owner_id` and use a composite foreign key `(parent_id, owner_id) REFERENCES parent(id, owner_id) ON DELETE CASCADE`, with an index on `owner_id`. A child can never belong to a different owner than its parent.
 - Every repository method on an owned entity takes the owner id as a required argument. No method may return another owner's rows. The in-memory fakes enforce the same rule.
-- Every repository exposes the same surface: `get` (nullable), `demand` (throws not found), `getMany`, `demandMany`, plus a single and a list data loader, all exported from the data access package index.
+- Every repository exposes the same surface: `get` (nullable), `demand` (throws not found), `getMany`, `demandMany`, plus a single and a list data loader, all exported from the data access package index. `CLAUDE.md` names these language-neutrally as `get_many` and `demand_many`; in this TypeScript codebase they are spelled `getMany` and `demandMany`.
 
 Good:
 
