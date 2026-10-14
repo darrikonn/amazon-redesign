@@ -7,7 +7,7 @@ import type {
   UnderstoodTerm,
   UnderstoodTermKind,
 } from "@/core";
-import { formatDollars, parseCents } from "./money";
+import { formatDollars, parseAmountInCents } from "./money";
 import { wholePhrasePattern } from "./phrase";
 import {
   CATEGORY_VOCABULARY,
@@ -37,17 +37,24 @@ export function interpretQuery(text: string): Interpretation {
   return { intent: draft.intent(), terms: inReadingOrder(draft.terms, text) };
 }
 
-const NUMBER = String.raw`(\d+(?:\.\d{1,2})?)(?:\s*(?:dollars?|bucks|usd))?`;
+const NUMBER_WORD = String.raw`(?:(?:a|one)\s+hundred|hundred|(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|one|two|three|four|five|six|seven|eight|nine)(?![a-z0-9])`;
+const CURRENCY_WORD = String.raw`(?:\s*(?:dollars?|bucks|usd))?`;
+const NUMBER = String.raw`(\d+(?:\.\d{1,2})?)${CURRENCY_WORD}`;
+const AMOUNT = String.raw`(\d+(?:\.\d{1,2})?|${NUMBER_WORD})${CURRENCY_WORD}`;
 const RATING_PATTERN =
   /(?:top[- ]rated|best[- ]rated|highly rated|well reviewed|(?:over |at least )?(\d(?:\.\d)?)\+?\s*stars?(?: and up| or more)?)/;
 const PRICE_RANGE_PATTERN = new RegExp(
   String.raw`(?:between\s+)?\$?${NUMBER}\s*(?:-|to|and)\s*\$?${NUMBER}`,
 );
+// Number words need "between" to count as a range, so "one or two lamps" stays plain text.
+const WORDED_PRICE_RANGE_PATTERN = new RegExp(
+  String.raw`between\s+\$?${AMOUNT}\s*(?:-|to|and)\s*\$?${AMOUNT}`,
+);
 const MAXIMUM_PRICE_PATTERN = new RegExp(
-  String.raw`(?:under|below|less than|cheaper than|up to|max)\s*\$?\s*${NUMBER}`,
+  String.raw`(?:under|below|less than|cheaper than|up to|max)\s*\$?\s*${AMOUNT}`,
 );
 const MINIMUM_PRICE_PATTERN = new RegExp(
-  String.raw`(?:over|above|more than|at least)\s*\$?\s*${NUMBER}`,
+  String.raw`(?:over|above|more than|at least)\s*\$?\s*${AMOUNT}`,
 );
 const DELIVERY_PREFIX = String.raw`(?:that\s+)?(?:(?:arrives?|arriving|delivered|delivery|get it|here)\s+)?`;
 const TOMORROW_PATTERN = new RegExp(String.raw`${DELIVERY_PREFIX}(?:by\s+)?tomorrow`);
@@ -127,10 +134,10 @@ function readPrice(scanner: QueryScanner, draft: IntentDraft): void {
 }
 
 function readPriceRange(scanner: QueryScanner, draft: IntentDraft): boolean {
-  const scanned = scanner.take(PRICE_RANGE_PATTERN);
+  const scanned = scanner.take(PRICE_RANGE_PATTERN) ?? scanner.take(WORDED_PRICE_RANGE_PATTERN);
   if (scanned === null) return false;
-  const firstInCents = parseCents(scanned.groups[1]);
-  const secondInCents = parseCents(scanned.groups[2]);
+  const firstInCents = parseAmountInCents(scanned.groups[1]);
+  const secondInCents = parseAmountInCents(scanned.groups[2]);
   draft.minimumPriceInCents = Math.min(firstInCents, secondInCents);
   draft.maximumPriceInCents = Math.max(firstInCents, secondInCents);
   const label = `${formatDollars(draft.minimumPriceInCents)} to ${formatDollars(draft.maximumPriceInCents)}`;
@@ -141,14 +148,14 @@ function readPriceRange(scanner: QueryScanner, draft: IntentDraft): boolean {
 function readMaximumPrice(scanner: QueryScanner, draft: IntentDraft): void {
   const scanned = scanner.take(MAXIMUM_PRICE_PATTERN);
   if (scanned === null) return;
-  draft.maximumPriceInCents = parseCents(scanned.groups[1]);
+  draft.maximumPriceInCents = parseAmountInCents(scanned.groups[1]);
   draft.understand("price", `Under ${formatDollars(draft.maximumPriceInCents)}`, scanned.phrase);
 }
 
 function readMinimumPrice(scanner: QueryScanner, draft: IntentDraft): void {
   const scanned = scanner.take(MINIMUM_PRICE_PATTERN);
   if (scanned === null) return;
-  draft.minimumPriceInCents = parseCents(scanned.groups[1]);
+  draft.minimumPriceInCents = parseAmountInCents(scanned.groups[1]);
   draft.understand("price", `Over ${formatDollars(draft.minimumPriceInCents)}`, scanned.phrase);
 }
 

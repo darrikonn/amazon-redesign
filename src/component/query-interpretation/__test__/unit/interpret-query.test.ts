@@ -106,6 +106,29 @@ describe("interpretQuery", () => {
     });
   });
 
+  it("reads prices written as words", () => {
+    expect(interpretQuery("lamp under forty bucks").intent).toMatchObject({
+      maximumPriceInCents: 4000,
+      keywords: [],
+    });
+    expect(interpretQuery("headphones over a hundred dollars").intent.minimumPriceInCents).toBe(
+      10000,
+    );
+    expect(interpretQuery("backpack under twenty-five").intent.maximumPriceInCents).toBe(2500);
+    expect(interpretQuery("lamp between ten and thirty").intent).toMatchObject({
+      minimumPriceInCents: 1000,
+      maximumPriceInCents: 3000,
+    });
+  });
+
+  it("does not read number words without a price word in front", () => {
+    expect(interpretQuery("one or two lamps").intent).toMatchObject({
+      minimumPriceInCents: null,
+      maximumPriceInCents: null,
+    });
+    expect(interpretQuery("lamp under tent").intent.maximumPriceInCents).toBeNull();
+  });
+
   it("reads a minimum price", () => {
     const interpretation = interpretQuery("headphones over 100");
 

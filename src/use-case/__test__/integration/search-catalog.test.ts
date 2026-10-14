@@ -156,6 +156,23 @@ describe("SearchCatalog", () => {
     expect(outcome.closestMatchesHeading).toBe("Closest matches, ignoring “gift” and “lover”");
   });
 
+  it("keeps a worded price while dropping the unknown words", async () => {
+    const outcome = await container.searchCatalog.execute({
+      text: "gift for a coffee lover under forty bucks",
+      sort: "best-match",
+    });
+
+    expect(outcome.understood.map((term) => term.label)).toEqual([
+      "“gift”",
+      "Coffee makers",
+      "“lover”",
+      "Under $40",
+    ]);
+    expect(outcome.relaxations).toEqual([
+      { label: "Drop “gift” and “lover”", text: "for a coffee under forty bucks", resultCount: 2 },
+    ]);
+  });
+
   it("does not double quote a dropped keyword", async () => {
     const outcome = await container.searchCatalog.execute({
       text: "office lamp",
