@@ -66,6 +66,8 @@ export function ResultSection({
         <div className={styles.sidebar}>
           <BrowseNavigation
             navigation={outcome.navigation}
+            sort={outcome.requestedSort}
+            isUpdating={isUpdating}
             onBrowse={onBrowse}
             onNarrow={onSearch}
           />
