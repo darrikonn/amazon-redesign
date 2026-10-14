@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { type FormEvent, useCallback, useId, useState } from "react";
 import type { ProductId } from "@/core";
-import type { OrderLineView, OrderView } from "@/use-case";
+import type { OrderView } from "@/use-case";
 import { formatDayAndDate, formatOrderDate, splitPrice } from "./format";
 import styles from "./order-detail-view.module.css";
 import { orderStatus } from "./order-status";
 import { ProductThumbnail } from "./product-thumbnail";
+import { returnStatus } from "./return-status";
 import { useShop } from "./shop-context";
 import page from "./shop-page.module.css";
 import { useLoaded } from "./use-loaded";
@@ -130,16 +131,6 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
       {returnable.length > 0 && <ReturnForm order={order} onReturned={onChange} />}
     </main>
   );
-}
-
-function returnStatus(line: OrderLineView, stage: OrderView["stage"]): string {
-  if (line.isReturned) return "Return started";
-  if (line.returnableUntil === null) return "Not returnable";
-  if (stage !== "delivered") return "Returnable once delivered";
-  if (line.isReturnable && line.returnableUntil !== null) {
-    return `Return or replace by ${formatOrderDate(line.returnableUntil)}`;
-  }
-  return "Return window closed";
 }
 
 type ReturnFormProps = {

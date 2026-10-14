@@ -70,7 +70,9 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
           <Stacked eyebrow="Returns" strong="& Orders" />
         </Link>
         <Link href={shopper === null ? signIn : "/account"} className={styles.phoneAccount}>
-          {shopper === null ? "Sign in" : shopper.firstName}
+          <span className={styles.phoneAccountName}>
+            {shopper === null ? "Sign in" : shopper.firstName}
+          </span>
           <Icon name="chevron-right" size={14} strokeWidth={2.6} />
         </Link>
         <Link
@@ -79,7 +81,7 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
           aria-label={`Cart, ${pluralize(cart.itemCount, "item", "items")}`}
         >
           <Icon name="cart" size={24} />
-          Cart
+          <span className={styles.cartWord}>Cart</span>
           <span className={styles.cartCount}>{cart.itemCount}</span>
         </Link>
       </nav>
