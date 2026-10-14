@@ -14,6 +14,8 @@ Builders for test data live in `src/test-support`, exported from its `index.ts`,
 
 Only test files import `@/test-support`. Production code never does, and `src/test-support` imports only `@/core` types.
 
+Exception: acceptance tests that pin the reference screens (the result counts, suggestions, and headlines the designs show) seed the fake with the bundled `CATALOG` from `@/infrastructure`, because those screens were drawn from exactly that catalog. Every other test builds the products it needs.
+
 Good:
 
 ```ts

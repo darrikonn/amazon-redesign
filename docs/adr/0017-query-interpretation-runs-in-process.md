@@ -16,6 +16,8 @@ Query interpretation is a pure business component in `src/component/query-interp
 
 The vocabulary (category synonyms, feature synonyms, colours, stop words) lives next to the interpreter as constants. Adding a synonym is a code change with a test.
 
+Rating phrases set a floor: "top rated", "best rated", and "highly rated" mean 4.5 and up, and an explicit star count ("4 stars", "4+ stars") means that count and up. The reference prototype mapped every rating phrase to 4.5; taking the shopper's number literally is deliberate.
+
 Suggestion counts are computed by appending the suggestion's phrase to the query and interpreting the result. The count a chip shows is therefore exactly what the shopper gets after pressing it.
 
 Good:
