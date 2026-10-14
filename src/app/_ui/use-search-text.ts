@@ -1,49 +1,37 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { SearchTextScheduler } from "./search-text-scheduler";
+import { BROWSER_TIMER } from "./timer";
 
 export type SearchText = {
   text: string;
   searchText: string;
+  isPending: boolean;
   type: (next: string) => void;
   apply: (next: string) => void;
 };
 
-// What the shopper types shows at once, but the search waits for a short pause so it
-// does not rerun on every keystroke. Picking a chip or a suggestion applies at once.
 export function useSearchText(initial: string): SearchText {
   const [text, setText] = useState(initial);
   const [searchText, setSearchText] = useState(initial);
-  const timer = useRef<number | null>(null);
+  const [scheduler] = useState(() => new SearchTextScheduler(BROWSER_TIMER, setSearchText));
 
-  const cancelPending = useCallback(() => {
-    if (timer.current === null) return;
-    window.clearTimeout(timer.current);
-    timer.current = null;
-  }, []);
+  useEffect(() => () => scheduler.dispose(), [scheduler]);
 
   const type = useCallback(
     (next: string) => {
       setText(next);
-      cancelPending();
-      timer.current = window.setTimeout(() => {
-        timer.current = null;
-        setSearchText(next);
-      }, SEARCH_PAUSE_IN_MILLISECONDS);
+      scheduler.type(next);
     },
-    [cancelPending],
+    [scheduler],
   );
 
   const apply = useCallback(
     (next: string) => {
-      cancelPending();
       setText(next);
-      setSearchText(next);
+      scheduler.apply(next);
     },
-    [cancelPending],
+    [scheduler],
   );
 
-  useEffect(() => cancelPending, [cancelPending]);
-
-  return { text, searchText, type, apply };
+  return { text, searchText, isPending: text !== searchText, type, apply };
 }
-
-const SEARCH_PAUSE_IN_MILLISECONDS = 250;

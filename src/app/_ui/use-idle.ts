@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
+import { IdleTracker } from "./idle-tracker";
+import { BROWSER_TIMER } from "./timer";
 
-// True once the shopper has not moved the pointer, scrolled, touched, or typed for
-// `delayInMilliseconds`; any of those makes it false again.
 export function useIdle(delayInMilliseconds: number): boolean {
   const [isIdle, setIsIdle] = useState(false);
 
   useEffect(() => {
-    let timer = window.setTimeout(() => setIsIdle(true), delayInMilliseconds);
-    function onActivity() {
-      setIsIdle(false);
-      window.clearTimeout(timer);
-      timer = window.setTimeout(() => setIsIdle(true), delayInMilliseconds);
-    }
+    const tracker = new IdleTracker(BROWSER_TIMER, delayInMilliseconds, setIsIdle);
+    const onActivity = () => tracker.activity();
     for (const event of ACTIVITY_EVENTS)
       window.addEventListener(event, onActivity, { passive: true });
     return () => {
-      window.clearTimeout(timer);
+      tracker.dispose();
       for (const event of ACTIVITY_EVENTS) window.removeEventListener(event, onActivity);
     };
   }, [delayInMilliseconds]);
