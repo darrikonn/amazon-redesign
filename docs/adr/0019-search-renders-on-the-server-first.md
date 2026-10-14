@@ -12,7 +12,7 @@ A search must be shareable and survive a reload, so the query and sort belong in
 
 - The URL is the source of truth for a search: `/?q=<text>&sort=<sort>`. Delivery passes both through as raw strings. The search use case validates `sort` against the `SearchSort` literals, falls back to best match for anything else, and returns the sort it used as `requestedSort`, so delivery never imports runtime code from core.
 - `src/app/page.tsx` is a server component. It reads the URL, creates a container, runs the search use case, and renders the first result on the server.
-- `src/app/_ui/storefront.tsx` is the client root. It creates its own container once per page, re-runs the use cases on every change, and writes the query and sort back to the URL with `history.replaceState`, so typing does not add history entries.
+- `src/app/_ui/storefront.tsx` is the client root. It creates its own container once per page, re-runs the search once the shopper pauses typing (ADR 0027), and writes the query and sort back to the URL with `history.replaceState`, so typing does not add history entries.
 - Responses that arrive after a newer request started are discarded, so a slow early keystroke never overwrites a later result.
 - Delivery UI lives in `src/app/_ui` (the underscore keeps it out of routing). Styles are CSS Modules next to the component, with colour tokens as CSS custom properties in `src/app/global.css`.
 
