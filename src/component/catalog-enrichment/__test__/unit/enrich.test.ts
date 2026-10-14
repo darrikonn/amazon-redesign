@@ -26,8 +26,18 @@ const dummyJsonProduct = {
   tags: ["watches", "leather watches"],
   brand: "Fashion Timepieces",
   thumbnail: "https://cdn.dummyjson.com/product-images/watch/thumbnail.webp",
+  images: ["https://cdn.dummyjson.com/product-images/watch/1.webp"],
   shippingInformation: "Ships in 3-5 business days",
-  reviewCount: 3,
+  warrantyInformation: "1 year warranty",
+  returnPolicy: "30 days return policy",
+  availabilityStatus: "In Stock",
+  stock: 12,
+  reviews: [1, 2, 3].map((rating) => ({
+    reviewerName: `Reviewer ${rating}`,
+    rating,
+    comment: "Fine.",
+    date: "2025-04-30T09:41:02.053Z",
+  })),
 };
 
 describe("mapCategory", () => {
@@ -199,6 +209,14 @@ describe("buildCatalog", () => {
 
     expect(buildCatalog("dummyjson", raw, overrides).products[0]?.color).toBe("black");
   });
+
+  it("builds the details of every product under the same product id", () => {
+    const raw = { products: [rawDummyJson(dummyJsonProduct)] };
+    const catalog = buildCatalog("dummyjson", raw, parseOverrides({}));
+
+    expect(catalog.details.map((details) => details.productId)).toEqual(["dummyjson-0007"]);
+    expect(catalog.products.map((product) => product.id)).toEqual(["dummyjson-0007"]);
+  });
 });
 
 describe("dropRareTags", () => {
@@ -213,9 +231,5 @@ describe("dropRareTags", () => {
 });
 
 function rawDummyJson(product: typeof dummyJsonProduct) {
-  return {
-    ...product,
-    price: product.priceInDollars,
-    reviews: Array.from({ length: product.reviewCount }, () => ({ rating: 4 })),
-  };
+  return { ...product, price: product.priceInDollars };
 }

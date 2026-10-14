@@ -12,6 +12,7 @@ async function main(): Promise<void> {
   if (!fromRaw) await writeText(rawPath(source), rawText);
   const catalog = buildCatalog(source, JSON.parse(rawText), CATALOG_OVERRIDES);
   await writeText(CATALOG_PATH, toJson(catalog.products));
+  await writeText(DETAILS_PATH, toJson(catalog.details));
   await writeText(VOCABULARY_PATH, toJson(catalog.vocabulary));
   console.info(
     `Built ${catalog.products.length} products from ${source}${fromRaw ? " (committed raw data)" : ""}.`,
@@ -31,6 +32,7 @@ const SOURCES: readonly SourceEndpoint[] = [
 const ROOT = path.resolve(import.meta.dirname, "..");
 const RAW_DIRECTORY = path.join(ROOT, "src/infrastructure/product/data/raw");
 const CATALOG_PATH = path.join(ROOT, "src/infrastructure/product/data/catalog.json");
+const DETAILS_PATH = path.join(ROOT, "src/infrastructure/product/data/product-details.json");
 const VOCABULARY_PATH = path.join(ROOT, "src/component/catalog-vocabulary/vocabulary.json");
 const FETCH_TIMEOUT_IN_MILLISECONDS = 20_000;
 

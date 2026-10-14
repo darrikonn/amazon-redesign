@@ -34,6 +34,16 @@ export function requireNumber(
   return value;
 }
 
+export function optionalNumber(
+  record: Record<string, unknown>,
+  key: string,
+  context: string,
+): number | null {
+  const value = record[key];
+  if (value === undefined || value === null) return null;
+  return requireNumber(record, key, context);
+}
+
 export function optionalString(
   record: Record<string, unknown>,
   key: string,

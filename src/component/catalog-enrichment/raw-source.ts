@@ -18,8 +18,21 @@ export type RawDummyJsonProduct = {
   tags: readonly string[];
   brand: string | null;
   thumbnail: string | null;
+  images: readonly string[];
   shippingInformation: string;
-  reviewCount: number;
+  warrantyInformation: string | null;
+  returnPolicy: string | null;
+  availabilityStatus: string | null;
+  stock: number;
+  reviews: readonly RawReview[];
+};
+
+// Reviewer email addresses in the source are never read, so they cannot reach the app.
+export type RawReview = {
+  reviewerName: string;
+  rating: number;
+  comment: string;
+  date: string;
 };
 
 export type RawFakeStoreProduct = {
@@ -48,10 +61,27 @@ export function parseDummyJsonResponse(json: unknown): RawDummyJsonProduct[] {
       tags: requireStringArray(record, "tags", context),
       brand: optionalString(record, "brand", context),
       thumbnail: optionalString(record, "thumbnail", context),
+      images: requireStringArray(record, "images", context),
       shippingInformation: requireString(record, "shippingInformation", context),
-      reviewCount: requireArray(record.reviews, `${context} reviews`).length,
+      warrantyInformation: optionalString(record, "warrantyInformation", context),
+      returnPolicy: optionalString(record, "returnPolicy", context),
+      availabilityStatus: optionalString(record, "availabilityStatus", context),
+      stock: requireNumber(record, "stock", context),
+      reviews: requireArray(record.reviews, `${context} reviews`).map((review, reviewIndex) =>
+        parseReview(review, `${context} review ${reviewIndex}`),
+      ),
     };
   });
+}
+
+function parseReview(value: unknown, context: string): RawReview {
+  const record = requireRecord(value, context);
+  return {
+    reviewerName: requireString(record, "reviewerName", context),
+    rating: requireNumber(record, "rating", context),
+    comment: requireString(record, "comment", context),
+    date: requireString(record, "date", context),
+  };
 }
 
 export function parseFakeStoreResponse(json: unknown): RawFakeStoreProduct[] {

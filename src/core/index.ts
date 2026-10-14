@@ -3,6 +3,7 @@ export type { CartLineRepository } from "./cart/cart-line-repository";
 export { NotFoundError } from "./error/not-found-error";
 export {
   isRecord,
+  optionalNumber,
   optionalString,
   requireArray,
   requireNumber,
@@ -16,6 +17,13 @@ export type { Color } from "./product/color";
 export { COLORS, isColor } from "./product/color";
 export type { Product, ProductId, ProductSource } from "./product/product";
 export { isProductSource, PRODUCT_SOURCES } from "./product/product";
+export type {
+  Availability,
+  ProductDetails,
+  ProductReview,
+} from "./product/product-details";
+export { AVAILABILITIES, isAvailability } from "./product/product-details";
+export type { ProductDetailsRepository } from "./product/product-details-repository";
 export type { ProductRepository } from "./product/product-repository";
 export type { Tag } from "./product/tag";
 export { isTag, TAGS } from "./product/tag";

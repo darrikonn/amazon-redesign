@@ -1,4 +1,4 @@
-import type { CategoryId, Color, Product, ProductSource, Tag } from "@/core";
+import type { CategoryId, Color, Product, ProductDetails, ProductSource, Tag } from "@/core";
 import { CATEGORY_IDS, COLORS, TAGS } from "@/core";
 import {
   CATEGORY_MAP,
@@ -9,12 +9,14 @@ import {
 } from "../catalog-vocabulary";
 import { wholePhrasePattern } from "../query-interpretation";
 import type { CatalogOverrides, ProductOverride } from "./override";
+import { buildProductDetails } from "./product-details";
 import {
   parseDummyJsonResponse,
   parseFakeStoreResponse,
   type RawDummyJsonProduct,
   type RawFakeStoreProduct,
 } from "./raw-source";
+import { blankToNull, compareText, productIdFor } from "./source-text";
 
 export const ENRICHMENT_RULES = {
   maximumNameLength: 60,
@@ -26,6 +28,7 @@ export const ENRICHMENT_RULES = {
 
 export type Catalog = {
   products: readonly Product[];
+  details: readonly ProductDetails[];
   vocabulary: CatalogVocabulary;
 };
 
@@ -40,7 +43,11 @@ export function buildCatalog(
   const products = applyOverrides(enriched, overrides[source]).sort((first, second) =>
     compareText(first.id, second.id),
   );
-  return { products, vocabulary: buildVocabulary(products) };
+  return {
+    products,
+    details: buildProductDetails(source, rawResponse),
+    vocabulary: buildVocabulary(products),
+  };
 }
 
 export function normaliseResponse(source: ProductSource, rawResponse: unknown): Product[] {
@@ -57,7 +64,7 @@ export function normaliseDummyJsonProduct(raw: RawDummyJsonProduct): Product {
     sourceTags: raw.tags,
     priceInDollars: raw.priceInDollars,
     rating: raw.rating,
-    reviewCount: raw.reviewCount,
+    reviewCount: raw.reviews.length,
     deliveryDays: deliveryDaysFrom(raw.shippingInformation),
     image: raw.thumbnail,
     brand: raw.brand,
@@ -170,12 +177,11 @@ type SourceFacts = {
 };
 
 const CENTS_PER_DOLLAR = 100;
-const ID_DIGITS = 4;
 
 function productFrom(source: ProductSource, sourceId: number, facts: SourceFacts): Product {
   const category = mapCategory(facts.sourceCategory, facts.title);
   return {
-    id: `${source}-${String(sourceId).padStart(ID_DIGITS, "0")}`,
+    id: productIdFor(source, sourceId),
     source,
     sourceId,
     name: trimName(facts.title),
@@ -235,11 +241,6 @@ const DELIVERY_RULES: readonly { pattern: RegExp; days: number }[] = [
   { pattern: /in 1 month/, days: 30 },
 ];
 
-function blankToNull(value: string | null): string | null {
-  const trimmed = value?.trim() ?? "";
-  return trimmed === "" ? null : trimmed;
-}
-
 function withOverride(product: Product, override: ProductOverride): Product {
   const category = override.category ?? product.category;
   return {
@@ -261,9 +262,4 @@ function countTags(products: readonly Product[]): Map<Tag, number> {
     for (const tag of product.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
   }
   return counts;
-}
-
-function compareText(first: string, second: string): number {
-  if (first === second) return 0;
-  return first < second ? -1 : 1;
 }

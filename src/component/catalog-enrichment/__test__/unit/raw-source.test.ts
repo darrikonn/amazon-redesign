@@ -11,12 +11,25 @@ const dummyJsonProduct = {
   tags: ["beauty", "mascara"],
   brand: "Essence",
   thumbnail: "https://cdn.dummyjson.com/x/thumbnail.webp",
+  images: ["https://cdn.dummyjson.com/x/1.webp", "https://cdn.dummyjson.com/x/2.webp"],
   shippingInformation: "Ships in 3-5 business days",
-  reviews: [{}, {}, {}],
+  warrantyInformation: "1 week warranty",
+  returnPolicy: "No return policy",
+  availabilityStatus: "Low Stock",
+  stock: 4,
+  reviews: [
+    {
+      rating: 5,
+      comment: "Highly impressed!",
+      date: "2025-04-30T09:41:02.053Z",
+      reviewerName: "Eleanor Collins",
+      reviewerEmail: "eleanor.collins@x.dummyjson.com",
+    },
+  ],
 };
 
 describe("parseDummyJsonResponse", () => {
-  it("reads the fields the app uses and counts the reviews", () => {
+  it("reads the fields the app uses", () => {
     expect(parseDummyJsonResponse({ products: [dummyJsonProduct] })).toEqual([
       {
         id: 1,
@@ -28,10 +41,34 @@ describe("parseDummyJsonResponse", () => {
         tags: ["beauty", "mascara"],
         brand: "Essence",
         thumbnail: "https://cdn.dummyjson.com/x/thumbnail.webp",
+        images: ["https://cdn.dummyjson.com/x/1.webp", "https://cdn.dummyjson.com/x/2.webp"],
         shippingInformation: "Ships in 3-5 business days",
-        reviewCount: 3,
+        warrantyInformation: "1 week warranty",
+        returnPolicy: "No return policy",
+        availabilityStatus: "Low Stock",
+        stock: 4,
+        reviews: [
+          {
+            reviewerName: "Eleanor Collins",
+            rating: 5,
+            comment: "Highly impressed!",
+            date: "2025-04-30T09:41:02.053Z",
+          },
+        ],
       },
     ]);
+  });
+
+  it("never reads a reviewer's email address", () => {
+    const [product] = parseDummyJsonResponse({ products: [dummyJsonProduct] });
+
+    expect(JSON.stringify(product)).not.toContain("@");
+  });
+
+  it("fails loudly when a review is missing its comment", () => {
+    const broken = { ...dummyJsonProduct, reviews: [{ rating: 5, reviewerName: "A", date: "x" }] };
+
+    expect(() => parseDummyJsonResponse({ products: [broken] })).toThrow('"comment"');
   });
 
   it("accepts a product without a brand", () => {

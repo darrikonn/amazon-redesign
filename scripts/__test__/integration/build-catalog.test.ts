@@ -11,12 +11,15 @@ import {
   STARTER_QUERIES,
 } from "@/component";
 import { isCategoryId, requireArray, requireRecord, requireString } from "@/core";
-import { CATALOG } from "@/infrastructure";
+import { CATALOG, parseProductDetailsFile } from "@/infrastructure";
 
 const ROOT = path.resolve(import.meta.dirname, "../../..");
 const rawResponse: unknown = readJson("src/infrastructure/product/data/raw/dummyjson.json");
 const committedVocabulary = parseCatalogVocabulary(
   readJson("src/component/catalog-vocabulary/vocabulary.json"),
+);
+const committedDetails = parseProductDetailsFile(
+  readJson("src/infrastructure/product/data/product-details.json"),
 );
 
 describe("the committed catalogue", () => {
@@ -60,7 +63,17 @@ describe("the committed catalogue", () => {
     // Assert
     expect(second).toEqual(first);
     expect(first.products).toEqual(CATALOG);
+    expect(first.details).toEqual(committedDetails);
     expect(first.vocabulary).toEqual(committedVocabulary);
+  });
+
+  it("has details for every product and no reviewer email addresses", () => {
+    const text = JSON.stringify(committedDetails);
+
+    expect(committedDetails.map((details) => details.productId)).toEqual(
+      CATALOG.map((product) => product.id),
+    );
+    expect(text).not.toContain("@");
   });
 });
 

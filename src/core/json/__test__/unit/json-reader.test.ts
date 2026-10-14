@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   isRecord,
+  optionalNumber,
   optionalString,
   requireArray,
   requireNumber,
@@ -23,6 +24,9 @@ describe("json readers", () => {
     expect(requireNumber(record, "price", "product")).toBe(12);
     expect(requireStringArray(record, "tags", "product")).toEqual(["a"]);
     expect(optionalString(record, "brand", "product")).toBeNull();
+    expect(optionalNumber(record, "price", "product")).toBe(12);
+    expect(optionalNumber(record, "brand", "product")).toBeNull();
+    expect(optionalNumber(record, "stock", "product")).toBeNull();
     expect(requireArray([1], "list")).toEqual([1]);
   });
 
@@ -33,6 +37,7 @@ describe("json readers", () => {
       'product: expected "name" to be a string',
     );
     expect(() => requireNumber(record, "price", "product")).toThrow('"price" to be a number');
+    expect(() => optionalNumber(record, "tags", "product")).toThrow('"tags" to be a number');
     expect(() => requireStringArray(record, "tags", "product")).toThrow(
       '"tags[1]" is not a string',
     );
