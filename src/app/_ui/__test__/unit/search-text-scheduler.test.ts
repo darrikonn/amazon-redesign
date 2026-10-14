@@ -39,14 +39,27 @@ describe("SearchTextScheduler", () => {
     expect(searched).toEqual(["watches"]);
   });
 
-  it("returns home at once when typing empties the bar", () => {
+  it("keeps the last search while the shopper deletes a query and starts a new one", () => {
+    const { timer, searched, scheduler } = setUp();
+
+    scheduler.type("watc");
+    timer.advance(100);
+    scheduler.type("");
+    timer.advance(100);
+    scheduler.type("b");
+    timer.advance(SEARCH_PAUSE_IN_MILLISECONDS);
+
+    expect(searched).toEqual(["b"]);
+  });
+
+  it("returns home once the shopper pauses with the bar empty", () => {
     const { timer, searched, scheduler } = setUp();
 
     scheduler.type("w");
-    scheduler.type(" ");
+    scheduler.type("");
+    timer.advance(SEARCH_PAUSE_IN_MILLISECONDS);
 
-    expect(searched).toEqual([" "]);
-    expect(timer.pendingCount).toBe(0);
+    expect(searched).toEqual([""]);
   });
 
   it("forgets a pending search when disposed", () => {

@@ -27,8 +27,4 @@ export class ManualTimer implements Timer {
       entry.callback();
     }
   }
-
-  get pendingCount(): number {
-    return this.scheduled.size;
-  }
 }
