@@ -245,6 +245,15 @@ describe("SearchCatalog", () => {
       text: "luxury watches",
       isCurrent: false,
     });
+    expect(watches?.popular).toHaveLength(3);
+    expect(Object.keys(watches?.popular[0] ?? {})).toEqual([
+      "id",
+      "name",
+      "category",
+      "image",
+      "priceInCents",
+      "rating",
+    ]);
   });
 
   it("keeps the department directory when nothing matched", async () => {

@@ -4,6 +4,7 @@ export {
   type NavigationLinkView,
   type NavigationView,
   type ProductListing,
+  type ProductTeaserView,
   SearchCatalog,
   type SearchCatalogRequest,
   type SearchOutcome,

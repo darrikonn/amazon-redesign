@@ -1,6 +1,6 @@
-import type { Highlight, Listing, SearchResult } from "@/component";
+import type { BrowseNavigation, Highlight, Listing, SearchResult } from "@/component";
 import { removePhrase, searchProducts, suggestRewrite } from "@/component";
-import type { CategoryId, Color, ProductId, ProductRepository, SearchSort } from "@/core";
+import type { CategoryId, Color, Product, ProductId, ProductRepository, SearchSort } from "@/core";
 import { isSearchSort, SEARCH_SORTS } from "@/core";
 
 export type SearchCatalogRequest = {
@@ -33,6 +33,16 @@ export type NavigationDepartmentView = {
   link: NavigationLinkView;
   containsResults: boolean;
   groups: readonly NavigationLinkView[];
+  popular: readonly ProductTeaserView[];
+};
+
+export type ProductTeaserView = {
+  id: ProductId;
+  name: string;
+  category: CategoryId;
+  image: string | null;
+  priceInCents: number;
+  rating: number;
 };
 
 export type NavigationLinkView = {
@@ -138,7 +148,7 @@ function toOutcome(
         ? null
         : `Closest matches, ignoring ${quoted(result.closestMatchesDroppedLabel)}`,
     listings: result.listings.map(toProductListing),
-    navigation: result.navigation,
+    navigation: toNavigationView(result.navigation),
   };
 }
 
@@ -180,5 +190,27 @@ function toProductListing(listing: Listing): ProductListing {
     image: product.image,
     isBestMatch: listing.isBestMatch,
     highlightLabel: listing.highlight === null ? null : HIGHLIGHT_LABELS[listing.highlight],
+  };
+}
+
+function toNavigationView(navigation: BrowseNavigation): NavigationView {
+  return {
+    departments: navigation.departments.map((department) => ({
+      link: department.link,
+      containsResults: department.containsResults,
+      groups: department.groups,
+      popular: department.popular.map(toProductTeaser),
+    })),
+  };
+}
+
+function toProductTeaser(product: Product): ProductTeaserView {
+  return {
+    id: product.id,
+    name: product.name,
+    category: product.category,
+    image: product.image,
+    priceInCents: product.priceInCents,
+    rating: product.rating,
   };
 }

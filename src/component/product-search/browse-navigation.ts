@@ -4,6 +4,7 @@ import { CATEGORY_MAP, capitalize, tagLabel, tagPhrase } from "../catalog-vocabu
 
 export const NAVIGATION_RULES = {
   maximumGroupLinks: 8,
+  maximumPopularProducts: 3,
 } as const;
 
 export type NavigationLink = {
@@ -17,6 +18,7 @@ export type NavigationDepartment = {
   link: NavigationLink;
   containsResults: boolean;
   groups: readonly NavigationLink[];
+  popular: readonly Product[];
 };
 
 export type BrowseNavigation = {
@@ -26,7 +28,8 @@ export type BrowseNavigation = {
 // A store directory: every department that has products, in a fixed order, with
 // catalogue-wide counts, so the panel reads the same on every search and clicking through
 // it never reshuffles it. Only the markers move: the department the results belong to,
-// and the entry that is exactly the current search.
+// and the entry that is exactly the current search. The department holding the results
+// also lists its best-rated products.
 export function buildBrowseNavigation(
   catalog: readonly Product[],
   interpretation: Interpretation,
@@ -34,7 +37,7 @@ export function buildBrowseNavigation(
 ): BrowseNavigation {
   const resultCategory = interpretation.intent.category ?? sharedCategory(matches);
   const departments = CATEGORY_IDS.map((category) =>
-    departmentEntry(catalog, interpretation, category, resultCategory),
+    departmentEntry(catalog, interpretation, matches, category, resultCategory),
   ).filter((department) => department.link.productCount > 0);
   return { departments };
 }
@@ -47,6 +50,7 @@ function sharedCategory(matches: readonly Product[]): CategoryId | null {
 function departmentEntry(
   catalog: readonly Product[],
   interpretation: Interpretation,
+  matches: readonly Product[],
   category: CategoryId,
   resultCategory: CategoryId | null,
 ): NavigationDepartment {
@@ -60,6 +64,7 @@ function departmentEntry(
     },
     containsResults: category === resultCategory,
     groups: groupLinks(inCategory, interpretation, category),
+    popular: category === resultCategory ? popularProducts(inCategory, matches) : [],
   };
 }
 
@@ -94,4 +99,23 @@ function countBy<Key>(keys: readonly Key[]): [Key, number][] {
   const counts = new Map<Key, number>();
   for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
   return [...counts.entries()].sort(([, first], [, second]) => second - first);
+}
+
+// Best rated first, preferring products the results are not already showing, so the panel
+// offers something new to look at.
+function popularProducts(inCategory: readonly Product[], matches: readonly Product[]): Product[] {
+  const shown = new Set(matches.map((product) => product.id));
+  return [...inCategory]
+    .sort(
+      (first, second) =>
+        Number(shown.has(first.id)) - Number(shown.has(second.id)) ||
+        second.rating - first.rating ||
+        compareIds(first, second),
+    )
+    .slice(0, NAVIGATION_RULES.maximumPopularProducts);
+}
+
+function compareIds(first: Product, second: Product): number {
+  if (first.id === second.id) return 0;
+  return first.id < second.id ? -1 : 1;
 }

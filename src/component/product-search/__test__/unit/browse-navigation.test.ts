@@ -17,9 +17,9 @@ const jewellery = {
 } as const;
 
 const catalog: Product[] = [
-  aProduct({ ...watch, id: "rolex", tags: ["luxury"] }),
-  aProduct({ ...watch, id: "longines", tags: ["luxury", "elegant"] }),
-  aProduct({ ...watch, id: "belt", tags: ["leather"] }),
+  aProduct({ ...watch, id: "rolex", tags: ["luxury"], rating: 4.8 }),
+  aProduct({ ...watch, id: "longines", tags: ["luxury", "elegant"], rating: 4.1 }),
+  aProduct({ ...watch, id: "belt", tags: ["leather"], rating: 3.2 }),
   aProduct({ ...jewellery, id: "earring" }),
   aProduct({ id: "laptop", tags: ["luxury"] }),
 ];
@@ -77,6 +77,7 @@ describe("buildBrowseNavigation", () => {
     expect(departmentFor(navigation, "Watches")).toEqual({
       link: { label: "Watches", productCount: 3, text: "watches", isCurrent: false },
       containsResults: true,
+      popular: [catalog[2], catalog[0], catalog[1]],
       groups: [
         { label: "Luxury", productCount: 2, text: "luxury watches", isCurrent: true },
         { label: "Elegant", productCount: 1, text: "elegant watches", isCurrent: false },
@@ -110,6 +111,27 @@ describe("buildBrowseNavigation", () => {
 
   it("still marks the department that was asked for when nothing in it matched", () => {
     expect(resultDepartmentLabels(navigationFor("purple watches"))).toEqual(["Watches"]);
+  });
+
+  it("lists the department's best-rated products, preferring ones the results do not show", () => {
+    const navigation = navigationFor("leather watches");
+    const popular = departmentFor(navigation, "Watches")?.popular.map((product) => product.id);
+
+    expect(popular).toEqual(["rolex", "longines", "belt"]);
+  });
+
+  it("lists popular products only for the department holding the results", () => {
+    const navigation = navigationFor("watches");
+    const others = navigation.departments.filter((department) => !department.containsResults);
+
+    expect(others.every((department) => department.popular.length === 0)).toBe(true);
+  });
+
+  it("caps the number of popular products", () => {
+    const many = ["a", "b", "c", "d", "e"].map((id) => aProduct({ ...watch, id }));
+    const watches = departmentFor(navigationFor("watches", many), "Watches");
+
+    expect(watches?.popular).toHaveLength(NAVIGATION_RULES.maximumPopularProducts);
   });
 
   it("caps the number of sub-group links", () => {
