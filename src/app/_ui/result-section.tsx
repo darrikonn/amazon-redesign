@@ -1,4 +1,4 @@
-import type { SearchSort } from "@/core";
+import type { ProductId, SearchSort } from "@/core";
 import type { SearchOutcome, SortOptionView } from "@/use-case";
 import { resultCountLabel } from "./format";
 import { ProductCard } from "./product-card";
@@ -6,10 +6,10 @@ import styles from "./result-section.module.css";
 
 type ResultSectionProps = {
   outcome: SearchOutcome;
-  cartProductIds: readonly string[];
+  cartProductIds: readonly ProductId[];
   onSearch: (text: string) => void;
   onPickSort: (sort: SearchSort, text: string) => void;
-  onToggleCart: (productId: string) => void;
+  onToggleCart: (productId: ProductId) => void;
 };
 
 export function ResultSection({

@@ -3,6 +3,8 @@ import type { IllustrationShape } from "@/core";
 
 export const GLOW_GRADIENT_ID = "product-glow";
 
+const GLOW_FILL = `url(#${GLOW_GRADIENT_ID}) #FFF1A8`;
+
 export function ProductIllustration({
   shape,
   isMirrored,
@@ -41,7 +43,7 @@ const SHAPES: Record<IllustrationShape, ReactNode> = {
   "led-desk-lamp": (
     <>
       <ellipse cx="100" cy="180" rx="56" ry="6" fill="#0F1111" opacity="0.140" />
-      <path d="M92 76 130 92 148 170H58z" fill="url(#product-glow) #FFF1A8" />
+      <path d="M92 76 130 92 148 170H58z" fill={GLOW_FILL} />
       <path
         d="M96 168 74 108 114 66"
         fill="none"
@@ -74,7 +76,7 @@ const SHAPES: Record<IllustrationShape, ReactNode> = {
     <>
       <ellipse cx="100" cy="180" rx="58" ry="6" fill="#0F1111" opacity="0.140" />
       <g transform="translate(9 0)">
-        <path d="M54 92h60l24 84H30z" fill="url(#product-glow) #FFF1A8" />
+        <path d="M54 92h60l24 84H30z" fill={GLOW_FILL} />
         <path
           d="M134 160 150 102 86 60"
           fill="none"
@@ -105,7 +107,7 @@ const SHAPES: Record<IllustrationShape, ReactNode> = {
   "gooseneck-lamp": (
     <>
       <ellipse cx="100" cy="180" rx="40" ry="6" fill="#0F1111" opacity="0.140" />
-      <path d="M96 60 138 74 150 150H70z" fill="url(#product-glow) #FFF1A8" />
+      <path d="M96 60 138 74 150 150H70z" fill={GLOW_FILL} />
       <path
         d="M100 150C100 112 58 116 66 82 71 62 92 54 112 60"
         fill="none"
@@ -142,7 +144,7 @@ const SHAPES: Record<IllustrationShape, ReactNode> = {
       <ellipse cx="100" cy="180" rx="50" ry="6" fill="#0F1111" opacity="0.140" />
       <rect x="40" y="66" width="120" height="84" rx="9" fill="#0F1111" opacity="0.160" />
       <rect x="48" y="74" width="104" height="68" rx="4" fill="#FFFFFF" opacity="0.550" />
-      <path d="M52 62h96l10 56H42z" fill="url(#product-glow) #FFF1A8" />
+      <path d="M52 62h96l10 56H42z" fill={GLOW_FILL} />
       <rect x="92" y="150" width="16" height="20" fill="#0F1111" opacity="0.160" />
       <rect x="68" y="168" width="64" height="9" rx="4.500" fill="#0F1111" opacity="0.200" />
       <rect x="46" y="46" width="108" height="16" rx="8" fill="currentColor" />
@@ -153,7 +155,7 @@ const SHAPES: Record<IllustrationShape, ReactNode> = {
   "bankers-lamp": (
     <>
       <ellipse cx="100" cy="180" rx="50" ry="6" fill="#0F1111" opacity="0.140" />
-      <path d="M58 84h84l26 90H32z" fill="url(#product-glow) #FFF1A8" />
+      <path d="M58 84h84l26 90H32z" fill={GLOW_FILL} />
       <rect x="96" y="80" width="8" height="84" fill="currentColor" />
       <path
         d="M66 42h68a8 8 0 0 1 7 5l14 30a6 6 0 0 1-5 9H50a6 6 0 0 1-5-9l14-30a8 8 0 0 1 7-5z"
@@ -169,7 +171,7 @@ const SHAPES: Record<IllustrationShape, ReactNode> = {
   "charging-base-lamp": (
     <>
       <ellipse cx="100" cy="180" rx="58" ry="6" fill="#0F1111" opacity="0.140" />
-      <path d="M84 60h62l14 106H70z" fill="url(#product-glow) #FFF1A8" />
+      <path d="M84 60h62l14 106H70z" fill={GLOW_FILL} />
       <rect x="58" y="44" width="10" height="124" rx="5" fill="currentColor" />
       <rect x="58" y="44" width="96" height="12" rx="6" fill="currentColor" />
       <rect x="84" y="54" width="62" height="6" rx="3" fill="#FFFFFF" opacity="0.800" />
@@ -189,7 +191,7 @@ const SHAPES: Record<IllustrationShape, ReactNode> = {
   "tripod-lamp": (
     <>
       <ellipse cx="100" cy="180" rx="54" ry="6" fill="#0F1111" opacity="0.140" />
-      <path d="M60 86h80l22 88H38z" fill="url(#product-glow) #FFF1A8" />
+      <path d="M60 86h80l22 88H38z" fill={GLOW_FILL} />
       <path
         d="M100 88 66 176M100 88v88M100 88l34 88"
         fill="none"

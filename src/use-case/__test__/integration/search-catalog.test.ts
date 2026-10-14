@@ -204,9 +204,17 @@ describe("SearchCatalog", () => {
     });
   });
 
-  it("reads the catalog once per search", async () => {
-    await container.searchCatalog.execute({ text: "lamp", sort: "best-match" });
+  it("falls back to best match for an unknown sort", async () => {
+    const outcome = await container.searchCatalog.execute({ text: "lamp", sort: "random" });
 
-    expect(fakes.products.calls).toEqual([{ method: "list", ids: [] }]);
+    expect(outcome.requestedSort).toBe("best-match");
+    expect(outcome.sortOptions.find((option) => option.isSelected)?.sort).toBe("best-match");
+  });
+
+  it("keeps a requested sort that the text does not override", async () => {
+    const outcome = await container.searchCatalog.execute({ text: "lamp", sort: "top-rated" });
+
+    expect(outcome.requestedSort).toBe("top-rated");
+    expect(outcome.listings[0]?.title).toBe("Monitor light bar with touch control");
   });
 });

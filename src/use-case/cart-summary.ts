@@ -1,7 +1,7 @@
-import type { CartLine } from "@/core";
+import type { CartLine, ProductId } from "@/core";
 
 export type CartSummary = {
-  productIds: readonly string[];
+  productIds: readonly ProductId[];
   itemCount: number;
 };
 

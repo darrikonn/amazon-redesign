@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Container, createContainer } from "@/composition";
-import type { SearchSort } from "@/core";
+import type { ProductId, SearchSort } from "@/core";
 import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { GlowGradient } from "./product-illustration";
 import { ResultSection } from "./result-section";
@@ -17,20 +17,14 @@ import { useTypingDemo } from "./use-typing-demo";
 
 type StorefrontProps = {
   initialOutcome: SearchOutcome;
-  initialSort: SearchSort;
   initialPreviewLabels: readonly string[];
   storefront: StorefrontData;
 };
 
-export function Storefront({
-  initialOutcome,
-  initialSort,
-  initialPreviewLabels,
-  storefront,
-}: StorefrontProps) {
+export function Storefront({ initialOutcome, initialPreviewLabels, storefront }: StorefrontProps) {
   const [container] = useState(createContainer);
   const [text, setText] = useState(initialOutcome.text);
-  const [sort, setSort] = useState(initialSort);
+  const [sort, setSort] = useState(initialOutcome.requestedSort);
   const outcome = useSearchOutcome(container, initialOutcome, text, sort);
   const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
   const demo = useTypingDemo(storefront.starterQueries, text === "");
@@ -48,7 +42,7 @@ export function Storefront({
   }, []);
 
   const toggleCart = useCallback(
-    (productId: string) => {
+    (productId: ProductId) => {
       container.toggleCartItem.execute({ productId }).then(setCart, reportError);
     },
     [container],

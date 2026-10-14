@@ -71,7 +71,7 @@ function categoryCandidates(intent: SearchIntent, matches: readonly Product[]): 
 
 function priceCandidates(intent: SearchIntent, matches: readonly Product[]): Candidate[] {
   if (intent.maximumPriceInCents !== null) return [];
-  const ceiling = formatDollars(medianPriceCeiling(matches));
+  const ceiling = formatDollars(medianPriceCeilingInCents(matches));
   return [{ label: `Under ${ceiling}`, phrase: `under ${ceiling}` }];
 }
 
@@ -96,13 +96,13 @@ function capitalize(text: string): string {
 }
 
 // The ceiling sits just above the median price, so the suggestion roughly halves the results.
-function medianPriceCeiling(matches: readonly Product[]): number {
-  const prices = matches
+function medianPriceCeilingInCents(matches: readonly Product[]): number {
+  const pricesInCents = matches
     .map((product) => product.priceInCents)
     .sort((first, second) => first - second);
-  const median = prices[Math.floor((prices.length - 1) / 2)] ?? 0;
-  const step = REFINEMENT_RULES.priceStepInCents;
-  return Math.ceil((median + 1) / step) * step;
+  const medianInCents = pricesInCents[Math.floor((pricesInCents.length - 1) / 2)] ?? 0;
+  const stepInCents = REFINEMENT_RULES.priceStepInCents;
+  return Math.ceil((medianInCents + 1) / stepInCents) * stepInCents;
 }
 
 function mostCommonFeatures(intent: SearchIntent, matches: readonly Product[]): Feature[] {

@@ -56,7 +56,7 @@
 
 .input::placeholder,
 .inputEmpty::placeholder {
-  color: #6f7373;
+  color: var(--color-placeholder);
 }
 
 .clearButton,

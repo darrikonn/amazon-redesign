@@ -24,10 +24,10 @@ export type ListingContext = {
 };
 
 export function toListings(products: readonly Product[], context: ListingContext): Listing[] {
-  const lowestPrice = Math.min(...products.map((product) => product.priceInCents));
+  const lowestPriceInCents = Math.min(...products.map((product) => product.priceInCents));
   return products.map((product, index) => {
     const isBestMatch = index === 0 && canHighlightBestMatch(context);
-    const isLowestPrice = canHighlight(context) && product.priceInCents === lowestPrice;
+    const isLowestPrice = canHighlight(context) && product.priceInCents === lowestPriceInCents;
     return {
       product,
       isBestMatch,

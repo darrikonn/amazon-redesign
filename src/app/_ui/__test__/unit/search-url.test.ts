@@ -2,16 +2,15 @@ import { describe, expect, it } from "vitest";
 import { readSearchParameters, searchUrl } from "@/app/_ui/search-url";
 
 describe("readSearchParameters", () => {
-  it("reads the query and a known sort", () => {
+  it("reads the query and the sort as typed", () => {
     expect(readSearchParameters({ q: "lamp", sort: "top-rated" })).toEqual({
       text: "lamp",
       sort: "top-rated",
     });
   });
 
-  it("falls back to best match for a missing or unknown sort", () => {
-    expect(readSearchParameters({})).toEqual({ text: "", sort: "best-match" });
-    expect(readSearchParameters({ q: "lamp", sort: "random" }).sort).toBe("best-match");
+  it("reads missing parameters as empty", () => {
+    expect(readSearchParameters({})).toEqual({ text: "", sort: "" });
   });
 
   it("uses the first value of a repeated parameter", () => {

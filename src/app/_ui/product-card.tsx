@@ -1,4 +1,4 @@
-import type { Color } from "@/core";
+import type { Color, ProductId } from "@/core";
 import type { ProductListing } from "@/use-case";
 import { deliveryLabel, formatRating, formatReviewCount, splitPrice } from "./format";
 import { Icon } from "./icon";
@@ -8,7 +8,7 @@ import { ProductIllustration } from "./product-illustration";
 type ProductCardProps = {
   listing: ProductListing;
   isInCart: boolean;
-  onToggleCart: (productId: string) => void;
+  onToggleCart: (productId: ProductId) => void;
 };
 
 export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProps) {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Department, ShopperGreeting } from "@/use-case";
 import { DepartmentMenu } from "./department-menu";
+import { pluralize } from "./format";
 import { Icon } from "./icon";
 import styles from "./site-header.module.css";
 
@@ -45,7 +46,7 @@ export function SiteHeader({ shopper, departments, cartCount, onSearch }: SiteHe
         <a
           href="#cart"
           className={styles.cartLink}
-          aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}
+          aria-label={`Cart, ${pluralize(cartCount, "item", "items")}`}
         >
           <Icon name="cart" size={24} />
           Cart

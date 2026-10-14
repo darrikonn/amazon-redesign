@@ -17,7 +17,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <Storefront
       initialOutcome={outcome}
-      initialSort={search.sort}
       initialPreviewLabels={preview.labels}
       storefront={storefront}
     />

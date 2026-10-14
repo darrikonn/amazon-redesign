@@ -1,15 +1,16 @@
 import type { Highlight, Listing, SearchResult } from "@/component";
 import { removePhrase, searchProducts } from "@/component";
-import type { Color, Illustration, ProductRepository, SearchSort } from "@/core";
-import { demandCategory, SEARCH_SORTS } from "@/core";
+import type { Color, Illustration, ProductId, ProductRepository, SearchSort } from "@/core";
+import { demandCategory, isSearchSort, SEARCH_SORTS } from "@/core";
 
 export type SearchCatalogRequest = {
   text: string;
-  sort: SearchSort;
+  sort: string;
 };
 
 export type SearchOutcome = {
   text: string;
+  requestedSort: SearchSort;
   hasQuery: boolean;
   understood: readonly UnderstoodTermView[];
   resultCount: number;
@@ -41,7 +42,7 @@ export type SuggestionView = {
 };
 
 export type ProductListing = {
-  id: string;
+  id: ProductId;
   title: string;
   categoryName: string;
   color: Color;
@@ -60,9 +61,12 @@ export class SearchCatalog {
 
   async execute(request: SearchCatalogRequest): Promise<SearchOutcome> {
     const catalog = await this.products.list();
-    return toOutcome(searchProducts(catalog, request.text, request.sort));
+    const requestedSort = isSearchSort(request.sort) ? request.sort : DEFAULT_SORT;
+    return toOutcome(searchProducts(catalog, request.text, requestedSort), requestedSort);
   }
 }
+
+const DEFAULT_SORT: SearchSort = "best-match";
 
 const SORT_LABELS: Record<SearchSort, string> = {
   "best-match": "Best match",
@@ -76,9 +80,10 @@ const HIGHLIGHT_LABELS: Record<Highlight, string> = {
   "lowest-price": "Lowest price",
 };
 
-function toOutcome(result: SearchResult): SearchOutcome {
+function toOutcome(result: SearchResult, requestedSort: SearchSort): SearchOutcome {
   return {
     text: result.text,
+    requestedSort,
     hasQuery: result.hasQuery,
     understood: result.interpretation.terms.map((term) => ({
       label: term.label,

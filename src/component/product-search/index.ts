@@ -1,3 +1,4 @@
+export { countResults } from "./count-results";
 export { describeResults } from "./describe-results";
 export { filterProducts } from "./filter-products";
 export { type SearchResult, searchProducts } from "./search-products";

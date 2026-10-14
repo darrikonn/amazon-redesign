@@ -129,10 +129,10 @@ function readPrice(scanner: QueryScanner, draft: IntentDraft): void {
 function readPriceRange(scanner: QueryScanner, draft: IntentDraft): boolean {
   const scanned = scanner.take(PRICE_RANGE_PATTERN);
   if (scanned === null) return false;
-  const first = parseCents(scanned.groups[1]);
-  const second = parseCents(scanned.groups[2]);
-  draft.minimumPriceInCents = Math.min(first, second);
-  draft.maximumPriceInCents = Math.max(first, second);
+  const firstInCents = parseCents(scanned.groups[1]);
+  const secondInCents = parseCents(scanned.groups[2]);
+  draft.minimumPriceInCents = Math.min(firstInCents, secondInCents);
+  draft.maximumPriceInCents = Math.max(firstInCents, secondInCents);
   const label = `${formatDollars(draft.minimumPriceInCents)} to ${formatDollars(draft.maximumPriceInCents)}`;
   draft.understand("price", label, scanned.phrase);
   return true;
