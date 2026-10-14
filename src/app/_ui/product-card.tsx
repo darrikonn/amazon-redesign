@@ -1,17 +1,33 @@
+import Link from "next/link";
+import type { MouseEvent } from "react";
 import type { Color, ProductId } from "@/core";
 import type { ProductListing } from "@/use-case";
-import { deliveryLabel, formatRating, splitPrice } from "./format";
+import { deliveryLabel } from "./format";
 import { Icon } from "./icon";
+import { isPlainClick } from "./plain-click";
+import { Price } from "./price";
 import styles from "./product-card.module.css";
 import { ProductImage } from "./product-image";
+import type { ProductPreview } from "./product-preview";
+import { StarRating } from "./star-rating";
 
 type ProductCardProps = {
   listing: ProductListing;
+  href: string;
   isInCart: boolean;
+  onOpen: (preview: ProductPreview) => void;
   onToggleCart: (productId: ProductId) => void;
 };
 
-export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProps) {
+// The title link stretches over the whole card, so the card opens the product anywhere
+// it is clicked; only the cart button sits above it.
+export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: ProductCardProps) {
+  function open(event: MouseEvent<HTMLAnchorElement>) {
+    if (!isPlainClick(event)) return;
+    event.preventDefault();
+    onOpen(listing);
+  }
+
   return (
     <article className={styles.card}>
       <div
@@ -22,7 +38,11 @@ export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProp
         <ProductImage image={listing.image} category={listing.category} />
       </div>
       <div className={styles.body}>
-        <h3 className={styles.title}>{listing.name}</h3>
+        <h3 className={styles.title}>
+          <Link href={href} className={styles.titleLink} onClick={open}>
+            {listing.name}
+          </Link>
+        </h3>
         <p className={styles.details}>
           {listing.details.map((detail, index) => (
             <span key={detail} className={index === 2 ? styles.thirdDetail : styles.detail}>
@@ -31,7 +51,11 @@ export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProp
             </span>
           ))}
         </p>
-        <Rating rating={listing.rating} />
+        {/* DummyJSON ships three sample reviews per product, so a count would mislead; only
+            the rating is shown. */}
+        <p className={styles.rating}>
+          <StarRating rating={listing.rating} />
+        </p>
         {listing.highlightLabel !== null && (
           <p className={styles.highlight}>
             <Icon name="check" size={15} strokeWidth={3.5} className={styles.highlightIcon} />
@@ -87,44 +111,3 @@ const INK: Record<Color, string> = {
 };
 
 const DEFAULT_INK = "#232f3e";
-
-const STARS = "★★★★★";
-const MAXIMUM_RATING = 5;
-
-// DummyJSON ships three sample reviews per product, so a count would mislead; only the
-// rating is shown.
-function Rating({ rating }: { rating: number }) {
-  const filled = `${Math.round((rating / MAXIMUM_RATING) * 100)}%`;
-  return (
-    <p className={styles.rating}>
-      <span className="visually-hidden">{formatRating(rating)} out of 5 stars</span>
-      <span className={styles.stars} aria-hidden="true">
-        {STARS}
-        <span className={styles.starsFilled} style={{ width: filled }}>
-          {STARS}
-        </span>
-      </span>
-      <span className={styles.ratingValue} aria-hidden="true">
-        {formatRating(rating)}
-      </span>
-    </p>
-  );
-}
-
-function Price({ priceInCents }: { priceInCents: number }) {
-  const price = splitPrice(priceInCents);
-  return (
-    <p className={styles.price}>
-      <span className="visually-hidden">{price.spoken}</span>
-      <span className={styles.priceSymbol} aria-hidden="true">
-        $
-      </span>
-      <span className={styles.priceDollars} aria-hidden="true">
-        {price.dollars}
-      </span>
-      <span className={styles.priceCents} aria-hidden="true">
-        {price.cents}
-      </span>
-    </p>
-  );
-}

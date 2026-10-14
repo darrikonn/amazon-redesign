@@ -1,0 +1,382 @@
+/* The dialog fills the window and is transparent; the frame inside is the visible card,
+   and the button behind it is the dim area that closes it. */
+.dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink);
+  overflow: hidden;
+}
+
+.dialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+
+.dialog::backdrop {
+  background: rgba(10, 14, 19, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+@keyframes open {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* Photos on the left, details on the right, like Instagram's post view. */
+.frame {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 1fr);
+  width: min(1080px, calc(100vw - 64px));
+  height: min(720px, calc(100dvh - 64px));
+  border-radius: 18px;
+  background: var(--color-surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-menu);
+  animation: open var(--duration-layout) ease both;
+}
+
+.media {
+  grid-row: 1;
+  grid-column: 1;
+  min-height: 0;
+}
+
+.details {
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid var(--color-divider);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.titleBlock {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.brand {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.closeButton {
+  display: grid;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+}
+
+.closeButton:hover {
+  background: var(--color-divider);
+}
+
+.body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 22px;
+  min-height: 0;
+  padding: 20px 24px 28px;
+  overflow-y: auto;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feature {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--color-teal-tint);
+  color: var(--color-teal);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.description {
+  color: var(--color-ink);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border-top: 1px solid var(--color-divider);
+}
+
+.fact {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-divider);
+  font-size: 15px;
+}
+
+.factLabel {
+  color: var(--color-muted);
+}
+
+.factValue {
+  margin: 0;
+  font-weight: 600;
+}
+
+.inStock {
+  color: var(--color-success);
+}
+
+.outOfStock {
+  color: var(--color-muted);
+}
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.ratingSummary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ratingValue {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.reviewCount {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.review {
+  display: flex;
+  gap: 12px;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--color-accent-tint);
+  color: var(--color-ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.reviewBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.reviewer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: 15px;
+}
+
+.reviewDate {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.comment {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-divider);
+  background: var(--color-surface);
+}
+
+.delivery {
+  margin-top: 6px;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.delivery strong {
+  color: var(--color-ink);
+}
+
+.cartButton,
+.cartButtonAdded {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 700;
+  transition: filter var(--duration-quick) ease;
+}
+
+.cartButton {
+  background: var(--color-cart);
+  color: var(--color-ink);
+}
+
+.cartButtonAdded {
+  background: var(--color-page);
+  color: var(--color-on-dark);
+}
+
+.cartButton:hover,
+.cartButtonAdded:hover {
+  filter: brightness(0.95);
+}
+
+.cartButton:disabled {
+  background: var(--color-surface-alt);
+  color: var(--color-muted);
+  cursor: not-allowed;
+  filter: none;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loadingLine,
+.loadingLineShort {
+  height: 14px;
+  border-radius: 999px;
+  background: var(--color-surface-alt);
+}
+
+.loadingLineShort {
+  width: 60%;
+}
+
+/* On a phone the dialog fills the screen and scrolls as one column: photos, then details,
+   with the price and cart button kept at the bottom and the close button at the top. */
+@media (max-width: 760px) {
+  .frame {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+
+  .media {
+    flex: none;
+    order: -1;
+    aspect-ratio: 1 / 1;
+  }
+
+  .details {
+    flex: none;
+    min-height: auto;
+    border-left: 0;
+  }
+
+  .header {
+    padding: 18px 16px 14px;
+  }
+
+  .closeButton {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    box-shadow: var(--shadow-card);
+  }
+
+  .body {
+    padding: 16px 16px 24px;
+    overflow-y: visible;
+  }
+
+  .footer {
+    position: sticky;
+    bottom: 0;
+    padding: 12px 16px;
+  }
+}

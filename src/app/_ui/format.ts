@@ -24,6 +24,18 @@ export function deliveryLabel(deliveryDays: number): string {
   return deliveryDays === 1 ? "Tomorrow" : `in ${deliveryDays} days`;
 }
 
+const REVIEW_DATE = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+// Review dates are calendar dates (YYYY-MM-DD), read in UTC so no time zone moves them.
+export function formatReviewDate(calendarDate: string): string {
+  return REVIEW_DATE.format(new Date(`${calendarDate}T00:00:00Z`));
+}
+
 export function formatRating(rating: number): string {
   return rating.toFixed(1);
 }

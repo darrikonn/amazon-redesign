@@ -76,6 +76,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* The page behind an open modal does not scroll (ADR 0029). The scrollbar's room is kept,
+   so hiding it does not shift the page sideways. */
+html {
+  scrollbar-gutter: stable;
+}
+
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   text-decoration: none;

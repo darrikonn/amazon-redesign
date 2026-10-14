@@ -1,0 +1,23 @@
+.price {
+  display: flex;
+  align-items: flex-start;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.symbol,
+.cents {
+  padding-top: 4px;
+  font-size: 14px;
+}
+
+.dollars {
+  font-size: 32px;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 760px) {
+  .dollars {
+    font-size: 26px;
+  }
+}

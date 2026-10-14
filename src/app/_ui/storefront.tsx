@@ -6,24 +6,28 @@ import type { ProductId, SearchSort } from "@/core";
 import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { Collapsible } from "./collapsible";
 import { scrollToTop } from "./motion";
+import { ProductModal } from "./product-modal";
+import type { ProductPreview } from "./product-preview";
 import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
-import { searchUrl } from "./search-url";
+import { productIdIn, searchUrl } from "./search-url";
 import { ShortcutList } from "./shortcut-list";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { StarterQueryList } from "./starter-query-list";
 import styles from "./storefront.module.css";
 import { useIdle } from "./use-idle";
+import { useProductModal } from "./use-product-modal";
 import { useSearchText } from "./use-search-text";
 import { useTypingDemo } from "./use-typing-demo";
 
 type StorefrontProps = {
   initialOutcome: SearchOutcome;
+  initialProductId: ProductId | null;
   storefront: StorefrontData;
 };
 
-export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
+export function Storefront({ initialOutcome, initialProductId, storefront }: StorefrontProps) {
   const [container] = useState(createContainer);
   const { text, searchText, type, apply } = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
@@ -32,6 +36,8 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   const isIdle = useIdle(DEMO_IDLE_DELAY_IN_MILLISECONDS);
   const demo = useTypingDemo(storefront.starterQueries, text === "" && isIdle);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const productModal = useProductModal(initialProductId);
+  const [productPreview, setProductPreview] = useState<ProductPreview | null>(null);
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
   const isShowingResults = outcome.hasQuery;
@@ -70,6 +76,15 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
       pick(nextText);
     },
     [pick],
+  );
+
+  const { open: openProductModal } = productModal;
+  const openProduct = useCallback(
+    (preview: ProductPreview) => {
+      setProductPreview(preview);
+      openProductModal(preview.id);
+    },
+    [openProductModal],
   );
 
   const toggleCart = useCallback(
@@ -125,6 +140,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
                 onSearch={pick}
                 onBrowse={choose}
                 onPickSort={pickSort}
+                onOpenProduct={openProduct}
                 onToggleCart={toggleCart}
               />
             )}
@@ -132,6 +148,14 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
         </main>
       </div>
       <SiteFooter />
+      <ProductModal
+        productId={productModal.productId}
+        preview={productPreview}
+        viewProduct={container.viewProduct}
+        cartProductIds={cart.productIds}
+        onToggleCart={toggleCart}
+        onClose={productModal.close}
+      />
     </div>
   );
 }
@@ -156,7 +180,12 @@ function useSearchOutcome(
   useEffect(() => {
     latestRequest.current += 1;
     const request = latestRequest.current;
-    window.history.replaceState(null, "", searchUrl({ text, sort }));
+    // Keeps an open product and its history marker; only the search part changes.
+    window.history.replaceState(
+      window.history.state,
+      "",
+      searchUrl({ text, sort, productId: productIdIn(window.location.href) }),
+    );
     container.searchCatalog.execute({ text, sort }).then((next) => {
       // Only the newest search may update the screen, so a slow early one never wins.
       if (request !== latestRequest.current) return;

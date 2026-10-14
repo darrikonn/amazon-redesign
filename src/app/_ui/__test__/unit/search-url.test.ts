@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { readSearchParameters, searchUrl } from "@/app/_ui/search-url";
+import {
+  productIdIn,
+  readProductParameter,
+  readSearchParameters,
+  searchUrl,
+  withProduct,
+} from "@/app/_ui/search-url";
 
 describe("readSearchParameters", () => {
   it("reads the query and the sort as typed", () => {
@@ -36,5 +42,29 @@ describe("searchUrl", () => {
     const query = Object.fromEntries(new URLSearchParams(searchUrl(parameters).slice(2)));
 
     expect(readSearchParameters(query)).toEqual(parameters);
+  });
+});
+
+describe("the open product in the address", () => {
+  it("is added to a search address and read back", () => {
+    const address = searchUrl({ text: "watches", sort: "best-match", productId: "dummyjson-0007" });
+
+    expect(address).toBe("/?q=watches&product=dummyjson-0007");
+    expect(productIdIn(address)).toBe("dummyjson-0007");
+    expect(readProductParameter({ q: "watches", product: "dummyjson-0007" })).toBe(
+      "dummyjson-0007",
+    );
+  });
+
+  it("is set and removed without touching the rest of the address", () => {
+    const opened = withProduct("https://shop.test/?q=watches&sort=top-rated", "dummyjson-0007");
+
+    expect(opened).toBe("/?q=watches&sort=top-rated&product=dummyjson-0007");
+    expect(withProduct(opened, null)).toBe("/?q=watches&sort=top-rated");
+  });
+
+  it("is absent when no product is open", () => {
+    expect(productIdIn("/?q=watches")).toBeNull();
+    expect(readProductParameter({ q: "watches" })).toBeNull();
   });
 });

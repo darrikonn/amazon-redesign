@@ -5,7 +5,9 @@ import { BrowseNavigation } from "./browse-navigation";
 import { resultCountLabel } from "./format";
 import { scrollToTop } from "./motion";
 import { ProductCard } from "./product-card";
+import type { ProductPreview } from "./product-preview";
 import styles from "./result-section.module.css";
+import { searchUrl } from "./search-url";
 
 type ResultSectionProps = {
   outcome: SearchOutcome;
@@ -14,6 +16,7 @@ type ResultSectionProps = {
   onSearch: (text: string) => void;
   onBrowse: (text: string) => void;
   onPickSort: (sort: SearchSort, text: string) => void;
+  onOpenProduct: (preview: ProductPreview) => void;
   onToggleCart: (productId: ProductId) => void;
 };
 
@@ -26,9 +29,14 @@ export function ResultSection({
   onSearch,
   onBrowse,
   onPickSort,
+  onOpenProduct,
   onToggleCart,
 }: ResultSectionProps) {
   const mainRef = useRef<HTMLDivElement>(null);
+
+  function productHref(productId: ProductId): string {
+    return searchUrl({ text: outcome.text, sort: outcome.requestedSort, productId });
+  }
 
   function browse(text: string, anchor: HTMLElement) {
     onBrowse(text);
@@ -61,7 +69,9 @@ export function ResultSection({
               <li key={listing.id} className={styles.gridItem}>
                 <ProductCard
                   listing={listing}
+                  href={productHref(listing.id)}
                   isInCart={cartProductIds.includes(listing.id)}
+                  onOpen={onOpenProduct}
                   onToggleCart={onToggleCart}
                 />
               </li>
@@ -75,7 +85,9 @@ export function ResultSection({
         <BrowseNavigation
           navigation={outcome.navigation}
           sort={outcome.requestedSort}
+          productHref={productHref}
           onBrowse={browse}
+          onOpenProduct={onOpenProduct}
         />
       </div>
     </section>

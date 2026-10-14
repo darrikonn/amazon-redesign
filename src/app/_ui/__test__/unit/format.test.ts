@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { deliveryLabel, formatRating, resultCountLabel, splitPrice } from "@/app/_ui/format";
+import {
+  deliveryLabel,
+  formatRating,
+  formatReviewDate,
+  resultCountLabel,
+  splitPrice,
+} from "@/app/_ui/format";
 
 describe("format", () => {
   it("pluralizes result counts", () => {
@@ -12,6 +18,11 @@ describe("format", () => {
     expect(splitPrice(2499)).toEqual({ dollars: "24", cents: "99", spoken: "$24.99" });
     expect(splitPrice(3900)).toEqual({ dollars: "39", cents: "00", spoken: "$39.00" });
     expect(splitPrice(3250)).toEqual({ dollars: "32", cents: "50", spoken: "$32.50" });
+  });
+
+  it("writes a review's calendar date the same in every time zone", () => {
+    expect(formatReviewDate("2025-04-30")).toBe("30 Apr 2025");
+    expect(formatReviewDate("2026-01-01")).toBe("1 Jan 2026");
   });
 
   it("says tomorrow for next day delivery", () => {

@@ -1,4 +1,5 @@
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -80,6 +81,22 @@
   -webkit-line-clamp: 2;
 }
 
+.titleLink::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  content: "";
+}
+
+.titleLink:focus-visible {
+  outline: none;
+}
+
+.titleLink:focus-visible::after {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
 .details {
   overflow: hidden;
   color: var(--color-muted);
@@ -95,34 +112,6 @@
 
 .rating {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--color-muted);
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.stars {
-  position: relative;
-  display: inline-block;
-  color: var(--color-star-empty);
-  font-size: 16px;
-  letter-spacing: 1px;
-  line-height: 1;
-}
-
-.starsFilled {
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  color: var(--color-star);
-  white-space: nowrap;
-}
-
-.ratingValue {
-  color: var(--color-ink);
-  font-weight: 600;
 }
 
 .highlight {
@@ -155,24 +144,6 @@
   min-width: 0;
 }
 
-.price {
-  display: flex;
-  align-items: flex-start;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.priceSymbol,
-.priceCents {
-  padding-top: 4px;
-  font-size: 14px;
-}
-
-.priceDollars {
-  font-size: 32px;
-  letter-spacing: -0.01em;
-}
-
 .delivery {
   color: var(--color-muted);
   font-size: 14px;
@@ -185,6 +156,8 @@
 
 .cartButton,
 .cartButtonAdded {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-shrink: 0;
   align-items: center;
@@ -219,9 +192,13 @@
 }
 
 @media (max-width: 760px) {
+  .card,
+  .titleLink::after {
+    border-radius: 14px;
+  }
+
   .card {
     padding: 6px 6px 12px;
-    border-radius: 14px;
   }
 
   .well {
@@ -250,20 +227,6 @@
 
   .thirdDetail {
     display: none;
-  }
-
-  .rating {
-    gap: 4px;
-    font-size: 13px;
-  }
-
-  .stars {
-    font-size: 14px;
-    letter-spacing: 0;
-  }
-
-  .priceDollars {
-    font-size: 26px;
   }
 
   .delivery {

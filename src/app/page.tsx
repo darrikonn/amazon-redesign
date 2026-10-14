@@ -1,5 +1,9 @@
 import { createContainer } from "@/composition";
-import { type RawSearchParameters, readSearchParameters } from "./_ui/search-url";
+import {
+  type RawSearchParameters,
+  readProductParameter,
+  readSearchParameters,
+} from "./_ui/search-url";
 import { Storefront } from "./_ui/storefront";
 
 type HomePageProps = {
@@ -7,11 +11,18 @@ type HomePageProps = {
 };
 
 export default async function HomePage({ searchParams }: HomePageProps) {
-  const search = readSearchParameters(await searchParams);
+  const parameters = await searchParams;
+  const search = readSearchParameters(parameters);
   const container = createContainer();
   const [outcome, storefront] = await Promise.all([
     container.searchCatalog.execute(search),
     container.viewStorefront.execute(),
   ]);
-  return <Storefront initialOutcome={outcome} storefront={storefront} />;
+  return (
+    <Storefront
+      initialOutcome={outcome}
+      initialProductId={readProductParameter(parameters)}
+      storefront={storefront}
+    />
+  );
 }

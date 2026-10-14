@@ -1,22 +1,40 @@
+import Image from "next/image";
 import Link from "next/link";
 import { type MouseEvent, useId, useState } from "react";
-import type { SearchSort } from "@/core";
-import type { NavigationDepartmentView, NavigationLinkView, NavigationView } from "@/use-case";
+import type { ProductId, SearchSort } from "@/core";
+import type {
+  NavigationDepartmentView,
+  NavigationLinkView,
+  NavigationView,
+  ProductTeaserView,
+} from "@/use-case";
 import styles from "./browse-navigation.module.css";
+import { CategoryGlyph } from "./category-glyph";
 import { Collapsible } from "./collapsible";
+import { splitPrice } from "./format";
 import { Icon } from "./icon";
+import { isPlainClick } from "./plain-click";
+import type { ProductPreview } from "./product-preview";
 import { searchUrl } from "./search-url";
 
 type BrowseNavigationProps = {
   navigation: NavigationView;
   sort: SearchSort;
+  productHref: (productId: ProductId) => string;
   onBrowse: (text: string, anchor: HTMLElement) => void;
+  onOpenProduct: (preview: ProductPreview) => void;
 };
 
 // Departments open, and nothing closes by itself: the department the results move into
 // opens, and the one they left stays open, so an entry never slides away from the
 // pointer. Only the shopper's own toggle closes a department.
-export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigationProps) {
+export function BrowseNavigation({
+  navigation,
+  sort,
+  productHref,
+  onBrowse,
+  onOpenProduct,
+}: BrowseNavigationProps) {
   const markedText =
     navigation.departments.find((department) => department.containsResults)?.link.text ?? null;
   const [openState, setOpenState] = useState<ReadonlyMap<string, boolean>>(new Map());
@@ -45,8 +63,10 @@ export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigatio
             department={department}
             sort={sort}
             isOpen={isOpen(department)}
+            productHref={productHref}
             onToggle={() => toggle(department)}
             onBrowse={onBrowse}
+            onOpenProduct={onOpenProduct}
           />
         ))}
       </ul>
@@ -67,13 +87,24 @@ type DepartmentItemProps = {
   department: NavigationDepartmentView;
   sort: SearchSort;
   isOpen: boolean;
+  productHref: (productId: ProductId) => string;
   onToggle: () => void;
   onBrowse: (text: string, anchor: HTMLElement) => void;
+  onOpenProduct: (preview: ProductPreview) => void;
 };
 
-function DepartmentItem({ department, sort, isOpen, onToggle, onBrowse }: DepartmentItemProps) {
-  const groupsId = useId();
-  const { link, containsResults, groups } = department;
+function DepartmentItem({
+  department,
+  sort,
+  isOpen,
+  productHref,
+  onToggle,
+  onBrowse,
+  onOpenProduct,
+}: DepartmentItemProps) {
+  const contentsId = useId();
+  const { link, containsResults, groups, popular } = department;
+  const hasContents = groups.length > 0 || popular.length > 0;
   return (
     <li>
       <div className={styles.departmentRow}>
@@ -84,12 +115,12 @@ function DepartmentItem({ department, sort, isOpen, onToggle, onBrowse }: Depart
           isResultDepartment={containsResults}
           onBrowse={onBrowse}
         />
-        {groups.length > 0 && (
+        {hasContents && (
           <button
             type="button"
             className={isOpen ? styles.toggleOpen : styles.toggle}
             aria-expanded={isOpen}
-            aria-controls={groupsId}
+            aria-controls={contentsId}
             aria-label={`${link.label} categories`}
             onClick={onToggle}
           >
@@ -97,24 +128,88 @@ function DepartmentItem({ department, sort, isOpen, onToggle, onBrowse }: Depart
           </button>
         )}
       </div>
-      {groups.length > 0 && (
+      {hasContents && (
         <Collapsible isOpen={isOpen}>
-          <ul id={groupsId} className={styles.groups}>
-            {groups.map((group) => (
-              <li key={group.text}>
-                <BrowseLink
-                  link={group}
-                  sort={sort}
-                  className={group.isCurrent ? styles.currentGroup : styles.group}
-                  isResultDepartment={false}
-                  onBrowse={onBrowse}
-                />
-              </li>
-            ))}
-          </ul>
+          <div id={contentsId} className={styles.contents}>
+            {groups.length > 0 && (
+              <ul className={styles.groups}>
+                {groups.map((group) => (
+                  <li key={group.text}>
+                    <BrowseLink
+                      link={group}
+                      sort={sort}
+                      className={group.isCurrent ? styles.currentGroup : styles.group}
+                      isResultDepartment={false}
+                      onBrowse={onBrowse}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+            {popular.length > 0 && (
+              <PopularProducts
+                departmentLabel={link.label}
+                products={popular}
+                productHref={productHref}
+                onOpenProduct={onOpenProduct}
+              />
+            )}
+          </div>
         </Collapsible>
       )}
     </li>
+  );
+}
+
+type PopularProductsProps = {
+  departmentLabel: string;
+  products: readonly ProductTeaserView[];
+  productHref: (productId: ProductId) => string;
+  onOpenProduct: (preview: ProductPreview) => void;
+};
+
+function PopularProducts({
+  departmentLabel,
+  products,
+  productHref,
+  onOpenProduct,
+}: PopularProductsProps) {
+  const headingId = useId();
+  return (
+    <section className={styles.popular} aria-labelledby={headingId}>
+      <h3 id={headingId} className={styles.popularHeading}>
+        Popular in {departmentLabel.toLowerCase()}
+      </h3>
+      <ul className={styles.popularList}>
+        {products.map((product) => (
+          <li key={product.id}>
+            <Link
+              href={productHref(product.id)}
+              className={styles.teaser}
+              onClick={(event) => {
+                if (!isPlainClick(event)) return;
+                event.preventDefault();
+                onOpenProduct(product);
+              }}
+            >
+              <span className={styles.teaserImage}>
+                {product.image === null ? (
+                  <CategoryGlyph category={product.category} />
+                ) : (
+                  <Image src={product.image} alt="" fill sizes="52px" className={styles.photo} />
+                )}
+              </span>
+              <span className={styles.teaserText}>
+                <span className={styles.teaserName}>{product.name}</span>
+                <span className={styles.teaserPrice}>
+                  {splitPrice(product.priceInCents).spoken}
+                </span>
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -130,8 +225,7 @@ type BrowseLinkProps = {
 // of reloading the page.
 function BrowseLink({ link, sort, className, isResultDepartment, onBrowse }: BrowseLinkProps) {
   function navigate(event: MouseEvent<HTMLAnchorElement>) {
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
-      return;
+    if (!isPlainClick(event)) return;
     event.preventDefault();
     onBrowse(link.text, event.currentTarget);
   }
