@@ -1,5 +1,6 @@
 import type { Interpretation, Product, SearchSort } from "@/core";
 import { interpretQuery } from "../query-interpretation";
+import { type BrowseNavigation, buildBrowseNavigation } from "./browse-navigation";
 import { describeResults } from "./describe-results";
 import { filterProducts } from "./filter-products";
 import { sortProducts } from "./sort-products";
@@ -18,6 +19,7 @@ export type SearchResult = {
   relaxations: readonly Relaxation[];
   closestMatchesDroppedLabel: string | null;
   listings: readonly Listing[];
+  navigation: BrowseNavigation | null;
 };
 
 export function searchProducts(
@@ -52,5 +54,6 @@ export function searchProducts(
     relaxations,
     closestMatchesDroppedLabel: closestMatches?.droppedLabel ?? null,
     listings,
+    navigation: buildBrowseNavigation(catalog, text, interpretation, matches),
   };
 }

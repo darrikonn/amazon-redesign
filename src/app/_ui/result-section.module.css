@@ -1,10 +1,36 @@
-.results {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.results,
+.resultsWithNavigation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px 40px;
   width: 100%;
   max-width: var(--content-width);
   margin-top: 40px;
+  animation: appear var(--duration-layout) ease both;
+}
+
+.resultsWithNavigation {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+.sidebar {
+  align-self: start;
+  position: sticky;
+  top: 16px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 .heading {
@@ -103,9 +129,24 @@
   display: flex;
 }
 
+@media (max-width: 1100px) {
+  .resultsWithNavigation {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 20px 28px;
+  }
+}
+
 @media (max-width: 760px) {
-  .results {
+  .results,
+  .resultsWithNavigation {
+    grid-template-columns: minmax(0, 1fr);
     margin-top: 32px;
+  }
+
+  /* On a phone the browse panel follows the results, so products come first. */
+  .sidebar {
+    position: static;
+    order: 1;
   }
 
   .headline {

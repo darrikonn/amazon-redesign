@@ -225,6 +225,40 @@ describe("SearchCatalog", () => {
     expect(outcome.assistantSuggestion).toBeNull();
   });
 
+  it("offers a browse panel for the department next to successful results", async () => {
+    const outcome = await container.searchCatalog.execute({
+      text: "luxury watches that arrive this week",
+      sort: "best-match",
+    });
+
+    expect(outcome.navigation?.heading).toEqual({
+      label: "Watches",
+      productCount: 12,
+      text: "watches",
+      isCurrent: false,
+    });
+    expect(outcome.navigation?.links[0]).toEqual({
+      label: "Luxury",
+      productCount: 9,
+      text: "luxury watches",
+      isCurrent: true,
+    });
+    expect(outcome.navigation?.related.map((link) => link.label)).toEqual([
+      "Jewellery",
+      "Sunglasses",
+      "Bags",
+    ]);
+  });
+
+  it("offers no browse panel when nothing matched", async () => {
+    const outcome = await container.searchCatalog.execute({
+      text: "red laptop under $1500",
+      sort: "best-match",
+    });
+
+    expect(outcome.navigation).toBeNull();
+  });
+
   it("returns an empty outcome for an empty query", async () => {
     const outcome = await container.searchCatalog.execute({ text: "", sort: "best-match" });
 

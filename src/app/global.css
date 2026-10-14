@@ -47,6 +47,7 @@
   --duration-quick: 0.12s;
   --duration-base: 0.15s;
   --duration-slow: 0.18s;
+  --duration-layout: 0.32s;
   --page-width: 1328px;
   --content-width: 1280px;
   --search-width: 860px;
@@ -122,5 +123,6 @@ textarea:focus-visible {
     --duration-quick: 0s;
     --duration-base: 0s;
     --duration-slow: 0s;
+    --duration-layout: 0s;
   }
 }

@@ -22,6 +22,21 @@ export type SearchOutcome = {
   emptyMessage: string | null;
   closestMatchesHeading: string | null;
   listings: readonly ProductListing[];
+  navigation: NavigationView | null;
+};
+
+export type NavigationView = {
+  heading: NavigationLinkView | null;
+  headingLabel: string;
+  links: readonly NavigationLinkView[];
+  related: readonly NavigationLinkView[];
+};
+
+export type NavigationLinkView = {
+  label: string;
+  productCount: number;
+  text: string;
+  isCurrent: boolean;
 };
 
 export type UnderstoodTermView = {
@@ -120,6 +135,7 @@ function toOutcome(
         ? null
         : `Closest matches, ignoring ${quoted(result.closestMatchesDroppedLabel)}`,
     listings: result.listings.map(toProductListing),
+    navigation: result.navigation,
   };
 }
 

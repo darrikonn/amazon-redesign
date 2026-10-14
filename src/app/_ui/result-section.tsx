@@ -1,5 +1,6 @@
 import type { ProductId, SearchSort } from "@/core";
 import type { SearchOutcome, SortOptionView } from "@/use-case";
+import { BrowseNavigation } from "./browse-navigation";
 import { resultCountLabel } from "./format";
 import { ProductCard } from "./product-card";
 import styles from "./result-section.module.css";
@@ -20,32 +21,42 @@ export function ResultSection({
   onToggleCart,
 }: ResultSectionProps) {
   return (
-    <section aria-label="Results" className={styles.results}>
-      <div className={styles.heading}>
-        <h2 className={styles.headline} aria-live="polite">
-          {outcome.headline}
-        </h2>
-        {outcome.resultCount > 0 && (
-          <SortControl options={outcome.sortOptions} onPick={onPickSort} />
+    <section
+      aria-label="Results"
+      className={outcome.navigation === null ? styles.results : styles.resultsWithNavigation}
+    >
+      {outcome.navigation !== null && (
+        <div className={styles.sidebar}>
+          <BrowseNavigation navigation={outcome.navigation} onSearch={onSearch} />
+        </div>
+      )}
+      <div className={styles.main}>
+        <div className={styles.heading}>
+          <h2 className={styles.headline} aria-live="polite">
+            {outcome.headline}
+          </h2>
+          {outcome.resultCount > 0 && (
+            <SortControl options={outcome.sortOptions} onPick={onPickSort} />
+          )}
+        </div>
+        {outcome.emptyMessage !== null && <EmptyState outcome={outcome} onSearch={onSearch} />}
+        {outcome.closestMatchesHeading !== null && (
+          <h3 className={styles.closestHeading}>{outcome.closestMatchesHeading}</h3>
+        )}
+        {outcome.listings.length > 0 && (
+          <ul className={styles.grid}>
+            {outcome.listings.map((listing) => (
+              <li key={listing.id} className={styles.gridItem}>
+                <ProductCard
+                  listing={listing}
+                  isInCart={cartProductIds.includes(listing.id)}
+                  onToggleCart={onToggleCart}
+                />
+              </li>
+            ))}
+          </ul>
         )}
       </div>
-      {outcome.emptyMessage !== null && <EmptyState outcome={outcome} onSearch={onSearch} />}
-      {outcome.closestMatchesHeading !== null && (
-        <h3 className={styles.closestHeading}>{outcome.closestMatchesHeading}</h3>
-      )}
-      {outcome.listings.length > 0 && (
-        <ul className={styles.grid}>
-          {outcome.listings.map((listing) => (
-            <li key={listing.id} className={styles.gridItem}>
-              <ProductCard
-                listing={listing}
-                isInCart={cartProductIds.includes(listing.id)}
-                onToggleCart={onToggleCart}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
     </section>
   );
 }
