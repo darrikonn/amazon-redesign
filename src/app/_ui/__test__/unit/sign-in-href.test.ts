@@ -7,7 +7,7 @@ describe("signInHref", () => {
       "/sign-in?next=%2Forders%3Fshow%3Don-the-way",
     );
     expect(signInHref("/")).toBe("/sign-in");
-    expect(signInHref("/sign-in?next=%2Fcart")).toBe("/sign-in");
+    expect(signInHref("/sign-in?next=%2Fcart")).toBe("/sign-in?next=%2Fcart");
   });
 });
 
@@ -27,6 +27,12 @@ describe("safeReturnPath", () => {
       "/\n/evil.example",
       "\\evil.example",
       "javascript:alert(1)",
+      "/.//evil.example",
+      "/..//evil.example",
+      "/%2e//evil.example",
+      "/x/..//evil.example",
+      "/./\\evil.example",
+      "/.\\/evil.example",
     ];
 
     for (const next of offSite) expect(safeReturnPath(next)).toBe("/");
