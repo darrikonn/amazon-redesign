@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "./motion";
 import { fullyTyped, TYPING, TypingAnimation, type TypingFrame } from "./typing-animation";
 
 export type TypingDemo = {
@@ -10,18 +11,23 @@ export type TypingDemo = {
 // so the placeholder never moves while the shopper is busy.
 export function useTypingDemo(examples: readonly string[], isActive: boolean): TypingDemo {
   const [frame, setFrame] = useState<TypingFrame>(() => fullyTyped(examples, 0));
-  const exampleIndex = useRef(frame.exampleIndex);
+  const exampleIndexRef = useRef(frame.exampleIndex);
 
   useEffect(() => {
     if (!isActive || prefersReducedMotion() || examples.length === 0) return;
-    const animation = new TypingAnimation(examples, exampleIndex.current);
+    const animation = new TypingAnimation(examples, exampleIndexRef.current);
     const interval = window.setInterval(() => {
       const next = animation.tick();
       if (next === null) return;
-      exampleIndex.current = next.exampleIndex;
+      exampleIndexRef.current = next.exampleIndex;
       setFrame(next);
     }, TYPING.tickInMilliseconds);
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearInterval(interval);
+      // The next animation starts from a fully written example, so the interrupted,
+      // half-typed frame must not be shown again while it holds.
+      setFrame(fullyTyped(examples, exampleIndexRef.current));
+    };
   }, [examples, isActive]);
 
   const example = examples[frame.exampleIndex] ?? "";
@@ -30,7 +36,3 @@ export function useTypingDemo(examples: readonly string[], isActive: boolean): T
 }
 
 const FALLBACK_PLACEHOLDER = "Describe what you need";
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
