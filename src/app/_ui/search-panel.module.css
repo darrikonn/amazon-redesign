@@ -110,6 +110,18 @@
   text-transform: uppercase;
 }
 
+.rows,
+.rowsUpdating {
+  width: 100%;
+  transition: opacity var(--duration-quick) ease;
+}
+
+/* Rows from the previous search fade while the next one is pending, so a shopper can
+   see they are about to change. */
+.rowsUpdating {
+  opacity: 0.55;
+}
+
 .understoodRow,
 .refinementRow {
   display: flex;
@@ -246,6 +258,9 @@
     font-size: 18px;
   }
 
+  /* Two lines are always reserved, so the bar keeps its height when the first
+     character replaces the wrapped placeholder. */
+  .input,
   .inputEmpty {
     min-height: 84px;
   }

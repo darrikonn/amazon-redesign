@@ -13,6 +13,16 @@
   grid-template-columns: 240px minmax(0, 1fr);
 }
 
+.results > *,
+.resultsWithNavigation > * {
+  transition: opacity var(--duration-quick) ease;
+}
+
+.results[data-updating="true"] > *,
+.resultsWithNavigation[data-updating="true"] > * {
+  opacity: 0.55;
+}
+
 .sidebar {
   align-self: start;
   position: sticky;

@@ -26,7 +26,12 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   const [container] = useState(createContainer);
   const search = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
-  const outcome = useSearchOutcome(container, initialOutcome, search.searchText, sort);
+  const { outcome, lastResults } = useSearchOutcome(
+    container,
+    initialOutcome,
+    search.searchText,
+    sort,
+  );
   const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
   const isIdle = useIdle(DEMO_IDLE_DELAY_IN_MILLISECONDS);
   const demo = useTypingDemo(storefront.starterQueries, search.text === "" && isIdle);
@@ -34,19 +39,28 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
   const isShowingResults = outcome.hasQuery;
+  // Chips, suggestions, and sort options belong to the last search. Until the newer typed
+  // text has been searched they would throw that text away, so picking one then searches
+  // the typed text instead.
+  const isUpdating = search.text !== outcome.text;
 
   useEffect(() => {
     container.viewCart.execute().then(setCart, reportError);
   }, [container]);
 
-  const { apply } = search;
+  const { apply, text } = search;
+
+  const pick = useCallback(
+    (nextText: string) => apply(isUpdating ? text : nextText),
+    [apply, isUpdating, text],
+  );
 
   const pickSort = useCallback(
     (nextSort: SearchSort, nextText: string) => {
       setSort(nextSort);
-      apply(nextText);
+      pick(nextText);
     },
-    [apply],
+    [pick],
   );
 
   const toggleCart = useCallback(
@@ -71,11 +85,14 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
           </Collapsible>
           <SearchPanel
             inputRef={inputRef}
-            text={search.text}
-            outcome={outcome}
+            text={text}
+            results={lastResults}
+            isShowingResults={isShowingResults}
+            isUpdating={isUpdating}
             placeholder={demo.placeholder}
             onType={search.type}
             onApply={apply}
+            onPick={pick}
             onTryExample={() => apply(demo.example)}
           />
           <Collapsible isOpen={!isShowingResults}>
@@ -84,15 +101,18 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
               <ShortcutList />
             </div>
           </Collapsible>
-          {isShowingResults && (
-            <ResultSection
-              outcome={outcome}
-              cartProductIds={cart.productIds}
-              onSearch={apply}
-              onPickSort={pickSort}
-              onToggleCart={toggleCart}
-            />
-          )}
+          <Collapsible isOpen={isShowingResults}>
+            {lastResults !== null && (
+              <ResultSection
+                outcome={lastResults}
+                isUpdating={isUpdating}
+                cartProductIds={cart.productIds}
+                onSearch={pick}
+                onPickSort={pickSort}
+                onToggleCart={toggleCart}
+              />
+            )}
+          </Collapsible>
         </main>
       </div>
       <SiteFooter />
@@ -100,17 +120,22 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   );
 }
 
-// The placeholder only animates once the shopper has been still this long.
-const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
-
 // Only the newest search may update the screen, so a slow early one never wins.
+type SearchOutcomes = {
+  outcome: SearchOutcome;
+  lastResults: SearchOutcome | null;
+};
+
+// lastResults keeps the latest search that had text, so the results can fold away on the
+// way home instead of vanishing.
 function useSearchOutcome(
   container: Container,
   initial: SearchOutcome,
   text: string,
   sort: SearchSort,
-): SearchOutcome {
+): SearchOutcomes {
   const [outcome, setOutcome] = useState(initial);
+  const [lastResults, setLastResults] = useState(initial.hasQuery ? initial : null);
   const latestRequest = useRef(0);
 
   useEffect(() => {
@@ -118,14 +143,18 @@ function useSearchOutcome(
     const request = latestRequest.current;
     window.history.replaceState(null, "", searchUrl({ text, sort }));
     container.searchCatalog.execute({ text, sort }).then((next) => {
-      if (request === latestRequest.current) setOutcome(next);
+      if (request !== latestRequest.current) return;
+      setOutcome(next);
+      if (next.hasQuery) setLastResults(next);
     }, reportError);
   }, [container, text, sort]);
 
-  return outcome;
+  return { outcome, lastResults };
 }
 
 const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };
+
+const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
 
 function Hero() {
   return (

@@ -6,6 +6,7 @@ import {
   useLayoutEffect,
 } from "react";
 import type { SearchOutcome, SuggestionView } from "@/use-case";
+import { Collapsible } from "./collapsible";
 import { resultCountLabel } from "./format";
 import { Icon } from "./icon";
 import styles from "./search-panel.module.css";
@@ -13,20 +14,26 @@ import styles from "./search-panel.module.css";
 type SearchPanelProps = {
   inputRef: RefObject<HTMLTextAreaElement | null>;
   text: string;
-  outcome: SearchOutcome;
+  results: SearchOutcome | null;
+  isShowingResults: boolean;
+  isUpdating: boolean;
   placeholder: string;
   onType: (text: string) => void;
   onApply: (text: string) => void;
+  onPick: (text: string) => void;
   onTryExample: () => void;
 };
 
 export function SearchPanel({
   inputRef,
   text,
-  outcome,
+  results,
+  isShowingResults,
+  isUpdating,
   placeholder,
   onType,
   onApply,
+  onPick,
   onTryExample,
 }: SearchPanelProps) {
   const inputId = useId();
@@ -78,15 +85,17 @@ export function SearchPanel({
           </button>
         )}
       </div>
-      {outcome.hasQuery && (
-        <>
-          <UnderstoodRow outcome={outcome} onTextChange={onApply} />
-          {outcome.assistantSuggestion !== null && (
-            <AssistantRow suggestion={outcome.assistantSuggestion} onTextChange={onApply} />
-          )}
-          <RefinementRow outcome={outcome} onTextChange={onApply} />
-        </>
-      )}
+      <Collapsible isOpen={isShowingResults}>
+        {results !== null && (
+          <div className={isUpdating ? styles.rowsUpdating : styles.rows} aria-busy={isUpdating}>
+            <UnderstoodRow outcome={results} onPick={onPick} />
+            {results.assistantSuggestion !== null && (
+              <AssistantRow suggestion={results.assistantSuggestion} onPick={onPick} />
+            )}
+            <RefinementRow outcome={results} onPick={onPick} />
+          </div>
+        )}
+      </Collapsible>
     </div>
   );
 }
@@ -122,7 +131,7 @@ function handleKey(event: KeyboardEvent<HTMLTextAreaElement>, actions: KeyAction
   if (window.matchMedia("(pointer: coarse)").matches) event.currentTarget.blur();
 }
 
-function UnderstoodRow({ outcome, onTextChange }: RowProps) {
+function UnderstoodRow({ outcome, onPick }: RowProps) {
   return (
     <div className={styles.understoodRow}>
       <span className={styles.rowLabel}>Understood</span>
@@ -135,7 +144,7 @@ function UnderstoodRow({ outcome, onTextChange }: RowProps) {
             key={term.label}
             className={styles.understoodChip}
             aria-label={`Remove ${term.label}`}
-            onClick={() => onTextChange(term.textWithoutTerm)}
+            onClick={() => onPick(term.textWithoutTerm)}
           >
             {term.label}
             <Icon name="close" size={14} strokeWidth={3} className={styles.chipIcon} />
@@ -149,22 +158,22 @@ function UnderstoodRow({ outcome, onTextChange }: RowProps) {
 
 type RowProps = {
   outcome: SearchOutcome;
-  onTextChange: (text: string) => void;
+  onPick: (text: string) => void;
 };
 
 type AssistantRowProps = {
   suggestion: SuggestionView;
-  onTextChange: (text: string) => void;
+  onPick: (text: string) => void;
 };
 
-function AssistantRow({ suggestion, onTextChange }: AssistantRowProps) {
+function AssistantRow({ suggestion, onPick }: AssistantRowProps) {
   return (
     <div className={styles.assistantRow}>
       <span className={styles.rowLabel}>Assistant</span>
       <button
         type="button"
         className={styles.assistantSuggestion}
-        onClick={() => onTextChange(suggestion.text)}
+        onClick={() => onPick(suggestion.text)}
       >
         <Icon name="sparkle" size={16} strokeWidth={2.2} className={styles.assistantIcon} />
         {suggestion.label}
@@ -174,7 +183,7 @@ function AssistantRow({ suggestion, onTextChange }: AssistantRowProps) {
   );
 }
 
-function RefinementRow({ outcome, onTextChange }: RowProps) {
+function RefinementRow({ outcome, onPick }: RowProps) {
   if (outcome.refinements.length === 0) return null;
   return (
     <div className={styles.refinementRow}>
@@ -185,7 +194,7 @@ function RefinementRow({ outcome, onTextChange }: RowProps) {
             type="button"
             key={refinement.label}
             className={styles.refinementChip}
-            onClick={() => onTextChange(refinement.text)}
+            onClick={() => onPick(refinement.text)}
           >
             <Icon name="plus" size={14} strokeWidth={3} className={styles.chipIcon} />
             {refinement.label}

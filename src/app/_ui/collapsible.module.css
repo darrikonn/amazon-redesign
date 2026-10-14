@@ -17,8 +17,9 @@
   opacity: 0;
 }
 
-/* The negative margin and matching padding leave room for focus rings and hover lifts,
-   which overflow: hidden would otherwise clip. */
+/* The negative margin and matching padding leave room for focus rings and hover lifts.
+   overflow: clip, unlike hidden, does not create a scroll container, so sticky content
+   inside still sticks to the page. */
 .content {
   display: flex;
   flex-direction: column;
@@ -26,5 +27,5 @@
   min-height: 0;
   margin: -6px;
   padding: 6px;
-  overflow: hidden;
+  overflow: clip;
 }

@@ -7,6 +7,7 @@ import styles from "./result-section.module.css";
 
 type ResultSectionProps = {
   outcome: SearchOutcome;
+  isUpdating: boolean;
   cartProductIds: readonly ProductId[];
   onSearch: (text: string) => void;
   onPickSort: (sort: SearchSort, text: string) => void;
@@ -15,6 +16,7 @@ type ResultSectionProps = {
 
 export function ResultSection({
   outcome,
+  isUpdating,
   cartProductIds,
   onSearch,
   onPickSort,
@@ -24,6 +26,8 @@ export function ResultSection({
     <section
       aria-label="Results"
       className={outcome.navigation === null ? styles.results : styles.resultsWithNavigation}
+      data-updating={isUpdating}
+      aria-busy={isUpdating}
     >
       {outcome.navigation !== null && (
         <div className={styles.sidebar}>
