@@ -27,6 +27,7 @@ function describeQualifiers(intent: SearchIntent): string[] {
     describePrice(intent),
     describeDelivery(intent),
     describeRating(intent),
+    describeKeywords(intent),
   ].filter(isPresent);
 }
 
@@ -53,4 +54,13 @@ function describeDelivery(intent: SearchIntent): string | null {
 
 function describeRating(intent: SearchIntent): string | null {
   return intent.minimumRating === null ? null : `rated ${intent.minimumRating} and up`;
+}
+
+// Words the interpreter did not understand still filter the results, so the headline says so.
+function describeKeywords(intent: SearchIntent): string | null {
+  if (intent.keywords.length === 0) return null;
+  const quoted = intent.keywords.map((keyword) => `“${keyword}”`);
+  const last = quoted.at(-1) ?? "";
+  const listed = quoted.length < 2 ? last : `${quoted.slice(0, -1).join(", ")} and ${last}`;
+  return `matching ${listed}`;
 }
