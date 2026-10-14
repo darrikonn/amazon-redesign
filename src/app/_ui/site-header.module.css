@@ -97,6 +97,38 @@
   line-height: 1;
 }
 
+/* On a phone the wide items give way to a short account link beside the cart and a
+   delivery line under the bar. */
+.phoneAccount,
+.phoneDelivery {
+  display: none;
+}
+
+.phoneAccount {
+  align-items: center;
+  gap: 2px;
+  height: 44px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.phoneDelivery {
+  flex-basis: 100%;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-hover-on-dark);
+  color: var(--color-on-dark-muted);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+}
+
 @media (max-width: 760px) {
   .header {
     padding: 10px 16px;
@@ -104,5 +136,10 @@
 
   .wideLink {
     display: none;
+  }
+
+  .phoneAccount,
+  .phoneDelivery {
+    display: flex;
   }
 }

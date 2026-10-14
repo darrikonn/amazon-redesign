@@ -102,7 +102,7 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
                 <span className={page.muted}>
                   {line.quantity} at {splitPrice(line.priceInCents).spoken}
                 </span>
-                <span className={styles.returnStatus}>{returnStatus(line)}</span>
+                <span className={styles.returnStatus}>{returnStatus(line, order.stage)}</span>
               </div>
             </li>
           ))}
@@ -132,12 +132,13 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
   );
 }
 
-function returnStatus(line: OrderLineView): string {
+function returnStatus(line: OrderLineView, stage: OrderView["stage"]): string {
   if (line.isReturned) return "Return started";
+  if (line.returnableUntil === null) return "Not returnable";
+  if (stage !== "delivered") return "Returnable once delivered";
   if (line.isReturnable && line.returnableUntil !== null) {
     return `Return or replace by ${formatOrderDate(line.returnableUntil)}`;
   }
-  if (line.returnableUntil === null) return "Not returnable";
   return "Return window closed";
 }
 

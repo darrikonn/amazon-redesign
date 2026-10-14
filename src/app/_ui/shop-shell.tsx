@@ -15,7 +15,6 @@ type ShopShellProps = {
   children: ReactNode;
 };
 
-// The frame around every page: header, footer, and the product modal any page can open.
 export function ShopShell({ initialShopper, departments, children }: ShopShellProps) {
   const initialProductId = useSearchParams().get("product");
   return (

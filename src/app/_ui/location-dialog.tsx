@@ -24,13 +24,18 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
     if (!isOpen && dialog.open) dialog.close();
   }, [isOpen]);
 
+  // An earlier mistake should not greet the shopper the next time the dialog opens.
+  function close() {
+    setError(null);
+    onClose();
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const postalCode = new FormData(event.currentTarget).get("postalCode");
     const result = await changeDeliveryLocation(typeof postalCode === "string" ? postalCode : "");
     if (result.status === "changed") {
-      setError(null);
-      onClose();
+      close();
     } else {
       setError("Enter a five-digit US ZIP code, such as 10001.");
     }
@@ -41,14 +46,14 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
       ref={dialogRef}
       className={styles.dialog}
       aria-labelledby={`${inputId}-title`}
-      onClose={onClose}
+      onClose={close}
     >
       <form className={styles.form} onSubmit={submit}>
         <div className={styles.header}>
           <h2 id={`${inputId}-title`} className={styles.title}>
             Choose your location
           </h2>
-          <button type="button" className={styles.close} aria-label="Close" onClick={onClose}>
+          <button type="button" className={styles.close} aria-label="Close" onClick={close}>
             <Icon name="close" size={18} strokeWidth={2.6} />
           </button>
         </div>

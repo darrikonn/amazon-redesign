@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { type RefObject, useEffect, useId, useRef, useState } from "react";
 import type { Department } from "@/use-case";
 import styles from "./department-menu.module.css";
 import { Icon } from "./icon";
 import { useShop } from "./shop-context";
 import { signInHref } from "./sign-in-href";
+import { useCurrentAddress } from "./use-current-address";
 
 type DepartmentMenuProps = {
   departments: readonly Department[];
@@ -23,7 +23,7 @@ const ACCOUNT_LINKS = [
 
 export function DepartmentMenu({ departments }: DepartmentMenuProps) {
   const { shopper, search, signOut } = useShop();
-  const pathname = usePathname();
+  const address = useCurrentAddress();
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,7 +79,7 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
           ))}
           <li>
             {shopper === null ? (
-              <Link href={signInHref(pathname)} className={styles.item} onClick={close}>
+              <Link href={signInHref(address)} className={styles.item} onClick={close}>
                 Sign in
                 <Icon name="chevron-right" size={16} strokeWidth={2.4} />
               </Link>

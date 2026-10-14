@@ -14,7 +14,6 @@ type ProductShelfProps = {
   renderAction?: (listing: ProductListing) => ReactNode;
 };
 
-// A grid of product cards outside search: each opens the product modal and adds to cart.
 export function ProductShelf({ label, listings, renderAction }: ProductShelfProps) {
   const { cart, toggleCart, openProduct } = useShop();
   const pathname = usePathname();

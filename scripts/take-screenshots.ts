@@ -23,6 +23,7 @@ type ScreenState = {
   name: string;
   query: string | null;
   productId?: string;
+  path?: string;
 };
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -43,6 +44,9 @@ const STATES: readonly ScreenState[] = [
   { name: "laptops", query: "laptops" },
   { name: "none", query: "red laptop under $1500" },
   { name: "product", query: "watches", productId: PRODUCT_WITH_PHOTOS },
+  { name: "deals", query: null, path: "/deals" },
+  { name: "sign-in", query: null, path: "/sign-in" },
+  { name: "cart", query: null, path: "/cart" },
   ...otherExamples.map((query, index) => ({ name: `example-${index + 2}`, query })),
 ];
 
@@ -120,6 +124,7 @@ async function scrollThrough(page: Page): Promise<void> {
 const SCROLL_PAUSE_IN_MILLISECONDS = 60;
 
 function urlFor(state: ScreenState): string {
+  if (state.path !== undefined) return `${BASE_URL}${state.path}`;
   const parameters = new URLSearchParams();
   if (state.query !== null) parameters.set("q", state.query);
   if (state.productId !== undefined) parameters.set("product", state.productId);

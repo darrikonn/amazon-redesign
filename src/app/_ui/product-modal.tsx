@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -22,6 +21,7 @@ import type { ProductPreview } from "./product-preview";
 import { withProduct } from "./search-url";
 import { signInHref } from "./sign-in-href";
 import { StarRating } from "./star-rating";
+import { useCurrentAddress } from "./use-current-address";
 
 type ProductModalProps = {
   productId: ProductId | null;
@@ -315,10 +315,8 @@ type SaveButtonProps = {
 
 // Signed out, it asks for sign-in and comes back to this product.
 function SaveButton({ productId, name, isSignedIn, isSaved, onToggleSaved }: SaveButtonProps) {
-  const pathname = usePathname();
-  const query = useSearchParams().toString();
+  const address = useCurrentAddress();
   if (!isSignedIn) {
-    const address = query === "" ? pathname : `${pathname}?${query}`;
     return (
       <Link
         href={signInHref(withProduct(address, productId))}
@@ -334,7 +332,6 @@ function SaveButton({ productId, name, isSignedIn, isSaved, onToggleSaved }: Sav
       type="button"
       className={isSaved ? styles.saveButtonSaved : styles.saveButton}
       aria-label={isSaved ? `Remove ${name} from your list` : `Save ${name} to your list`}
-      aria-pressed={isSaved}
       onClick={() => onToggleSaved(productId)}
     >
       <Icon name="heart" size={22} strokeWidth={2.2} />

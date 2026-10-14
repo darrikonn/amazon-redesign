@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback } from "react";
-import type { OrderSummaryView } from "@/use-case";
+import type { OrderFilter, OrderSummaryView } from "@/use-case";
 import { formatOrderDate, pluralize, splitPrice } from "./format";
 import { orderStatus } from "./order-status";
 import styles from "./orders-view.module.css";
@@ -15,10 +15,10 @@ type OrdersViewProps = {
   show: string;
 };
 
-const TABS = [
+const TABS: readonly { show: OrderFilter; label: string; href: string }[] = [
   { show: "all", label: "All orders", href: "/orders" },
   { show: "on-the-way", label: "On the way", href: "/orders?show=on-the-way" },
-] as const;
+];
 
 export function OrdersView({ show }: OrdersViewProps) {
   const { container } = useShop();

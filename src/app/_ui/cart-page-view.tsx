@@ -13,13 +13,11 @@ import page from "./shop-page.module.css";
 import { signInHref } from "./sign-in-href";
 import { useLoaded } from "./use-loaded";
 
-// The quantity menu offers one to ten, the cart's limit (CART_RULES).
-const QUANTITIES = Array.from({ length: 10 }, (_, index) => index + 1);
-
 export function CartPageView() {
   const { container, showCart } = useShop();
   const load = useCallback(() => container.viewCart.execute(), [container]);
   const cart = useLoaded(load);
+  const view = cart.value;
 
   async function changeQuantity(productId: ProductId, quantity: number) {
     const next = await container.changeCartQuantity.execute({ productId, quantity });
@@ -31,7 +29,7 @@ export function CartPageView() {
     <main className={page.main}>
       <h1 className={page.title}>Your cart</h1>
       {cart.isLoading && <p className={page.loading}>Loading your cart</p>}
-      {cart.value !== null && cart.value.lines.length === 0 && (
+      {view !== null && view.lines.length === 0 && (
         <div className={`${page.panel} ${page.empty}`}>
           <p className={page.emptyTitle}>Your cart is empty</p>
           <p className={page.muted}>
@@ -47,14 +45,15 @@ export function CartPageView() {
           </div>
         </div>
       )}
-      {cart.value !== null && cart.value.lines.length > 0 && (
+      {view !== null && view.lines.length > 0 && (
         <div className={styles.layout}>
           <section className={page.panel} aria-label="Items in your cart">
             <ul className={styles.lines}>
-              {cart.value.lines.map((line) => (
+              {view.lines.map((line) => (
                 <CartLine
                   key={line.productId}
                   line={line}
+                  maximumQuantity={view.maximumQuantity}
                   onChangeQuantity={(quantity) => {
                     changeQuantity(line.productId, quantity).catch(reportError);
                   }}
@@ -62,7 +61,7 @@ export function CartPageView() {
               ))}
             </ul>
           </section>
-          <Checkout cart={cart.value} onPlaced={(next) => showCart(next)} />
+          <Checkout cart={view} onPlaced={(next) => showCart(next)} />
         </div>
       )}
     </main>
@@ -71,10 +70,12 @@ export function CartPageView() {
 
 type CartLineProps = {
   line: CartLineView;
+  maximumQuantity: number;
   onChangeQuantity: (quantity: number) => void;
 };
 
-function CartLine({ line, onChangeQuantity }: CartLineProps) {
+function CartLine({ line, maximumQuantity, onChangeQuantity }: CartLineProps) {
+  const quantities = Array.from({ length: maximumQuantity }, (_, index) => index + 1);
   const { shopper, savedProductIds, toggleSaved } = useShop();
   const quantityId = useId();
   const isSaved = savedProductIds.includes(line.productId);
@@ -96,7 +97,7 @@ function CartLine({ line, onChangeQuantity }: CartLineProps) {
             value={line.quantity}
             onChange={(event) => onChangeQuantity(Number(event.target.value))}
           >
-            {QUANTITIES.map((quantity) => (
+            {quantities.map((quantity) => (
               <option key={quantity} value={quantity}>
                 Qty {quantity}
               </option>

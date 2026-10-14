@@ -17,9 +17,9 @@
 .smile {
   position: absolute;
   bottom: -2px;
-  left: 4%;
-  width: 82%;
-  height: 12px;
+  left: 5%;
+  width: 76%;
+  height: 13px;
   overflow: visible;
   fill: none;
   stroke: var(--color-accent);

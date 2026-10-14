@@ -12,6 +12,6 @@ type OrdersPageProps = {
 export default async function OrdersPage({ searchParams }: OrdersPageProps) {
   const { show } = await searchParams;
   const filter = typeof show === "string" ? show : "all";
-  await requireShopper(filter === "all" ? "/orders" : `/orders?show=${filter}`);
+  await requireShopper(filter === "all" ? "/orders" : `/orders?show=${encodeURIComponent(filter)}`);
   return <OrdersView show={filter} />;
 }

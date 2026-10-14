@@ -67,7 +67,8 @@ export function SignInForm({ returnPath }: SignInFormProps) {
           {isSigningIn ? "Signing in" : "Continue"}
         </button>
         <p className={styles.note}>
-          Your cart, orders, and list are kept in this browser only. Nothing is sent anywhere.
+          Your cart, orders, and list stay in this browser. Only your email and ZIP code are kept,
+          in a cookie, so you stay signed in.
         </p>
       </form>
     </main>
