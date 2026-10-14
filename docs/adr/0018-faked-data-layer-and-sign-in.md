@@ -20,6 +20,8 @@ Bindings per container (ADR 0005):
 | `CartLineRepository` | `SessionCartLineRepository`, one per container | `InMemoryCartLineRepository` |
 | `IdentityProvider` | `DemoIdentityProvider`, always signed in as the demo shopper | `InMemoryIdentityProvider`, seeded per test |
 
+The query assistant is a real external service, not a fake; its bindings are in ADR 0024.
+
 The production and local containers are identical today. They stay separate factories so a real adapter replaces one line in one factory.
 
 The cart lives in the container that the browser creates, so it lasts for the page session and is never shared between visitors. The server never reads or writes a cart.

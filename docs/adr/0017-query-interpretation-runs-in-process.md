@@ -36,4 +36,4 @@ const next = await languageModel.interpret(`${text} under $30`);
 
 ## Consequences
 
-Interpretation is instant, free, deterministic, and unit tested against the reference screens. Phrasing outside the vocabulary falls through to keyword matching on product text, which is less clever than a model. If a model is added later, it goes behind a core port as an infrastructure adapter that enriches the intent for leftover keywords after the shopper pauses, never on the per-keystroke path, and the in-process interpreter stays the fallback.
+Interpretation is instant, free, deterministic, and unit tested against the reference screens. Phrasing outside the vocabulary falls through to keyword matching on product text, which is less clever than a model. A language model handles leftover keywords after the shopper pauses, behind a core port and never on the per-keystroke path (ADR 0024); the in-process interpreter stays the source of truth for what a query means.
