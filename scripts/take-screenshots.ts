@@ -22,6 +22,7 @@ async function main(): Promise<void> {
 type ScreenState = {
   name: string;
   query: string | null;
+  productId?: string;
 };
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -33,6 +34,7 @@ const VIEWPORT_HEIGHT = 900;
 const READY_TIMEOUT_IN_MILLISECONDS = 30_000;
 
 const [firstExample = "", ...otherExamples] = STARTER_QUERIES;
+const PRODUCT_WITH_PHOTOS = "dummyjson-0094";
 
 const STATES: readonly ScreenState[] = [
   { name: "home", query: null },
@@ -40,6 +42,7 @@ const STATES: readonly ScreenState[] = [
   { name: "headphones", query: "headphones" },
   { name: "laptops", query: "laptops" },
   { name: "none", query: "red laptop under $1500" },
+  { name: "product", query: "watches", productId: PRODUCT_WITH_PHOTOS },
   ...otherExamples.map((query, index) => ({ name: `example-${index + 2}`, query })),
 ];
 
@@ -81,13 +84,47 @@ async function captureAll(): Promise<void> {
   }
 }
 
+// An open product modal covers the window, so it is captured at window size; every other
+// state is captured as the whole page.
 async function capture(page: Page, state: ScreenState, width: number): Promise<void> {
-  const url = state.query === null ? BASE_URL : `${BASE_URL}/?q=${encodeURIComponent(state.query)}`;
-  await page.goto(url, { waitUntil: "networkidle" });
-  await page.waitForFunction(() => [...document.images].every((image) => image.complete));
+  await page.goto(urlFor(state), { waitUntil: "networkidle" });
+  if (state.productId === undefined) await scrollThrough(page);
+  else await page.waitForSelector("dialog[open] dt");
+  // Behind an open modal the page cannot scroll, so its lazy images below the window never
+  // load; only the images that will be in the picture are waited for.
+  const scope = state.productId === undefined ? "body" : "dialog";
+  await page.waitForFunction(
+    (selector) =>
+      [...document.querySelectorAll(`${selector} img`)].every(
+        (image) => image instanceof HTMLImageElement && image.complete,
+      ),
+    scope,
+  );
   const file = path.join(OUTPUT_DIRECTORY, `${state.name}-${width}.png`);
-  await page.screenshot({ path: file, fullPage: true });
+  await page.screenshot({ path: file, fullPage: state.productId === undefined });
   console.info(`Saved ${path.relative(ROOT, file)}`);
+}
+
+// A full-page picture includes images far below the window, which lazy loading only
+// starts once they come near; scrolling through once starts them all.
+async function scrollThrough(page: Page): Promise<void> {
+  await page.evaluate(async (pauseInMilliseconds) => {
+    for (let top = 0; top < document.body.scrollHeight; top += window.innerHeight) {
+      window.scrollTo(0, top);
+      await new Promise((resolve) => setTimeout(resolve, pauseInMilliseconds));
+    }
+    window.scrollTo(0, 0);
+  }, SCROLL_PAUSE_IN_MILLISECONDS);
+}
+
+const SCROLL_PAUSE_IN_MILLISECONDS = 60;
+
+function urlFor(state: ScreenState): string {
+  const parameters = new URLSearchParams();
+  if (state.query !== null) parameters.set("q", state.query);
+  if (state.productId !== undefined) parameters.set("product", state.productId);
+  const query = parameters.toString();
+  return query === "" ? BASE_URL : `${BASE_URL}/?${query}`;
 }
 
 main().catch((error: unknown) => {
