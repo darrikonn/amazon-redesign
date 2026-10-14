@@ -173,6 +173,20 @@ describe("SearchCatalog", () => {
     ]);
   });
 
+  it("says when unknown words left nothing to show, so the assistant may help", async () => {
+    const stuck = await container.searchCatalog.execute({
+      text: "gift for a coffee lover",
+      sort: "best-match",
+    });
+    const working = await container.searchCatalog.execute({
+      text: "lamp with touch",
+      sort: "best-match",
+    });
+
+    expect(stuck.needsAssistance).toBe(true);
+    expect(working.needsAssistance).toBe(false);
+  });
+
   it("does not double quote a dropped keyword", async () => {
     const outcome = await container.searchCatalog.execute({
       text: "office lamp",

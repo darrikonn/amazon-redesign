@@ -1,5 +1,5 @@
 import type { Highlight, Listing, SearchResult } from "@/component";
-import { removePhrase, searchProducts } from "@/component";
+import { removePhrase, requestAssistance, searchProducts } from "@/component";
 import type { Color, Illustration, ProductId, ProductRepository, SearchSort } from "@/core";
 import { demandCategory, isSearchSort, SEARCH_SORTS } from "@/core";
 
@@ -14,6 +14,7 @@ export type SearchOutcome = {
   hasQuery: boolean;
   understood: readonly UnderstoodTermView[];
   unrecognizedWords: readonly string[];
+  needsAssistance: boolean;
   resultCount: number;
   headline: string;
   sortOptions: readonly SortOptionView[];
@@ -63,7 +64,8 @@ export class SearchCatalog {
   async execute(request: SearchCatalogRequest): Promise<SearchOutcome> {
     const catalog = await this.products.list();
     const requestedSort = isSearchSort(request.sort) ? request.sort : DEFAULT_SORT;
-    return toOutcome(searchProducts(catalog, request.text, requestedSort), requestedSort);
+    const outcome = toOutcome(searchProducts(catalog, request.text, requestedSort), requestedSort);
+    return { ...outcome, needsAssistance: requestAssistance(catalog, request.text) !== null };
   }
 }
 
@@ -81,7 +83,10 @@ const HIGHLIGHT_LABELS: Record<Highlight, string> = {
   "lowest-price": "Lowest price",
 };
 
-function toOutcome(result: SearchResult, requestedSort: SearchSort): SearchOutcome {
+function toOutcome(
+  result: SearchResult,
+  requestedSort: SearchSort,
+): Omit<SearchOutcome, "needsAssistance"> {
   return {
     text: result.text,
     requestedSort,

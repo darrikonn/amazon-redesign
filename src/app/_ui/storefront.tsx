@@ -141,8 +141,7 @@ function usePreviewLabels(
   return labels;
 }
 
-// The assistant costs a model call, so it waits for the shopper to stop typing and only
-// asks when unrecognized words left nothing to show.
+// The assistant costs a model call, so it waits for the shopper to stop typing.
 const ASSISTANT_PAUSE_IN_MILLISECONDS = 700;
 
 function useAssistant(
@@ -152,8 +151,7 @@ function useAssistant(
 ): AssistantState | null {
   const [state, setState] = useState<AssistantState | null>(null);
   const { text } = outcome;
-  const shouldAsk =
-    isAvailable && outcome.resultCount === 0 && outcome.unrecognizedWords.length > 0;
+  const shouldAsk = isAvailable && outcome.needsAssistance;
   const unrecognizedWords = outcome.unrecognizedWords.join(" ");
 
   useEffect(() => {
