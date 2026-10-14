@@ -35,32 +35,34 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
   const isShowingResults = outcome.hasQuery;
-  // Chips, suggestions, sort options, relaxations, and narrowing browse links belong to the
-  // last search. Until the newer typed text has been searched they would throw that text
-  // away, so picking one then searches the typed text instead.
+  // Chips, suggestions, sort options, and relaxations belong to the last search. Until the
+  // newer typed text has been searched they would throw that text away, so picking one then
+  // searches the typed text instead. A bar the shopper emptied has nothing to lose.
   const isUpdating = text !== outcome.text;
+  const keepsTypedText = isUpdating && text.trim() !== "";
 
   useEffect(() => {
     container.viewCart.execute().then(setCart, reportError);
   }, [container]);
 
-  // Set only when the choice changes the search; otherwise no new outcome would ever
-  // arrive to clear it, and a later, unrelated search would move focus.
+  // Set only when the choice changes the bar or the search; a choice that changes neither
+  // would never be cleared, and a later, unrelated search would move focus.
   const chosenTextRef = useRef<string | null>(null);
   const choose = useCallback(
     (nextText: string) => {
-      chosenTextRef.current = nextText === outcome.text ? null : nextText;
+      const changesNothing = nextText === text && nextText === outcome.text;
+      chosenTextRef.current = changesNothing ? null : nextText;
       apply(nextText);
     },
-    [apply, outcome.text],
+    [apply, text, outcome.text],
   );
 
   const pick = useCallback(
-    (nextText: string) => choose(isUpdating ? text : nextText),
-    [choose, isUpdating, text],
+    (nextText: string) => choose(keepsTypedText ? text : nextText),
+    [choose, keepsTypedText, text],
   );
 
-  useFocusRecovery(chosenTextRef, isShowingResults, outcome, inputRef);
+  useFocusRecovery(chosenTextRef, isShowingResults, text, outcome.text, inputRef);
 
   const pickSort = useCallback(
     (nextSort: SearchSort, nextText: string) => {
@@ -176,19 +178,25 @@ const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
 function useFocusRecovery(
   chosenTextRef: RefObject<string | null>,
   isShowingResults: boolean,
-  outcome: SearchOutcome,
+  text: string,
+  searchedText: string,
   inputRef: RefObject<HTMLTextAreaElement | null>,
 ) {
+  // Watches the bar as well as the search, because choosing the text that was already
+  // searched (the example arrow on an emptied bar) changes only the bar. Once the shopper
+  // has typed something else, focus is theirs and is left alone.
   useEffect(() => {
-    if (chosenTextRef.current === null || outcome.text !== chosenTextRef.current) return;
+    const chosenText = chosenTextRef.current;
+    if (chosenText === null || searchedText !== chosenText) return;
     chosenTextRef.current = null;
+    if (text !== chosenText) return;
     const active = document.activeElement;
     if (active !== null && active !== document.body && active.closest("[inert]") === null) return;
     const target = isShowingResults
       ? document.getElementById(RESULTS_HEADLINE_ID)
       : inputRef.current;
     target?.focus({ preventScroll: true });
-  }, [chosenTextRef, isShowingResults, outcome.text, inputRef]);
+  }, [chosenTextRef, isShowingResults, text, searchedText, inputRef]);
 }
 
 function Hero() {
