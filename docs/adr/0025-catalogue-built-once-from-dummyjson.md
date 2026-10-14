@@ -18,6 +18,7 @@ The hand-written sample catalogue had 26 products in four categories. A believab
 | --- | --- |
 | Raw response, verbatim | `src/infrastructure/product/data/raw/<source>.json` |
 | Generated catalogue | `src/infrastructure/product/data/catalog.json`, validated on load by `parseCatalogFile` |
+| Generated product details (photos, facts, reviews), validated on load by `parseProductDetailsFile` (ADR 0029) | `src/infrastructure/product/data/product-details.json`, built by `catalog-enrichment/product-details.ts` |
 | Generated vocabulary (live categories, tags with counts, colours) | `src/component/catalog-vocabulary/vocabulary.json` |
 | Category groups, labels, synonyms, source mapping | `src/component/catalog-vocabulary/category-map.ts` |
 | Keyword to tag rules | `src/component/catalog-vocabulary/tag-rules.ts` |

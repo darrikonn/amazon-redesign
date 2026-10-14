@@ -9,7 +9,6 @@ import {
 } from "./raw-source";
 import { blankToNull, compareText, productIdFor } from "./source-text";
 
-// The details file, in the same product order as the catalogue (ADR 0029).
 export function buildProductDetails(source: ProductSource, rawResponse: unknown): ProductDetails[] {
   const details =
     source === "dummyjson"
@@ -22,7 +21,7 @@ export function dummyJsonDetails(raw: RawDummyJsonProduct): ProductDetails {
   return {
     productId: productIdFor("dummyjson", raw.id),
     description: raw.description.trim(),
-    images: photosOf(raw.images, raw.thumbnail),
+    images: photosOrThumbnail(raw.images, raw.thumbnail),
     availability: availabilityFrom(raw.availabilityStatus),
     stock: raw.stock,
     shipping: blankToNull(raw.shippingInformation),
@@ -36,7 +35,7 @@ export function fakeStoreDetails(raw: RawFakeStoreProduct): ProductDetails {
   return {
     productId: productIdFor("fakestore", raw.id),
     description: raw.description.trim(),
-    images: photosOf([], raw.image),
+    images: photosOrThumbnail([], raw.image),
     availability: null,
     stock: null,
     shipping: null,
@@ -46,8 +45,7 @@ export function fakeStoreDetails(raw: RawFakeStoreProduct): ProductDetails {
   };
 }
 
-// The full-size photos, or the thumbnail when the source has none.
-function photosOf(images: readonly string[], fallback: string | null): string[] {
+function photosOrThumbnail(images: readonly string[], fallback: string | null): string[] {
   const photos = images.flatMap((image) => {
     const photo = blankToNull(image);
     return photo === null ? [] : [photo];

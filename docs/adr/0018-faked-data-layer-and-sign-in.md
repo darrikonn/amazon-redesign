@@ -10,13 +10,14 @@ The storefront redesign has no backend: no catalog service, no cart service, and
 
 ## Decision
 
-Core defines the ports as if the services were real: `ProductRepository`, `CartLineRepository`, and `IdentityProvider`. Each is asynchronous, and every cart method takes the owner id (ADR 0012). The test fakes record their calls and expose seeding helpers and `reset()`; the production and local adapters do not record anything.
+Core defines the ports as if the services were real: `ProductRepository`, `ProductDetailsRepository`, `CartLineRepository`, and `IdentityProvider`. Each is asynchronous, and every cart method takes the owner id (ADR 0012). The test fakes record their calls and expose seeding helpers and `reset()`; the production and local adapters do not record anything.
 
 Bindings per container (ADR 0005):
 
 | Port | Production and local | Test |
 | --- | --- | --- |
 | `ProductRepository` | `CatalogProductRepository`, reading the generated `catalog.json` (ADR 0025) | `InMemoryProductRepository`, empty until seeded |
+| `ProductDetailsRepository` | `CatalogProductDetailsRepository`, importing the generated `product-details.json` on first use (ADR 0029) | `InMemoryProductDetailsRepository`, empty until seeded |
 | `CartLineRepository` | `SessionCartLineRepository`, one per container | `InMemoryCartLineRepository` |
 | `IdentityProvider` | `DemoIdentityProvider`, always signed in as the demo shopper | `InMemoryIdentityProvider`, seeded per test |
 

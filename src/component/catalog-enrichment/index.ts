@@ -27,5 +27,4 @@ export {
   parseFakeStoreResponse,
   type RawDummyJsonProduct,
   type RawFakeStoreProduct,
-  type RawReview,
 } from "./raw-source";

@@ -100,6 +100,30 @@ describe("ViewProduct", () => {
     expect(gone?.availability).toEqual({ label: "Out of stock", canBuy: false });
   });
 
+  it("says low stock without a number when the count is unknown", async () => {
+    // Arrange
+    fakes.productDetails.seedDetails(
+      aProductDetails({ productId: "watch", availability: "low-stock", stock: null }),
+    );
+
+    // Act
+    const view = await container.viewProduct.execute({ productId: "watch" });
+
+    // Assert
+    expect(view?.availability).toEqual({ label: "Low stock", canBuy: true });
+  });
+
+  it("uses the card photo when the details have no photos", async () => {
+    // Arrange
+    fakes.productDetails.seedDetails(aProductDetails({ productId: "watch", images: [] }));
+
+    // Act
+    const view = await container.viewProduct.execute({ productId: "watch" });
+
+    // Assert
+    expect(view?.images).toEqual(["https://cdn.dummyjson.com/watch/thumbnail.webp"]);
+  });
+
   it("leaves out facts the source does not have", async () => {
     // Arrange
     fakes.productDetails.seedDetails(
