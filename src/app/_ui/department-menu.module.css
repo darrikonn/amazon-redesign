@@ -16,7 +16,7 @@
 
 .toggle:hover,
 .toggle[aria-expanded="true"] {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-hover-on-dark);
 }
 
 .panel {
@@ -29,7 +29,7 @@
   border-radius: 16px;
   background: var(--color-surface);
   color: var(--color-ink);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-menu);
 }
 
 .panel[hidden] {

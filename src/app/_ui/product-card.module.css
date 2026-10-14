@@ -6,7 +6,7 @@
   border-radius: 18px;
   background: var(--color-surface);
   color: var(--color-ink);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  box-shadow: var(--shadow-card);
   transition:
     transform var(--duration-slow) ease,
     box-shadow var(--duration-slow) ease;
@@ -14,7 +14,7 @@
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.42);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .well {
@@ -28,7 +28,7 @@
 }
 
 .well svg {
-  filter: drop-shadow(0 8px 10px rgba(15, 17, 17, 0.24));
+  filter: var(--shadow-illustration);
 }
 
 .bestMatch {
