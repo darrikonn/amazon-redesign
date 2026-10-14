@@ -38,6 +38,19 @@ None of this is real retail data: the products, prices, ratings, stock, and imag
 
 Clicking a product opens it in a modal over the results, laid out like Instagram's post view: a photo carousel on the left (swipe, arrows, arrow keys, or dots) and the details on the right, with the description, availability, shipping, warranty, returns, and the ratings and reviews. The price and the cart button stay in view at the bottom. The open product is in the address (`?product=...`), so it can be shared, and Back closes it. On a phone it fills the screen, photos first.
 
+## Account, orders, and the cart
+
+The header, the home page shortcuts, and the menu all lead somewhere real:
+
+- **Sign in** (`/sign-in`) takes only an email. There is no password; the name comes from the address (`darri.konn@example.com` is greeted as Darri). Signing out is in the menu and on the account page.
+- **Deliver to** sets the delivery ZIP code; a dozen US ZIP codes also name their city.
+- **Account & Lists** (`/account`) links to everything below, and **Your list** (`/lists`) holds products saved with the heart in a product's details.
+- **Returns & Orders** (`/orders`) lists orders with where each one is; an order's page tracks it (ordered, shipped, out for delivery, delivered) and starts a return for items still inside their return window.
+- **Cart** (`/cart`) changes quantities, saves items for later, and places the order.
+- **Buy again** (`/buy-again`), **Track an order** (`/orders?show=on-the-way`), and **Today's deals** (`/deals`) are the home page shortcuts.
+
+None of it has a backend. The session is a cookie holding the email and ZIP code; the cart, orders, returns, and list are kept in the browser's `localStorage`, so they stay on this device and survive a reload. A new shopper starts with three sample orders, marked "Sample order", so tracking, returns, and buy again have something to show. ADR 0030 records the design.
+
 ## Search assistant
 
 There is no real AI behind the search. The assistant is simulated. The search bar parses what the shopper writes against the catalogue's own tagging system: categories, tags, colours, prices, delivery, and rating. It then finds the best matching products and suggests the next filters with exact result counts.

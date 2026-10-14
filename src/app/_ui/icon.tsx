@@ -14,6 +14,7 @@ export type IconName =
   | "tag"
   | "chevron-right"
   | "add-to-cart"
+  | "heart"
   | "sparkle";
 
 type IconProps = {
@@ -96,5 +97,8 @@ const PATHS: Record<IconName, ReactNode> = {
       <circle cx="16.5" cy="19.5" r="1.4" />
       <path d="M13 3v7M9.5 6.5h7" />
     </>
+  ),
+  heart: (
+    <path d="M12 20s-7.5-4.6-7.5-10.1A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20Z" />
   ),
 };

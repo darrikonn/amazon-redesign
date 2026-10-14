@@ -39,6 +39,7 @@
 }
 
 .heading {
+  margin-top: 6px;
   padding: 8px 12px;
   color: var(--color-muted);
   font-size: 12px;
@@ -49,6 +50,7 @@
 
 .item {
   display: flex;
+  color: inherit;
   align-items: center;
   justify-content: space-between;
   width: 100%;

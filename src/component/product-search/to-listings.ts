@@ -1,4 +1,4 @@
-import type { Product, SearchIntent, SearchSort } from "@/core";
+import type { Product, SearchIntent, SearchSort, Tag } from "@/core";
 import { capitalize, colorLabel, tagLabel } from "../catalog-vocabulary";
 
 export const LISTING_RULES = {
@@ -32,7 +32,7 @@ export function toListings(products: readonly Product[], context: ListingContext
       product,
       isBestMatch,
       highlight: highlightFor(isBestMatch, isLowestPrice, context.sort),
-      details: detailsFor(product, context.intent),
+      details: cardDetailsFor(product, context.intent.tags),
     };
   });
 }
@@ -56,9 +56,9 @@ function highlightFor(
 
 // Tags the shopper already asked for are left out: they are true of every result. A card
 // always has a detail line, falling back to the brand and then the category.
-function detailsFor(product: Product, intent: SearchIntent): string[] {
+export function cardDetailsFor(product: Product, askedTags: readonly Tag[] = []): string[] {
   const extraTags = product.tags
-    .filter((tag) => !intent.tags.includes(tag))
+    .filter((tag) => !askedTags.includes(tag))
     .slice(0, LISTING_RULES.maximumExtraDetails)
     .map(tagLabel);
   const details = [...(product.color === null ? [] : [colorLabel(product.color)]), ...extraTags];

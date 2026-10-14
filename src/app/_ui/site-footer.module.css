@@ -61,10 +61,14 @@
 }
 
 .wordmark {
+  display: inline-flex;
   color: var(--color-on-dark);
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: 0.72em;
+}
+
+.wordmark > * {
+  transform: scale(0.72);
+  transform-origin: left center;
 }
 
 @media (max-width: 760px) {

@@ -1,11 +1,12 @@
+import { cardDetailsFor } from "@/component";
 import type { Product } from "@/core";
 import type { DealPriceView, ProductListing } from "./search-catalog";
 
 // A product shown outside search (buy again, deals, the saved list): no best match or
-// highlight, and the line under the name says why it is there.
+// highlight, and the same detail line as a search card unless the shelf has a better one.
 export function toShelfListing(
   product: Product,
-  details: readonly string[],
+  details: readonly string[] = cardDetailsFor(product),
   deal: DealPriceView | null = null,
 ): ProductListing {
   return {

@@ -75,7 +75,7 @@ describe("ToggleSavedItem and ViewSavedList", () => {
     // Assert
     expect(savedLamp).toEqual({ status: "saved", list: { productIds: ["lamp"] } });
     expect(list?.productIds).toEqual(["mug", "lamp"]);
-    expect(list?.listings[0]?.details).toEqual(["Saved to your list"]);
+    expect(list?.listings[0]?.details).toEqual(["Laptop"]);
     expect(removed).toEqual({ status: "removed", list: { productIds: ["mug"] } });
   });
 

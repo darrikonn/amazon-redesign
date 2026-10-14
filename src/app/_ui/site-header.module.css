@@ -17,13 +17,22 @@
   margin-left: -11px;
 }
 
+/* Every item is the same height and centred on one line, the logo included, so the bar
+   reads as one row whatever is signed in. */
 .logo,
 .wideLink,
 .cartLink {
   display: flex;
   align-items: center;
-  height: 44px;
+  height: 52px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 0;
   border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   transition: background var(--duration-base) ease;
 }
 
@@ -35,10 +44,6 @@
 
 .logo {
   padding: 0 10px;
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1;
 }
 
 .navigation {

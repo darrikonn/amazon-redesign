@@ -1,0 +1,138 @@
+.order {
+  /* White surfaces draw form controls light, not in the page's dark scheme. */
+  color-scheme: light;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-card);
+}
+
+.orderHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 32px;
+  padding: 16px 24px;
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.factLabel {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.factValue {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sample {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-teal-tint);
+  color: var(--color-teal);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.detailsLink {
+  margin-left: auto;
+  color: var(--color-teal);
+  font-weight: 700;
+}
+
+.detailsLink:hover {
+  text-decoration: underline;
+}
+
+.orderBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 24px 24px;
+}
+
+.status {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.returnNote {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lineText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lineName {
+  font-weight: 700;
+}
+
+.lineMeta {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.orderActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 760px) {
+  .orderHeader {
+    gap: 10px 20px;
+    padding: 14px 16px;
+  }
+
+  .detailsLink {
+    margin-left: 0;
+  }
+
+  .orderBody {
+    padding: 16px;
+  }
+
+  /* The button goes under the name, the same for every line. */
+  .line {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: start;
+    gap: 8px 14px;
+  }
+
+  .line > button {
+    grid-column: 2;
+    justify-self: start;
+    min-height: 40px;
+  }
+}

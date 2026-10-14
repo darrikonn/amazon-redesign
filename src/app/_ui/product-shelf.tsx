@@ -1,0 +1,39 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
+import type { ProductListing } from "@/use-case";
+import { ProductCard } from "./product-card";
+import { withProduct } from "./search-url";
+import { useShop } from "./shop-context";
+import page from "./shop-page.module.css";
+
+type ProductShelfProps = {
+  label: string;
+  listings: readonly ProductListing[];
+  renderAction?: (listing: ProductListing) => ReactNode;
+};
+
+// A grid of product cards outside search: each opens the product modal and adds to cart.
+export function ProductShelf({ label, listings, renderAction }: ProductShelfProps) {
+  const { cart, toggleCart, openProduct } = useShop();
+  const pathname = usePathname();
+  return (
+    <ul className={page.grid} aria-label={label}>
+      {listings.map((listing) => (
+        <li key={listing.id} className={page.gridItem}>
+          <ProductCard
+            listing={listing}
+            href={withProduct(pathname, listing.id)}
+            isInCart={cart.productIds.includes(listing.id)}
+            onOpen={openProduct}
+            onToggleCart={(productId) => {
+              toggleCart(productId).catch(reportError);
+            }}
+          />
+          {renderAction?.(listing)}
+        </li>
+      ))}
+    </ul>
+  );
+}

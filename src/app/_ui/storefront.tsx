@@ -1,55 +1,36 @@
 "use client";
 
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
-import { type Container, createContainer } from "@/composition";
+import type { Container } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
-import type {
-  CartSummary,
-  SearchOutcome,
-  ShopperView,
-  Storefront as StorefrontData,
-} from "@/use-case";
+import type { SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { Collapsible } from "./collapsible";
 import { scrollToTop } from "./motion";
-import { ProductModal } from "./product-modal";
-import type { ProductPreview } from "./product-preview";
 import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
+import { useShop } from "./shop-context";
 import { ShortcutList } from "./shortcut-list";
-import { SiteFooter } from "./site-footer";
-import { SiteHeader } from "./site-header";
 import { StarterQueryList } from "./starter-query-list";
 import styles from "./storefront.module.css";
 import { useIdle } from "./use-idle";
-import { useProductModal } from "./use-product-modal";
 import { useSearchText } from "./use-search-text";
 import { useTypingDemo } from "./use-typing-demo";
 
 type StorefrontProps = {
   initialOutcome: SearchOutcome;
-  initialProductId: ProductId | null;
   storefront: StorefrontData;
-  shopper: ShopperView | null;
 };
 
-export function Storefront({
-  initialOutcome,
-  initialProductId,
-  storefront,
-  shopper,
-}: StorefrontProps) {
-  const [container] = useState(createContainer);
+export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
+  const { container, cart, productModal, openProduct, toggleCart, searchHandlerRef } = useShop();
   const { text, searchText, type, apply } = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
   const { outcome, lastResults } = useSearchOutcome(container, initialOutcome, searchText, sort);
-  const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
   const isIdle = useIdle(DEMO_IDLE_DELAY_IN_MILLISECONDS);
   const demo = useTypingDemo(storefront.starterQueries, text === "" && isIdle);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const productModal = useProductModal(initialProductId);
   useAddressInStepWithScreen(searchText, sort, productModal.productId);
-  const [productPreview, setProductPreview] = useState<ProductPreview | null>(null);
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
   const isShowingResults = outcome.hasQuery;
@@ -58,10 +39,6 @@ export function Storefront({
   // searches the typed text instead. A bar the shopper emptied has nothing to lose.
   const isUpdating = text !== outcome.text;
   const keepsTypedText = isUpdating && text.trim() !== "";
-
-  useEffect(() => {
-    container.viewCart.execute().then(setCart, reportError);
-  }, [container]);
 
   // Set only when the choice changes the bar or the search; a choice that changes neither
   // would never be cleared, and a later, unrelated search would move focus.
@@ -81,6 +58,7 @@ export function Storefront({
   );
 
   useFocusRecovery(chosenTextRef, isShowingResults, text, outcome.text, inputRef);
+  useHeaderSearch(searchHandlerRef, choose);
 
   const pickSort = useCallback(
     (nextSort: SearchSort, nextText: string) => {
@@ -90,85 +68,52 @@ export function Storefront({
     [pick],
   );
 
-  const { open: openProductModal } = productModal;
-  const openProduct = useCallback(
-    (preview: ProductPreview) => {
-      setProductPreview(preview);
-      openProductModal(preview.id);
-    },
-    [openProductModal],
-  );
-
-  const toggleCart = useCallback(
-    (productId: ProductId) => {
-      container.toggleCartItem.execute({ productId }).then(setCart, reportError);
-    },
-    [container],
-  );
-
   return (
-    <div className={styles.page}>
-      <div className={styles.viewport}>
-        <SiteHeader
-          shopper={shopper}
-          departments={storefront.departments}
-          cartCount={cart.itemCount}
-          onSearch={choose}
-        />
-        <main className={isShowingResults ? styles.mainWithResults : styles.mainEmpty}>
-          <Collapsible isOpen={!isShowingResults}>
-            <Hero />
-          </Collapsible>
-          <SearchPanel
-            inputRef={inputRef}
-            text={text}
-            results={lastResults}
-            isShowingResults={isShowingResults}
-            isUpdating={keepsTypedText}
-            placeholder={demo.placeholder}
-            onType={type}
-            onApply={apply}
-            onPick={pick}
-            onTryExample={() => choose(demo.example)}
-          />
-          <Collapsible isOpen={!isShowingResults}>
-            <div className={styles.home}>
-              <StarterQueryList
-                queries={storefront.starterQueries}
-                onPick={(query) => {
-                  choose(query);
-                  scrollToTop();
-                }}
-              />
-              <ShortcutList />
-            </div>
-          </Collapsible>
-          <Collapsible isOpen={isShowingResults}>
-            {lastResults !== null && (
-              <ResultSection
-                outcome={lastResults}
-                isUpdating={isUpdating}
-                cartProductIds={cart.productIds}
-                onSearch={pick}
-                onBrowse={choose}
-                onPickSort={pickSort}
-                onOpenProduct={openProduct}
-                onToggleCart={toggleCart}
-              />
-            )}
-          </Collapsible>
-        </main>
-      </div>
-      <SiteFooter />
-      <ProductModal
-        productId={productModal.productId}
-        preview={productPreview}
-        viewProduct={container.viewProduct}
-        cartProductIds={cart.productIds}
-        onToggleCart={toggleCart}
-        onClose={productModal.close}
+    <main className={isShowingResults ? styles.mainWithResults : styles.mainEmpty}>
+      <Collapsible isOpen={!isShowingResults}>
+        <Hero />
+      </Collapsible>
+      <SearchPanel
+        inputRef={inputRef}
+        text={text}
+        results={lastResults}
+        isShowingResults={isShowingResults}
+        isUpdating={keepsTypedText}
+        placeholder={demo.placeholder}
+        onType={type}
+        onApply={apply}
+        onPick={pick}
+        onTryExample={() => choose(demo.example)}
       />
-    </div>
+      <Collapsible isOpen={!isShowingResults}>
+        <div className={styles.home}>
+          <StarterQueryList
+            queries={storefront.starterQueries}
+            onPick={(query) => {
+              choose(query);
+              scrollToTop();
+            }}
+          />
+          <ShortcutList />
+        </div>
+      </Collapsible>
+      <Collapsible isOpen={isShowingResults}>
+        {lastResults !== null && (
+          <ResultSection
+            outcome={lastResults}
+            isUpdating={isUpdating}
+            cartProductIds={cart.productIds}
+            onSearch={pick}
+            onBrowse={choose}
+            onPickSort={pickSort}
+            onOpenProduct={openProduct}
+            onToggleCart={(productId) => {
+              toggleCart(productId).catch(reportError);
+            }}
+          />
+        )}
+      </Collapsible>
+    </main>
   );
 }
 
@@ -212,8 +157,6 @@ function useAddressInStepWithScreen(text: string, sort: SearchSort, productId: P
   }, [text, sort, productId]);
 }
 
-const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };
-
 const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
 
 // Choosing something can fold away the very control that was used (a starter query, the
@@ -241,6 +184,19 @@ function useFocusRecovery(
       : inputRef.current;
     target?.focus({ preventScroll: true });
   }, [chosenTextRef, isShowingResults, text, searchedText, inputRef]);
+}
+
+// While the home page is open, the header's department menu and logo search in place.
+function useHeaderSearch(
+  handlerRef: RefObject<((text: string) => void) | null>,
+  choose: (text: string) => void,
+) {
+  useEffect(() => {
+    handlerRef.current = choose;
+    return () => {
+      handlerRef.current = null;
+    };
+  }, [handlerRef, choose]);
 }
 
 function Hero() {

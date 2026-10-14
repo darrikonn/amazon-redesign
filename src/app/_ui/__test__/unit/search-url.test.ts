@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  productIdIn,
-  readProductParameter,
-  readSearchParameters,
-  searchUrl,
-  withProduct,
-} from "@/app/_ui/search-url";
+import { productIdIn, readSearchParameters, searchUrl, withProduct } from "@/app/_ui/search-url";
 
 describe("readSearchParameters", () => {
   it("reads the query and the sort as typed", () => {
@@ -51,9 +45,6 @@ describe("the open product in the address", () => {
 
     expect(address).toBe("/?q=watches&product=dummyjson-0007");
     expect(productIdIn(address)).toBe("dummyjson-0007");
-    expect(readProductParameter({ q: "watches", product: "dummyjson-0007" })).toBe(
-      "dummyjson-0007",
-    );
   });
 
   it("is set and removed without touching the rest of the address", () => {
@@ -65,6 +56,5 @@ describe("the open product in the address", () => {
 
   it("is absent when no product is open", () => {
     expect(productIdIn("/?q=watches")).toBeNull();
-    expect(readProductParameter({ q: "watches" })).toBeNull();
   });
 });

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -17,6 +19,8 @@ import { type CarouselControl, ImageCarousel } from "./image-carousel";
 import { Price } from "./price";
 import styles from "./product-modal.module.css";
 import type { ProductPreview } from "./product-preview";
+import { withProduct } from "./search-url";
+import { signInHref } from "./sign-in-href";
 import { StarRating } from "./star-rating";
 
 type ProductModalProps = {
@@ -24,7 +28,10 @@ type ProductModalProps = {
   preview: ProductPreview | null;
   viewProduct: ViewProduct;
   cartProductIds: readonly ProductId[];
+  savedProductIds: readonly ProductId[];
+  isSignedIn: boolean;
   onToggleCart: (productId: ProductId) => void;
+  onToggleSaved: (productId: ProductId) => void;
   onClose: () => void;
 };
 
@@ -38,7 +45,10 @@ export function ProductModal({
   preview,
   viewProduct,
   cartProductIds,
+  savedProductIds,
+  isSignedIn,
   onToggleCart,
+  onToggleSaved,
   onClose,
 }: ProductModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -110,13 +120,22 @@ export function ProductModal({
                     </p>
                   )}
                 </div>
-                <CartButton
-                  productId={summary.id}
-                  name={summary.name}
-                  availability={cartAvailability(view)}
-                  isInCart={cartProductIds.includes(summary.id)}
-                  onToggleCart={onToggleCart}
-                />
+                <div className={styles.actions}>
+                  <SaveButton
+                    productId={summary.id}
+                    name={summary.name}
+                    isSignedIn={isSignedIn}
+                    isSaved={savedProductIds.includes(summary.id)}
+                    onToggleSaved={onToggleSaved}
+                  />
+                  <CartButton
+                    productId={summary.id}
+                    name={summary.name}
+                    availability={cartAvailability(view)}
+                    isInCart={cartProductIds.includes(summary.id)}
+                    onToggleCart={onToggleCart}
+                  />
+                </div>
               </footer>
             )}
           </div>
@@ -284,6 +303,43 @@ function initialsOf(name: string): string {
     .slice(0, 2)
     .map((part) => part.charAt(0).toUpperCase())
     .join("");
+}
+
+type SaveButtonProps = {
+  productId: ProductId;
+  name: string;
+  isSignedIn: boolean;
+  isSaved: boolean;
+  onToggleSaved: (productId: ProductId) => void;
+};
+
+// Signed out, it asks for sign-in and comes back to this product.
+function SaveButton({ productId, name, isSignedIn, isSaved, onToggleSaved }: SaveButtonProps) {
+  const pathname = usePathname();
+  const query = useSearchParams().toString();
+  if (!isSignedIn) {
+    const address = query === "" ? pathname : `${pathname}?${query}`;
+    return (
+      <Link
+        href={signInHref(withProduct(address, productId))}
+        className={styles.saveButton}
+        aria-label={`Sign in to save ${name} to your list`}
+      >
+        <Icon name="heart" size={22} strokeWidth={2.2} />
+      </Link>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className={isSaved ? styles.saveButtonSaved : styles.saveButton}
+      aria-label={isSaved ? `Remove ${name} from your list` : `Save ${name} to your list`}
+      aria-pressed={isSaved}
+      onClick={() => onToggleSaved(productId)}
+    >
+      <Icon name="heart" size={22} strokeWidth={2.2} />
+    </button>
+  );
 }
 
 type CartAvailability = "loading" | "buyable" | "sold-out";

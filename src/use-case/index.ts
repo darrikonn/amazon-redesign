@@ -21,9 +21,9 @@ export type {
   OrderReturnView,
   OrderSummaryView,
   OrderView,
+  ReturnReasonOption,
   TrackingStepView,
 } from "./order-view";
-export { RETURN_REASON_LABELS } from "./order-view";
 export { PlaceOrder, type PlaceOrderResult } from "./place-order";
 export {
   RememberSession,

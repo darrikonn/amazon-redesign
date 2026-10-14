@@ -11,10 +11,6 @@ export function readSearchParameters(raw: RawSearchParameters): RequestedSearch 
   return { text: firstValue(raw.q) ?? "", sort: firstValue(raw.sort) ?? "" };
 }
 
-export function readProductParameter(raw: RawSearchParameters): ProductId | null {
-  return firstValue(raw[PRODUCT_PARAMETER]) ?? null;
-}
-
 const DEFAULT_SORT: SearchSort = "best-match";
 const PRODUCT_PARAMETER = "product";
 

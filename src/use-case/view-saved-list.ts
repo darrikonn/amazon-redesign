@@ -25,7 +25,7 @@ export class ViewSavedList {
     const products = await this.products.getMany(items.map((item) => item.productId));
     return {
       productIds: products.map((product) => product.id),
-      listings: products.map((product) => toShelfListing(product, ["Saved to your list"])),
+      listings: products.map((product) => toShelfListing(product)),
     };
   }
 }

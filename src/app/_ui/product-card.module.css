@@ -45,6 +45,27 @@
   object-fit: contain;
 }
 
+.dealBadge {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--color-deal);
+  color: var(--color-on-dark);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.listPrice {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
 .bestMatch {
   position: absolute;
   z-index: 1;

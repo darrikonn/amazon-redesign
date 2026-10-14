@@ -1,0 +1,93 @@
+.dialog {
+  /* White surfaces draw form controls light, not in the page's dark scheme. */
+  color-scheme: light;
+  width: min(420px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-menu);
+}
+
+.dialog::backdrop {
+  background: var(--color-scrim);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.close {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface-alt);
+}
+
+.lede {
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.label {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.input {
+  color: var(--color-ink);
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font: inherit;
+  font-size: 17px;
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--color-accent);
+}
+
+.apply {
+  height: 46px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-cart);
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.error {
+  color: var(--color-ink);
+  font-size: 14px;
+}

@@ -20,7 +20,7 @@ export class ViewDeals {
     return {
       day: today.toISOString().slice(0, 10),
       listings: deals.map((deal) =>
-        toShelfListing(deal.product, [`${deal.product.discountPercent}% off`], {
+        toShelfListing(deal.product, undefined, {
           listPriceInCents: deal.listPriceInCents,
           discountPercent: deal.product.discountPercent,
         }),

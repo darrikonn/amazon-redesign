@@ -41,6 +41,8 @@
 
 /* Photos on the left, details on the right, like Instagram's post view. */
 .frame {
+  /* White surfaces draw form controls light, not in the page's dark scheme. */
+  color-scheme: light;
   position: relative;
   z-index: 1;
   display: grid;
@@ -279,6 +281,34 @@
 
 .delivery strong {
   color: var(--color-ink);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.saveButton,
+.saveButtonSaved {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.saveButtonSaved {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.saveButtonSaved svg {
+  fill: currentColor;
 }
 
 .cartButton,

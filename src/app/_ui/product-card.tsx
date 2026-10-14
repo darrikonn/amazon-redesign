@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { MouseEvent } from "react";
 import type { Color, ProductId } from "@/core";
 import type { ProductListing } from "@/use-case";
-import { deliveryLabel } from "./format";
+import { deliveryLabel, splitPrice } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
 import { Price } from "./price";
@@ -35,6 +35,9 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
         style={{ color: listing.color === null ? DEFAULT_INK : INK[listing.color] }}
       >
         {listing.isBestMatch && <span className={styles.bestMatch}>Best match</span>}
+        {listing.deal !== null && (
+          <span className={styles.dealBadge}>{listing.deal.discountPercent}% off</span>
+        )}
         <ProductImage image={listing.image} category={listing.category} />
       </div>
       <div className={styles.body}>
@@ -65,6 +68,11 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
         <div className={styles.footer}>
           <div className={styles.purchase}>
             <Price priceInCents={listing.priceInCents} />
+            {listing.deal !== null && (
+              <p className={styles.listPrice}>
+                List price <s>{splitPrice(listing.deal.listPriceInCents).spoken}</s>
+              </p>
+            )}
             <p className={styles.delivery}>
               FREE delivery{" "}
               <strong className={styles.deliveryDate}>{deliveryLabel(listing.deliveryDays)}</strong>

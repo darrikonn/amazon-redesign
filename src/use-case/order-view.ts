@@ -8,6 +8,7 @@ import {
   trackOrder,
 } from "@/component";
 import type { CategoryId, Order, OrderId, ProductId, ReturnReason } from "@/core";
+import { RETURN_REASONS } from "@/core";
 
 export type OrderSummaryView = {
   id: OrderId;
@@ -46,21 +47,27 @@ export type OrderReturnView = {
   requestedAt: string;
 };
 
+export type ReturnReasonOption = {
+  reason: ReturnReason;
+  label: string;
+};
+
 export type OrderView = OrderSummaryView & {
   deliveryCity: string | null;
   deliveryPostalCode: string;
   steps: readonly TrackingStepView[];
   returns: readonly OrderReturnView[];
+  returnReasons: readonly ReturnReasonOption[];
 };
 
-export const STAGE_LABELS: Record<TrackingStage, string> = {
+const STAGE_LABELS: Record<TrackingStage, string> = {
   ordered: "Ordered",
   shipped: "Shipped",
   "out-for-delivery": "Out for delivery",
   delivered: "Delivered",
 };
 
-export const RETURN_REASON_LABELS: Record<ReturnReason, string> = {
+const RETURN_REASON_LABELS: Record<ReturnReason, string> = {
   "no-longer-needed": "No longer needed",
   damaged: "Arrived damaged",
   "wrong-item": "Wrong item was sent",
@@ -83,6 +90,10 @@ export function toOrderView(order: Order, now: Date): OrderView {
       productIds: orderReturn.productIds,
       reasonLabel: RETURN_REASON_LABELS[orderReturn.reason],
       requestedAt: orderReturn.requestedAt,
+    })),
+    returnReasons: RETURN_REASONS.map((reason) => ({
+      reason,
+      label: RETURN_REASON_LABELS[reason],
     })),
   };
 }

@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { AmazonLogo } from "./amazon-logo";
 import styles from "./site-footer.module.css";
 
 type FooterColumn = {
@@ -9,8 +11,8 @@ const COLUMNS: readonly FooterColumn[] = [
   {
     heading: "Shop",
     links: [
-      { label: "Today's Deals", href: "#todays-deals" },
-      { label: "Buy Again", href: "#buy-again" },
+      { label: "Today's Deals", href: "/deals" },
+      { label: "Buy Again", href: "/buy-again" },
       { label: "Gift Cards", href: "#gift-cards" },
       { label: "Registry", href: "#registry" },
     ],
@@ -18,9 +20,9 @@ const COLUMNS: readonly FooterColumn[] = [
   {
     heading: "Your account",
     links: [
-      { label: "Your Orders", href: "#your-orders" },
-      { label: "Returns", href: "#returns" },
-      { label: "Your Lists", href: "#your-lists" },
+      { label: "Your Orders", href: "/orders" },
+      { label: "Returns", href: "/orders" },
+      { label: "Your Lists", href: "/lists" },
       { label: "Prime", href: "#prime" },
     ],
   },
@@ -50,18 +52,26 @@ export function SiteFooter() {
         {COLUMNS.map((column) => (
           <nav key={column.heading} aria-label={column.heading} className={styles.column}>
             <p className={styles.heading}>{column.heading}</p>
-            {column.links.map((link) => (
-              <a key={link.href} href={link.href} className={styles.link}>
-                {link.label}
-              </a>
-            ))}
+            {column.links.map((link) =>
+              link.href.startsWith("/") ? (
+                <Link key={link.label} href={link.href} className={styles.link}>
+                  {link.label}
+                </Link>
+              ) : (
+                <a key={link.label} href={link.href} className={styles.link}>
+                  {link.label}
+                </a>
+              ),
+            )}
           </nav>
         ))}
       </div>
       <div className={styles.legal}>
         <p className={styles.copyright}>
-          <span className={styles.wordmark}>amazon</span>© 1996-2026, Amazon.com, Inc. or its
-          affiliates
+          <span className={styles.wordmark}>
+            <AmazonLogo />
+          </span>
+          © 1996-2026, Amazon.com, Inc. or its affiliates
         </p>
         <p>English · United States · USD</p>
       </div>

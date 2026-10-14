@@ -1,64 +1,97 @@
+"use client";
+
 import Link from "next/link";
-import type { Department, ShopperView } from "@/use-case";
+import { usePathname } from "next/navigation";
+import { type MouseEvent, useState } from "react";
+import type { Department } from "@/use-case";
+import { AmazonLogo } from "./amazon-logo";
 import { DepartmentMenu } from "./department-menu";
 import { pluralize } from "./format";
 import { Icon } from "./icon";
+import { LocationDialog } from "./location-dialog";
+import { isPlainClick } from "./plain-click";
+import { useShop } from "./shop-context";
+import { signInHref } from "./sign-in-href";
 import styles from "./site-header.module.css";
 
 type SiteHeaderProps = {
-  shopper: ShopperView | null;
   departments: readonly Department[];
-  cartCount: number;
-  onSearch: (text: string) => void;
 };
 
-export function SiteHeader({ shopper, departments, cartCount, onSearch }: SiteHeaderProps) {
+export function SiteHeader({ departments }: SiteHeaderProps) {
+  const { shopper, cart, search } = useShop();
+  const pathname = usePathname();
+  const [isChoosingLocation, setIsChoosingLocation] = useState(false);
+
+  // On the home page the logo clears the search in place, like a fresh visit.
+  function goHome(event: MouseEvent<HTMLAnchorElement>) {
+    if (pathname !== "/" || !isPlainClick(event)) return;
+    event.preventDefault();
+    search("");
+  }
+
   return (
     <header className={styles.header}>
       <div className={styles.brand}>
-        <DepartmentMenu departments={departments} onPick={onSearch} />
-        <Link href="/" className={styles.logo} onClick={() => onSearch("")}>
-          amazon
+        <DepartmentMenu departments={departments} />
+        <Link href="/" className={styles.logo} aria-label="Amazon home" onClick={goHome}>
+          <AmazonLogo />
         </Link>
       </div>
-      <nav aria-label="Your account" className={styles.navigation}>
-        <a href="#deliver" className={styles.wideLink}>
-          <Icon name="pin" size={20} />
-          <span className={styles.stacked}>
-            <span className={styles.eyebrow}>
-              {shopper === null ? "Deliver to" : `Deliver to ${shopper.firstName}`}
-            </span>
-            <span className={styles.strong}>
-              {shopper === null
-                ? "Choose location"
-                : [shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ")}
-            </span>
-          </span>
-        </a>
-        <a href="#account" className={styles.wideLink}>
-          <span className={styles.stacked}>
-            <span className={styles.eyebrow}>
-              {shopper === null ? "Hello, sign in" : `Hello, ${shopper.firstName}`}
-            </span>
-            <span className={styles.strong}>Account &amp; Lists</span>
-          </span>
-        </a>
-        <a href="#orders" className={styles.wideLink}>
-          <span className={styles.stacked}>
-            <span className={styles.eyebrow}>Returns</span>
-            <span className={styles.strong}>&amp; Orders</span>
-          </span>
-        </a>
-        <a
-          href="#cart"
+      <nav aria-label="Account and cart" className={styles.navigation}>
+        {shopper === null ? (
+          <Link href={signInHref(pathname)} className={styles.wideLink}>
+            <Icon name="pin" size={20} />
+            <Stacked eyebrow="Deliver to" strong="Sign in to choose" />
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className={styles.wideLink}
+            aria-haspopup="dialog"
+            onClick={() => setIsChoosingLocation(true)}
+          >
+            <Icon name="pin" size={20} />
+            <Stacked
+              eyebrow={`Deliver to ${shopper.firstName}`}
+              strong={[shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ")}
+            />
+          </button>
+        )}
+        <Link
+          href={shopper === null ? signInHref(pathname) : "/account"}
+          className={styles.wideLink}
+        >
+          <Stacked
+            eyebrow={shopper === null ? "Hello, sign in" : `Hello, ${shopper.firstName}`}
+            strong="Account & Lists"
+          />
+        </Link>
+        <Link href="/orders" className={styles.wideLink}>
+          <Stacked eyebrow="Returns" strong="& Orders" />
+        </Link>
+        <Link
+          href="/cart"
           className={styles.cartLink}
-          aria-label={`Cart, ${pluralize(cartCount, "item", "items")}`}
+          aria-label={`Cart, ${pluralize(cart.itemCount, "item", "items")}`}
         >
           <Icon name="cart" size={24} />
           Cart
-          <span className={styles.cartCount}>{cartCount}</span>
-        </a>
+          <span className={styles.cartCount}>{cart.itemCount}</span>
+        </Link>
       </nav>
+      {shopper !== null && (
+        <LocationDialog isOpen={isChoosingLocation} onClose={() => setIsChoosingLocation(false)} />
+      )}
     </header>
+  );
+}
+
+function Stacked({ eyebrow, strong }: { eyebrow: string; strong: string }) {
+  return (
+    <span className={styles.stacked}>
+      <span className={styles.eyebrow}>{eyebrow}</span>
+      <span className={styles.strong}>{strong}</span>
+    </span>
   );
 }

@@ -36,6 +36,29 @@ export function formatReviewDate(calendarDate: string): string {
   return REVIEW_DATE.format(new Date(`${calendarDate}T00:00:00Z`));
 }
 
+const SHORT_DATE = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+const DAY_AND_DATE = new Intl.DateTimeFormat("en-GB", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  timeZone: "UTC",
+});
+
+// Order dates are moments; they are shown in UTC so the server and the browser agree.
+export function formatOrderDate(moment: string): string {
+  return SHORT_DATE.format(new Date(moment));
+}
+
+export function formatDayAndDate(moment: string): string {
+  return DAY_AND_DATE.format(new Date(moment));
+}
+
 export function formatRating(rating: number): string {
   return rating.toFixed(1);
 }

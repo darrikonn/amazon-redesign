@@ -20,6 +20,7 @@ export {
   suggestRelaxations,
 } from "./suggest-relaxations";
 export {
+  cardDetailsFor,
   type Highlight,
   LISTING_RULES,
   type Listing,
