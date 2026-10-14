@@ -100,7 +100,6 @@
 }
 
 .rowLabel,
-.previewLabel,
 .refinementLabel {
   flex-shrink: 0;
   width: 104px;
@@ -111,7 +110,6 @@
   text-transform: uppercase;
 }
 
-.previewRow,
 .understoodRow,
 .refinementRow {
   display: flex;
@@ -120,25 +118,6 @@
   gap: 8px;
   padding: 12px 22px;
   border-top: 1px solid var(--color-divider);
-}
-
-.previewRow {
-  align-content: flex-start;
-  min-height: 64px;
-}
-
-.previewChip {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  height: 40px;
-  padding: 0 14px;
-  border: 1px dashed var(--color-teal-dashed);
-  border-radius: 999px;
-  color: var(--color-teal-ink);
-  font-size: 15px;
-  font-weight: 600;
-  white-space: nowrap;
 }
 
 .understoodChip,
@@ -271,7 +250,6 @@
     min-height: 84px;
   }
 
-  .previewRow,
   .understoodRow,
   .assistantRow,
   .refinementRow {
@@ -279,11 +257,6 @@
     padding-left: 14px;
   }
 
-  .previewRow {
-    min-height: 116px;
-  }
-
-  .previewLabel,
   .refinementLabel {
     width: 100%;
   }

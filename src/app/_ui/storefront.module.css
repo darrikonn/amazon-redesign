@@ -10,6 +10,8 @@
   min-height: 100vh;
 }
 
+/* Both states keep the search bar in the same flow; only the space above it changes, and
+   that change is animated, so starting a search never makes the page jump. */
 .mainEmpty,
 .mainWithResults {
   display: flex;
@@ -17,14 +19,14 @@
   flex-direction: column;
   align-items: center;
   padding: 24px 24px 72px;
+  transition: padding-top var(--duration-layout) ease;
 }
 
 .mainEmpty {
-  justify-content: center;
+  padding-top: clamp(24px, 11vh, 120px);
 }
 
 .mainWithResults {
-  justify-content: flex-start;
   padding-top: 10px;
 }
 
@@ -69,10 +71,6 @@
   .mainEmpty,
   .mainWithResults {
     padding: 16px 16px 56px;
-  }
-
-  .mainEmpty {
-    justify-content: flex-start;
   }
 
   .hero {

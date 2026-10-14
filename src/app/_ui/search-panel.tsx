@@ -15,8 +15,8 @@ type SearchPanelProps = {
   text: string;
   outcome: SearchOutcome;
   placeholder: string;
-  previewLabels: readonly string[];
-  onTextChange: (text: string) => void;
+  onType: (text: string) => void;
+  onApply: (text: string) => void;
   onTryExample: () => void;
 };
 
@@ -25,16 +25,16 @@ export function SearchPanel({
   text,
   outcome,
   placeholder,
-  previewLabels,
-  onTextChange,
+  onType,
+  onApply,
   onTryExample,
 }: SearchPanelProps) {
   const inputId = useId();
   const hasQuery = text.trim() !== "";
-  useAutoGrow(inputRef);
+  useAutoGrow(inputRef, text);
 
   function clear() {
-    onTextChange("");
+    onApply("");
     inputRef.current?.focus();
   }
 
@@ -55,8 +55,8 @@ export function SearchPanel({
           autoComplete="off"
           spellCheck={false}
           enterKeyHint="search"
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => onTextChange(event.target.value)}
-          onKeyDown={(event) => handleKey(event, clear)}
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => onType(event.target.value)}
+          onKeyDown={(event) => handleKey(event, { clear, submit: () => onApply(text) })}
         />
         {hasQuery ? (
           <button
@@ -78,16 +78,14 @@ export function SearchPanel({
           </button>
         )}
       </div>
-      {hasQuery ? (
+      {outcome.hasQuery && (
         <>
-          <UnderstoodRow outcome={outcome} onTextChange={onTextChange} />
+          <UnderstoodRow outcome={outcome} onTextChange={onApply} />
           {outcome.assistantSuggestion !== null && (
-            <AssistantRow suggestion={outcome.assistantSuggestion} onTextChange={onTextChange} />
+            <AssistantRow suggestion={outcome.assistantSuggestion} onTextChange={onApply} />
           )}
-          <RefinementRow outcome={outcome} onTextChange={onTextChange} />
+          <RefinementRow outcome={outcome} onTextChange={onApply} />
         </>
-      ) : (
-        <PreviewRow labels={previewLabels} />
       )}
     </div>
   );
@@ -95,22 +93,32 @@ export function SearchPanel({
 
 const MINIMUM_INPUT_HEIGHT = 56;
 
-// Runs after every render because the text can change from a chip as well as from typing.
-function useAutoGrow(inputRef: RefObject<HTMLTextAreaElement | null>) {
+// Grows with the text, which can change from a chip as well as from typing. The page's
+// scroll position is restored because collapsing the box to measure it can shorten the
+// page for an instant.
+function useAutoGrow(inputRef: RefObject<HTMLTextAreaElement | null>, text: string) {
   useLayoutEffect(() => {
     const input = inputRef.current;
-    if (input === null) return;
+    if (input === null || input.value !== text) return;
+    const scrollTop = window.scrollY;
     input.style.height = "auto";
     input.style.height = `${Math.max(MINIMUM_INPUT_HEIGHT, input.scrollHeight)}px`;
-  });
+    if (window.scrollY !== scrollTop) window.scrollTo({ top: scrollTop });
+  }, [inputRef, text]);
 }
 
-// Enter would add a newline to the textarea; the results are already live, so it only
-// closes the on-screen keyboard on touch devices.
-function handleKey(event: KeyboardEvent<HTMLTextAreaElement>, clear: () => void) {
-  if (event.key === "Escape") clear();
+type KeyActions = {
+  clear: () => void;
+  submit: () => void;
+};
+
+// Enter would add a newline to the textarea; instead it searches at once, without waiting
+// for the typing pause, and closes the on-screen keyboard on touch devices.
+function handleKey(event: KeyboardEvent<HTMLTextAreaElement>, actions: KeyActions) {
+  if (event.key === "Escape") actions.clear();
   if (event.key !== "Enter") return;
   event.preventDefault();
+  actions.submit();
   if (window.matchMedia("(pointer: coarse)").matches) event.currentTarget.blur();
 }
 
@@ -187,19 +195,6 @@ function RefinementRow({ outcome, onTextChange }: RowProps) {
           </button>
         ))}
       </div>
-    </div>
-  );
-}
-
-function PreviewRow({ labels }: { labels: readonly string[] }) {
-  return (
-    <div className={styles.previewRow} aria-hidden="true">
-      <span className={styles.previewLabel}>Would set</span>
-      {labels.map((label) => (
-        <span key={label} className={styles.previewChip}>
-          {label}
-        </span>
-      ))}
     </div>
   );
 }

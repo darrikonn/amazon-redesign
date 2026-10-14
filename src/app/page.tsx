@@ -9,16 +9,9 @@ type HomePageProps = {
 export default async function HomePage({ searchParams }: HomePageProps) {
   const search = readSearchParameters(await searchParams);
   const container = createContainer();
-  const storefront = await container.viewStorefront.execute();
-  const [outcome, preview] = await Promise.all([
+  const [outcome, storefront] = await Promise.all([
     container.searchCatalog.execute(search),
-    container.previewQuery.execute(storefront.starterQueries[0] ?? ""),
+    container.viewStorefront.execute(),
   ]);
-  return (
-    <Storefront
-      initialOutcome={outcome}
-      initialPreviewLabels={preview.labels}
-      storefront={storefront}
-    />
-  );
+  return <Storefront initialOutcome={outcome} storefront={storefront} />;
 }

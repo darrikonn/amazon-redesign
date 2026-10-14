@@ -1,0 +1,30 @@
+.open,
+.closed {
+  display: grid;
+  width: 100%;
+  transition:
+    grid-template-rows var(--duration-layout) ease,
+    opacity var(--duration-layout) ease;
+}
+
+.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.closed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+/* The negative margin and matching padding leave room for focus rings and hover lifts,
+   which overflow: hidden would otherwise clip. */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+  margin: -6px;
+  padding: 6px;
+  overflow: hidden;
+}

@@ -1,5 +1,4 @@
 export type { CartSummary } from "./cart-summary";
-export { PreviewQuery, type QueryPreview } from "./preview-query";
 export {
   type NavigationLinkView,
   type NavigationView,

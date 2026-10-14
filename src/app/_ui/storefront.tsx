@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { type Container, createContainer } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
 import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
+import { Collapsible } from "./collapsible";
 import { ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
@@ -12,33 +13,41 @@ import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { StarterQueryList } from "./starter-query-list";
 import styles from "./storefront.module.css";
+import { useIdle } from "./use-idle";
+import { useSearchText } from "./use-search-text";
 import { useTypingDemo } from "./use-typing-demo";
 
 type StorefrontProps = {
   initialOutcome: SearchOutcome;
-  initialPreviewLabels: readonly string[];
   storefront: StorefrontData;
 };
 
-export function Storefront({ initialOutcome, initialPreviewLabels, storefront }: StorefrontProps) {
+export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   const [container] = useState(createContainer);
-  const [text, setText] = useState(initialOutcome.text);
+  const search = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
-  const outcome = useSearchOutcome(container, initialOutcome, text, sort);
+  const outcome = useSearchOutcome(container, initialOutcome, search.searchText, sort);
   const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
-  const demo = useTypingDemo(storefront.starterQueries, text === "");
-  const previewLabels = usePreviewLabels(container, demo.placeholder, initialPreviewLabels);
+  const isIdle = useIdle(DEMO_IDLE_DELAY_IN_MILLISECONDS);
+  const demo = useTypingDemo(storefront.starterQueries, search.text === "" && isIdle);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const hasQuery = text.trim() !== "";
+  // The layout follows the search that ran, not each keystroke, so it changes once, after
+  // the pause, and the hero folds away instead of vanishing under the caret.
+  const isShowingResults = outcome.hasQuery;
 
   useEffect(() => {
     container.viewCart.execute().then(setCart, reportError);
   }, [container]);
 
-  const pickSort = useCallback((nextSort: SearchSort, nextText: string) => {
-    setSort(nextSort);
-    setText(nextText);
-  }, []);
+  const { apply } = search;
+
+  const pickSort = useCallback(
+    (nextSort: SearchSort, nextText: string) => {
+      setSort(nextSort);
+      apply(nextText);
+    },
+    [apply],
+  );
 
   const toggleCart = useCallback(
     (productId: ProductId) => {
@@ -54,32 +63,35 @@ export function Storefront({ initialOutcome, initialPreviewLabels, storefront }:
           shopper={storefront.shopper}
           departments={storefront.departments}
           cartCount={cart.itemCount}
-          onSearch={setText}
+          onSearch={apply}
         />
-        <main className={hasQuery ? styles.mainWithResults : styles.mainEmpty}>
-          {!hasQuery && <Hero />}
+        <main className={isShowingResults ? styles.mainWithResults : styles.mainEmpty}>
+          <Collapsible isOpen={!isShowingResults}>
+            <Hero />
+          </Collapsible>
           <SearchPanel
             inputRef={inputRef}
-            text={text}
+            text={search.text}
             outcome={outcome}
             placeholder={demo.placeholder}
-            previewLabels={previewLabels}
-            onTextChange={setText}
-            onTryExample={() => setText(demo.example)}
+            onType={search.type}
+            onApply={apply}
+            onTryExample={() => apply(demo.example)}
           />
-          {hasQuery ? (
+          <Collapsible isOpen={!isShowingResults}>
+            <div className={styles.home}>
+              <StarterQueryList queries={storefront.starterQueries} onPick={apply} />
+              <ShortcutList />
+            </div>
+          </Collapsible>
+          {isShowingResults && (
             <ResultSection
               outcome={outcome}
               cartProductIds={cart.productIds}
-              onSearch={setText}
+              onSearch={apply}
               onPickSort={pickSort}
               onToggleCart={toggleCart}
             />
-          ) : (
-            <div className={styles.home}>
-              <StarterQueryList queries={storefront.starterQueries} onPick={setText} />
-              <ShortcutList />
-            </div>
           )}
         </main>
       </div>
@@ -88,7 +100,10 @@ export function Storefront({ initialOutcome, initialPreviewLabels, storefront }:
   );
 }
 
-// Every keystroke starts a search; only the newest one may update the screen.
+// The placeholder only animates once the shopper has been still this long.
+const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
+
+// Only the newest search may update the screen, so a slow early one never wins.
 function useSearchOutcome(
   container: Container,
   initial: SearchOutcome,
@@ -111,26 +126,6 @@ function useSearchOutcome(
 }
 
 const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };
-
-function usePreviewLabels(
-  container: Container,
-  placeholder: string,
-  initial: readonly string[],
-): readonly string[] {
-  const [labels, setLabels] = useState(initial);
-
-  useEffect(() => {
-    let isCurrent = true;
-    container.previewQuery.execute(placeholder).then((preview) => {
-      if (isCurrent) setLabels(preview.labels);
-    }, reportError);
-    return () => {
-      isCurrent = false;
-    };
-  }, [container, placeholder]);
-
-  return labels;
-}
 
 function Hero() {
   return (
