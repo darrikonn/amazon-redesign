@@ -20,6 +20,7 @@ A first version built the panel from each search: one department with its sub-gr
 - A sub-group link searches "<tag> <department>" and does not keep the shopper's other filters, like a store directory. Narrowing the current search is the job of the "Add a detail" chips.
 - Each entry is a real link to its search (`/?q=...&sort=...`, keeping the shopper's sort, as a plain click does), so it opens in a new tab, but a plain click searches in place without a reload. On a phone, where the panel follows the results, the page then goes back to the top so the new results are in view. Beside the results, it goes to the top only if the clicked entry stays in view there; otherwise the page stays put, so the entry never jumps away from the pointer.
 - Every entry goes somewhere fixed, so the panel works even while a newer typed search is pending, and it does not dim with the results.
+- The entries are links the page answers itself, so they do not prefetch: prefetching would run a full server render of every search and product in view for nothing.
 - The panel comes after the results in the DOM, so keyboard and screen reader order reaches the products first. On desktop the grid draws it in a 240 px column left of the results (200 px below 1100 px wide), and it scrolls with the page. It is deliberately neither sticky nor a scroll area of its own: a scroll area that fills the left column would capture the mouse wheel and stop the page from scrolling. On a phone it follows the results.
 
 ## Consequences

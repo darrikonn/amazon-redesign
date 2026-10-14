@@ -56,8 +56,10 @@ export function ProductModal({
     if (productId !== null) onClose();
   }
 
-  // The arrow keys turn the photos wherever focus is in the dialog.
+  // A modified arrow belongs to the browser (Alt+Left is Back), so only a plain one turns
+  // the photos.
   function stepPhotos(event: KeyboardEvent<HTMLDialogElement>) {
+    if (event.altKey || event.metaKey || event.ctrlKey || event.shiftKey) return;
     if (event.key === "ArrowLeft") carouselRef.current?.step(-1);
     if (event.key === "ArrowRight") carouselRef.current?.step(1);
   }
@@ -301,10 +303,10 @@ type CartButtonProps = {
 };
 
 function CartButton({ productId, name, availability, isInCart, onToggleCart }: CartButtonProps) {
-  if (availability !== "buyable" && !isInCart) {
+  if (availability === "sold-out" && !isInCart) {
     return (
       <button type="button" className={styles.cartButton} disabled>
-        {availability === "loading" ? "Add to cart" : "Out of stock"}
+        Out of stock
       </button>
     );
   }
@@ -313,6 +315,7 @@ function CartButton({ productId, name, availability, isInCart, onToggleCart }: C
       type="button"
       className={isInCart ? styles.cartButtonAdded : styles.cartButton}
       aria-label={isInCart ? `Remove ${name} from cart` : `Add ${name} to cart`}
+      disabled={availability === "loading" && !isInCart}
       onClick={() => onToggleCart(productId)}
     >
       <Icon name={isInCart ? "check" : "add-to-cart"} size={22} strokeWidth={2.4} />
