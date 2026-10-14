@@ -5,6 +5,7 @@ import { type Container, createContainer } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
 import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { Collapsible } from "./collapsible";
+import { scrollToTop } from "./motion";
 import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
@@ -24,17 +25,12 @@ type StorefrontProps = {
 
 export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   const [container] = useState(createContainer);
-  const search = useSearchText(initialOutcome.text);
+  const { text, searchText, type, apply } = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
-  const { outcome, lastResults } = useSearchOutcome(
-    container,
-    initialOutcome,
-    search.searchText,
-    sort,
-  );
+  const { outcome, lastResults } = useSearchOutcome(container, initialOutcome, searchText, sort);
   const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
   const isIdle = useIdle(DEMO_IDLE_DELAY_IN_MILLISECONDS);
-  const demo = useTypingDemo(storefront.starterQueries, search.text === "" && isIdle);
+  const demo = useTypingDemo(storefront.starterQueries, text === "" && isIdle);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
@@ -42,21 +38,21 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   // Chips, suggestions, sort options, relaxations, and narrowing browse links belong to the
   // last search. Until the newer typed text has been searched they would throw that text
   // away, so picking one then searches the typed text instead.
-  const isUpdating = search.text !== outcome.text;
+  const isUpdating = text !== outcome.text;
 
   useEffect(() => {
     container.viewCart.execute().then(setCart, reportError);
   }, [container]);
 
-  const { apply, text } = search;
-
+  // Set only when the choice changes the search; otherwise no new outcome would ever
+  // arrive to clear it, and a later, unrelated search would move focus.
   const chosenTextRef = useRef<string | null>(null);
   const choose = useCallback(
     (nextText: string) => {
-      chosenTextRef.current = nextText;
+      chosenTextRef.current = nextText === outcome.text ? null : nextText;
       apply(nextText);
     },
-    [apply],
+    [apply, outcome.text],
   );
 
   const pick = useCallback(
@@ -101,14 +97,20 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
             isShowingResults={isShowingResults}
             isUpdating={isUpdating}
             placeholder={demo.placeholder}
-            onType={search.type}
+            onType={type}
             onApply={apply}
             onPick={pick}
             onTryExample={() => choose(demo.example)}
           />
           <Collapsible isOpen={!isShowingResults}>
             <div className={styles.home}>
-              <StarterQueryList queries={storefront.starterQueries} onPick={choose} />
+              <StarterQueryList
+                queries={storefront.starterQueries}
+                onPick={(query) => {
+                  choose(query);
+                  scrollToTop();
+                }}
+              />
               <ShortcutList />
             </div>
           </Collapsible>
@@ -164,9 +166,13 @@ function useSearchOutcome(
   return { outcome, lastResults };
 }
 
+const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };
+
+const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
+
 // Choosing something can fold away the very control that was used (a starter query, the
-// last chip, the example arrow), which would leave keyboard focus nowhere. Focus then moves
-// to the results headline, or back to the input on the way home.
+// last chip, the example arrow, a browse link), which would leave keyboard focus nowhere.
+// Focus then moves to the results headline, or back to the input on the way home.
 function useFocusRecovery(
   chosenTextRef: RefObject<string | null>,
   isShowingResults: boolean,
@@ -184,10 +190,6 @@ function useFocusRecovery(
     target?.focus({ preventScroll: true });
   }, [chosenTextRef, isShowingResults, outcome.text, inputRef]);
 }
-
-const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };
-
-const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
 
 function Hero() {
   return (
