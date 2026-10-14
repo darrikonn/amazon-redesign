@@ -28,9 +28,9 @@ export type BrowseNavigation = {
   related: readonly NavigationLink[];
 };
 
-// The panel beside successful results. When the results sit in one department it shows
-// that department and its sub-groups across the whole catalogue, plus related
-// departments; otherwise it splits the results by department.
+// Department entries browse the department as a whole, like a store directory; narrowing
+// the current search is what the "Add a detail" chips are for. Results spread over several
+// departments get links that narrow the search to one of them instead.
 export function buildBrowseNavigation(
   catalog: readonly Product[],
   text: string,
@@ -61,6 +61,17 @@ function departmentsNavigation(text: string, matches: readonly Product[]): Brows
   return { heading: null, headingLabel: "Results by department", links, related: [] };
 }
 
+// Most common first; ties keep the order of first appearance, so the result is stable.
+function countBy<Key>(keys: readonly Key[]): [Key, number][] {
+  const counts = new Map<Key, number>();
+  for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
+  return [...counts.entries()].sort(([, first], [, second]) => second - first);
+}
+
+function departmentLabel(category: CategoryId): string {
+  return capitalize(CATEGORY_MAP[category].plural);
+}
+
 function categoryNavigation(
   catalog: readonly Product[],
   interpretation: Interpretation,
@@ -68,32 +79,42 @@ function categoryNavigation(
 ): BrowseNavigation {
   const inCategory = catalog.filter((product) => product.category === category);
   const plural = CATEGORY_MAP[category].plural;
-  const isWholeCategory = interpretation.terms.every((term) => term.kind === "category");
   return {
     heading: {
       label: departmentLabel(category),
       productCount: inCategory.length,
       text: plural,
-      isCurrent: isWholeCategory,
+      isCurrent: isExactly(interpretation, category, null),
     },
     headingLabel: departmentLabel(category),
-    links: tagLinks(inCategory, interpretation.intent.tags, plural),
+    links: tagLinks(inCategory, interpretation, category),
     related: relatedLinks(catalog, category),
   };
 }
 
+// An entry is current only when the search is exactly that entry, so a narrower search
+// (with a price, say) never claims to be the plain department page.
+function isExactly(interpretation: Interpretation, category: CategoryId, tag: Tag | null): boolean {
+  const { intent, terms } = interpretation;
+  const expectedTerms = tag === null ? 1 : 2;
+  const tagsMatch =
+    tag === null ? intent.tags.length === 0 : intent.tags.length === 1 && intent.tags[0] === tag;
+  return intent.category === category && tagsMatch && terms.length === expectedTerms;
+}
+
 function tagLinks(
   inCategory: readonly Product[],
-  currentTags: readonly Tag[],
-  plural: string,
+  interpretation: Interpretation,
+  category: CategoryId,
 ): NavigationLink[] {
+  const plural = CATEGORY_MAP[category].plural;
   return countBy(inCategory.flatMap((product) => product.tags))
     .slice(0, NAVIGATION_RULES.maximumTagLinks)
     .map(([tag, productCount]) => ({
       label: tagLabel(tag),
       productCount,
       text: `${tagPhrase(tag)} ${plural}`,
-      isCurrent: currentTags.length === 1 && currentTags[0] === tag,
+      isCurrent: isExactly(interpretation, category, tag),
     }));
 }
 
@@ -107,15 +128,4 @@ function relatedLinks(catalog: readonly Product[], category: CategoryId): Naviga
     }))
     .filter((link) => link.productCount > 0)
     .slice(0, NAVIGATION_RULES.maximumRelatedLinks);
-}
-
-function departmentLabel(category: CategoryId): string {
-  return capitalize(CATEGORY_MAP[category].plural);
-}
-
-// Most common first; ties keep the order of first appearance, so the result is stable.
-function countBy<Key>(keys: readonly Key[]): [Key, number][] {
-  const counts = new Map<Key, number>();
-  for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
-  return [...counts.entries()].sort(([, first], [, second]) => second - first);
 }

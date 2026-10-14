@@ -241,7 +241,7 @@ describe("SearchCatalog", () => {
       label: "Luxury",
       productCount: 9,
       text: "luxury watches",
-      isCurrent: true,
+      isCurrent: false,
     });
     expect(outcome.navigation?.related.map((link) => link.label)).toEqual([
       "Jewellery",

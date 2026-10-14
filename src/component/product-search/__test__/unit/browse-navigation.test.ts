@@ -51,6 +51,13 @@ describe("buildBrowseNavigation", () => {
     expect(navigationFor("watches")?.heading?.isCurrent).toBe(true);
   });
 
+  it("marks nothing as current when the search is narrower than any entry", () => {
+    const navigation = navigationFor("luxury watches over $100");
+
+    expect(navigation?.heading?.isCurrent).toBe(false);
+    expect(navigation?.links.some((link) => link.isCurrent)).toBe(false);
+  });
+
   it("uses the department all results share even when the text did not name it", () => {
     expect(navigationFor("leather")?.headingLabel).toBe("Watches");
   });
