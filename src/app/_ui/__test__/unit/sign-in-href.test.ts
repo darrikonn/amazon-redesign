@@ -12,10 +12,24 @@ describe("signInHref", () => {
 });
 
 describe("safeReturnPath", () => {
-  it("follows only paths on this site", () => {
+  it("follows paths on this site, with their query", () => {
     expect(safeReturnPath("/cart")).toBe("/cart");
-    expect(safeReturnPath("https://evil.example")).toBe("/");
-    expect(safeReturnPath("//evil.example")).toBe("/");
+    expect(safeReturnPath("/orders?show=on-the-way")).toBe("/orders?show=on-the-way");
     expect(safeReturnPath(null)).toBe("/");
+  });
+
+  it("never leaves the site, however the address is disguised", () => {
+    const offSite = [
+      "https://evil.example",
+      "//evil.example",
+      "/\\evil.example",
+      "/\t/evil.example",
+      "/\n/evil.example",
+      "\\evil.example",
+      "javascript:alert(1)",
+    ];
+
+    for (const next of offSite) expect(safeReturnPath(next)).toBe("/");
+    expect(safeReturnPath("/\tcart")).toBe("/cart");
   });
 });
