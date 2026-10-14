@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { type Container, createTestContainer, type TestFakes } from "@/composition";
-import { anOrder, aProduct, aProductDetails, aSession } from "@/test-support";
+import { aCartLine, anOrder, aProduct, aProductDetails, aSession } from "@/test-support";
 
 let container: Container;
 let fakes: TestFakes;
@@ -56,17 +56,24 @@ describe("SignIn", () => {
 
   it("moves the guest's cart into the shopper's, adding up shared products", async () => {
     // Arrange
-    fakes.cartLines.seedLine({ ownerId: "guest", productId: "product-1", quantity: 2 });
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "product-1", quantity: 1 });
-    fakes.cartLines.seedLine({ ownerId: "guest", productId: "product-2", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: "guest", productId: "product-1", quantity: 2 }));
+    fakes.cartLines.seedLine(
+      aCartLine({ ownerId: SHOPPER_ID, productId: "product-1", quantity: 1 }),
+    );
+    fakes.cartLines.seedLine(aCartLine({ ownerId: "guest", productId: "product-2", quantity: 1 }));
 
     // Act
     await container.signIn.execute({ email: "darri.konn@gmail.com" });
 
     // Assert
     expect(fakes.cartLines.storedLines()).toEqual([
-      { ownerId: SHOPPER_ID, productId: "product-1", quantity: 3 },
-      { ownerId: SHOPPER_ID, productId: "product-2", quantity: 1 },
+      aCartLine({
+        ownerId: SHOPPER_ID,
+        productId: "product-1",
+        quantity: 3,
+        modified: "2026-10-14T12:00:00.000Z",
+      }),
+      aCartLine({ ownerId: SHOPPER_ID, productId: "product-2", quantity: 1 }),
     ]);
   });
 

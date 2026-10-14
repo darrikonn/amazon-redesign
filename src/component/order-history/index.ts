@@ -1,5 +1,13 @@
-export { BUY_AGAIN_RULES, buyAgainProductIds } from "./buy-again";
-export { orderIdFor, orderItemCount, orderLineFor, orderTotalInCents } from "./order-line";
+export { BUY_AGAIN_RULES, buyAgainPurchases, type Purchase } from "./buy-again";
+export {
+  type NewOrder,
+  newOrder,
+  type OrderItem,
+  orderIdFor,
+  orderItemCount,
+  orderLineFor,
+  orderTotalInCents,
+} from "./order-line";
 export {
   isReturnable,
   isReturned,

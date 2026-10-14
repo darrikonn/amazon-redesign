@@ -1,5 +1,7 @@
-import type { Order, OrderId, OrderRepository, ShopperId } from "@/core";
+import type { Clock, Order, OrderId, OrderRepository, ShopperId } from "@/core";
 import { NotFoundError } from "@/core";
+import { FixedClock } from "../clock";
+import { stampModified } from "../storage";
 
 export type OrderRepositoryCall = {
   method: "get" | "demand" | "getMany" | "demandMany" | "listByOwner" | "save";
@@ -7,21 +9,25 @@ export type OrderRepositoryCall = {
   orderIds: readonly OrderId[];
 };
 
+// Order ids are only unique per shopper, so orders are kept by owner and id together, as
+// the stored repository keeps one list per owner.
 export class InMemoryOrderRepository implements OrderRepository {
   readonly calls: OrderRepositoryCall[] = [];
-  private readonly ordersById = new Map<string, Order>();
+  private readonly ordersByKey = new Map<string, Order>();
+
+  constructor(private readonly clock: Clock = new FixedClock()) {}
 
   seedOrder(order: Order): void {
-    this.ordersById.set(order.id, order);
+    this.ordersByKey.set(orderKey(order.ownerId, order.id), order);
   }
 
   storedOrders(): Order[] {
-    return [...this.ordersById.values()];
+    return [...this.ordersByKey.values()];
   }
 
   async get(ownerId: ShopperId, orderId: OrderId): Promise<Order | null> {
     this.record("get", ownerId, [orderId]);
-    return this.owned(ownerId, orderId) ?? null;
+    return this.ordersByKey.get(orderKey(ownerId, orderId)) ?? null;
   }
 
   async demand(ownerId: ShopperId, orderId: OrderId): Promise<Order> {
@@ -32,7 +38,7 @@ export class InMemoryOrderRepository implements OrderRepository {
   async getMany(ownerId: ShopperId, orderIds: readonly OrderId[]): Promise<Order[]> {
     this.record("getMany", ownerId, orderIds);
     return orderIds.flatMap((orderId) => {
-      const order = this.owned(ownerId, orderId);
+      const order = this.ordersByKey.get(orderKey(ownerId, orderId));
       return order === undefined ? [] : [order];
     });
   }
@@ -49,12 +55,13 @@ export class InMemoryOrderRepository implements OrderRepository {
 
   async save(order: Order): Promise<void> {
     this.record("save", order.ownerId, [order.id]);
-    this.ordersById.set(order.id, order);
+    const key = orderKey(order.ownerId, order.id);
+    this.ordersByKey.set(key, stampModified(order, this.ordersByKey.get(key), this.clock.now()));
   }
 
   reset(): void {
     this.calls.length = 0;
-    this.ordersById.clear();
+    this.ordersByKey.clear();
   }
 
   private record(
@@ -65,15 +72,13 @@ export class InMemoryOrderRepository implements OrderRepository {
     this.calls.push({ method, ownerId, orderIds: [...orderIds] });
   }
 
-  // Another shopper's order is as invisible as one that does not exist.
-  private owned(ownerId: ShopperId, orderId: OrderId): Order | undefined {
-    const order = this.ordersById.get(orderId);
-    return order?.ownerId === ownerId ? order : undefined;
-  }
-
   private require(ownerId: ShopperId, orderId: OrderId): Order {
-    const order = this.owned(ownerId, orderId);
+    const order = this.ordersByKey.get(orderKey(ownerId, orderId));
     if (order === undefined) throw new NotFoundError("order", orderId);
     return order;
   }
+}
+
+function orderKey(ownerId: ShopperId, orderId: OrderId): string {
+  return JSON.stringify([ownerId, orderId]);
 }

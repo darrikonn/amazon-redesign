@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { BUY_AGAIN_RULES, buyAgainProductIds } from "@/component";
+import { BUY_AGAIN_RULES, buyAgainPurchases } from "@/component";
 import { anOrder, anOrderLine } from "@/test-support";
 
 const now = new Date("2026-10-14T12:00:00Z");
 
-describe("buyAgainProductIds", () => {
+describe("buyAgainPurchases", () => {
   it("lists kept products from delivered orders, most bought first, then most recent", () => {
     const orders = [
       anOrder({
@@ -29,13 +29,17 @@ describe("buyAgainProductIds", () => {
       }),
     ];
 
-    expect(buyAgainProductIds(orders, now)).toEqual(["coffee", "bag", "lamp"]);
+    expect(buyAgainPurchases(orders, now)).toEqual([
+      { productId: "coffee", timesBought: 3 },
+      { productId: "bag", timesBought: 1 },
+      { productId: "lamp", timesBought: 1 },
+    ]);
   });
 
   it("caps the list", () => {
     const lines = Array.from({ length: 40 }, (_, index) => anOrderLine({ productId: `p${index}` }));
 
-    expect(buyAgainProductIds([anOrder({ lines })], now)).toHaveLength(
+    expect(buyAgainPurchases([anOrder({ lines })], now)).toHaveLength(
       BUY_AGAIN_RULES.maximumProducts,
     );
   });

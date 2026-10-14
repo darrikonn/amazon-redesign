@@ -20,7 +20,7 @@ export class ViewSavedList {
     const shopper = await currentShopper(this.sessions);
     if (shopper === null) return null;
     const items = (await this.savedItems.listByOwner(shopper.id)).sort((first, second) =>
-      second.savedAt.localeCompare(first.savedAt),
+      second.created.localeCompare(first.created),
     );
     const products = await this.products.getMany(items.map((item) => item.productId));
     return {

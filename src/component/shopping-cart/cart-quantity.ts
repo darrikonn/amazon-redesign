@@ -14,13 +14,18 @@ export function mergeIntoCart(
   shopperLines: readonly CartLine[],
   guestLines: readonly CartLine[],
   ownerId: ShopperId,
+  now: Date,
 ): CartLine[] {
   return guestLines.map((guestLine) => {
     const existing = shopperLines.find((line) => line.productId === guestLine.productId);
+    const quantity = clampQuantity((existing?.quantity ?? 0) + guestLine.quantity);
+    if (existing !== undefined) return { ...existing, quantity };
     return {
       ownerId,
       productId: guestLine.productId,
-      quantity: clampQuantity((existing?.quantity ?? 0) + guestLine.quantity),
+      quantity,
+      created: now.toISOString(),
+      modified: null,
     };
   });
 }

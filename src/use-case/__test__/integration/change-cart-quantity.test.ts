@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { CART_RULES } from "@/component";
 import { type Container, createTestContainer, type TestFakes } from "@/composition";
 import { NotFoundError } from "@/core";
-import { aProduct, aSession } from "@/test-support";
+import { aCartLine, aProduct, aSession } from "@/test-support";
 
 let container: Container;
 let fakes: TestFakes;
@@ -12,7 +12,7 @@ beforeEach(() => {
   ({ container, fakes } = createTestContainer());
   fakes.sessions.seedSession(aSession());
   fakes.products.seedProduct(aProduct({ id: "lamp", priceInCents: 2_000 }));
-  fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 });
+  fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
 });
 
 describe("ChangeCartQuantity", () => {
@@ -21,7 +21,12 @@ describe("ChangeCartQuantity", () => {
 
     expect(cart).toMatchObject({ itemCount: 3, subtotalInCents: 6_000 });
     expect(fakes.cartLines.storedLines()).toEqual([
-      { ownerId: SHOPPER_ID, productId: "lamp", quantity: 3 },
+      aCartLine({
+        ownerId: SHOPPER_ID,
+        productId: "lamp",
+        quantity: 3,
+        modified: "2026-10-14T12:00:00.000Z",
+      }),
     ]);
   });
 

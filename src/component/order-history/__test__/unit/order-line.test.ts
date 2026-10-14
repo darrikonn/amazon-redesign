@@ -12,7 +12,6 @@ describe("orderLineFor", () => {
       productId: "lamp",
       name: "Lamp",
       category: "laptops",
-      image: "lamp.webp",
       priceInCents: 2_500,
       quantity: 2,
       returnWindowDays: 7,

@@ -4,17 +4,22 @@ import { NotFoundError } from "@/core";
 import {
   createSavedItemListLoader,
   createSavedItemLoader,
+  FixedClock,
   InMemoryKeyValueStorage,
   InMemorySavedItemRepository,
   StoredSavedItemRepository,
 } from "@/infrastructure";
+import { aSavedItem } from "@/test-support";
 
-const lamp = { ownerId: "robin", productId: "lamp", savedAt: "2026-10-01T00:00:00Z" };
-const bag = { ownerId: "robin", productId: "bag", savedAt: "2026-10-02T00:00:00Z" };
-const theirs = { ownerId: "sam", productId: "lamp", savedAt: "2026-10-03T00:00:00Z" };
+const lamp = aSavedItem({ ownerId: "robin", productId: "lamp", created: "2026-10-01T00:00:00Z" });
+const bag = aSavedItem({ ownerId: "robin", productId: "bag", created: "2026-10-02T00:00:00Z" });
+const theirs = aSavedItem({ ownerId: "sam", productId: "lamp", created: "2026-10-03T00:00:00Z" });
 
 const implementations: [string, () => SavedItemRepository][] = [
-  ["StoredSavedItemRepository", () => new StoredSavedItemRepository(new InMemoryKeyValueStorage())],
+  [
+    "StoredSavedItemRepository",
+    () => new StoredSavedItemRepository(new InMemoryKeyValueStorage(), new FixedClock()),
+  ],
   ["InMemorySavedItemRepository", () => new InMemorySavedItemRepository()],
 ];
 
@@ -47,12 +52,12 @@ describe.each(implementations)("%s", (_, create) => {
     const repository = await seeded(create);
 
     // Act
-    await repository.save({ ...lamp, savedAt: "2026-10-09T00:00:00Z" });
+    await repository.save({ ...lamp, created: "2026-10-09T00:00:00Z" });
     await repository.remove("robin", "bag");
 
     // Assert
     expect(await repository.listByOwner("robin")).toEqual([
-      { ...lamp, savedAt: "2026-10-09T00:00:00Z" },
+      { ...lamp, modified: "2026-10-14T12:00:00.000Z" },
     ]);
     expect(await repository.listByOwner("sam")).toEqual([theirs]);
   });

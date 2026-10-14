@@ -1,5 +1,7 @@
-import type { CartLine, CartLineRepository, ProductId, ShopperId } from "@/core";
+import type { CartLine, CartLineRepository, Clock, ProductId, ShopperId } from "@/core";
 import { NotFoundError } from "@/core";
+import { FixedClock } from "../clock";
+import { stampModified } from "../storage";
 import { cartLineKey } from "./cart-line-key";
 
 export type CartLineRepositoryCall = {
@@ -11,6 +13,8 @@ export type CartLineRepositoryCall = {
 export class InMemoryCartLineRepository implements CartLineRepository {
   readonly calls: CartLineRepositoryCall[] = [];
   private readonly linesByKey = new Map<string, CartLine>();
+
+  constructor(private readonly clock: Clock = new FixedClock()) {}
 
   seedLine(line: CartLine): void {
     this.linesByKey.set(cartLineKey(line.ownerId, line.productId), line);
@@ -50,7 +54,8 @@ export class InMemoryCartLineRepository implements CartLineRepository {
 
   async save(line: CartLine): Promise<void> {
     this.record("save", line.ownerId, [line.productId]);
-    this.linesByKey.set(cartLineKey(line.ownerId, line.productId), line);
+    const key = cartLineKey(line.ownerId, line.productId);
+    this.linesByKey.set(key, stampModified(line, this.linesByKey.get(key), this.clock.now()));
   }
 
   async remove(ownerId: ShopperId, productId: ProductId): Promise<void> {

@@ -4,10 +4,15 @@ import type { KeyValueStorage } from "./key-value-storage";
 
 type ItemParser<Item> = (value: unknown, context: string) => Item;
 
+type Owned = {
+  ownerId: ShopperId;
+};
+
 // One owner's list of records under one key. What the browser hands back is checked on
 // every read; a list that no longer parses (an old format, a hand edit) reads as empty so
-// the shop starts that list afresh instead of breaking.
-export class StoredCollection<Item> {
+// the shop starts that list afresh instead of breaking, and a row naming another owner is
+// never returned (ADR 0012).
+export class StoredCollection<Item extends Owned> {
   constructor(
     private readonly storage: KeyValueStorage,
     private readonly name: string,
@@ -19,9 +24,9 @@ export class StoredCollection<Item> {
     const stored = this.storage.read(key);
     if (stored === null) return [];
     try {
-      return requireArray(stored, key).map((item, index) =>
-        this.parseItem(item, `${key}[${index}]`),
-      );
+      return requireArray(stored, key)
+        .map((item, index) => this.parseItem(item, `${key}[${index}]`))
+        .filter((item) => item.ownerId === ownerId);
     } catch {
       return [];
     }

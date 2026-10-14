@@ -1,4 +1,5 @@
 import {
+  deliveryCityFor,
   isReturnable,
   isReturned,
   orderItemCount,
@@ -7,7 +8,14 @@ import {
   type TrackingStage,
   trackOrder,
 } from "@/component";
-import type { CategoryId, Order, OrderId, ProductId, ReturnReason } from "@/core";
+import type {
+  CategoryId,
+  Order,
+  OrderId,
+  ProductId,
+  ProductRepository,
+  ReturnReason,
+} from "@/core";
 import { RETURN_REASONS } from "@/core";
 
 export type OrderSummaryView = {
@@ -74,11 +82,26 @@ const RETURN_REASON_LABELS: Record<ReturnReason, string> = {
   "found-better-price": "Found a better price",
 };
 
-export function toOrderView(order: Order, now: Date): OrderView {
+// Photos are not part of an order's snapshot; they come from the catalogue when shown, and
+// a product that has left it is drawn with its category glyph.
+export type OrderPhotos = ReadonlyMap<ProductId, string | null>;
+
+export async function photosFor(
+  products: ProductRepository,
+  orders: readonly Order[],
+): Promise<OrderPhotos> {
+  const productIds = [
+    ...new Set(orders.flatMap((order) => order.lines.map((line) => line.productId))),
+  ];
+  const found = await products.getMany(productIds);
+  return new Map(found.map((product) => [product.id, product.image]));
+}
+
+export function toOrderView(order: Order, now: Date, photos: OrderPhotos): OrderView {
   const tracking = trackOrder(order, now);
   return {
-    ...toOrderSummaryView(order, now),
-    deliveryCity: order.deliveryCity,
+    ...toOrderSummaryView(order, now, photos),
+    deliveryCity: deliveryCityFor(order.deliveryPostalCode),
     deliveryPostalCode: order.deliveryPostalCode,
     steps: tracking.steps.map((step) => ({
       stage: step.stage,
@@ -98,7 +121,7 @@ export function toOrderView(order: Order, now: Date): OrderView {
   };
 }
 
-export function toOrderSummaryView(order: Order, now: Date): OrderSummaryView {
+export function toOrderSummaryView(order: Order, now: Date, photos: OrderPhotos): OrderSummaryView {
   const tracking = trackOrder(order, now);
   return {
     id: order.id,
@@ -113,7 +136,7 @@ export function toOrderSummaryView(order: Order, now: Date): OrderSummaryView {
       productId: line.productId,
       name: line.name,
       category: line.category,
-      image: line.image,
+      image: photos.get(line.productId) ?? null,
       priceInCents: line.priceInCents,
       quantity: line.quantity,
       isReturnable: isReturnable(order, line.productId, now),

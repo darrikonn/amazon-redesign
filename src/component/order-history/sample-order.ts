@@ -19,7 +19,7 @@ export function pickSamplePurchases(seed: string, catalog: readonly Product[]): 
       daysAgo: plan.daysAgo,
       items: candidates.map((product, index) => ({
         productId: product.id,
-        quantity: index === 0 ? 1 : 2,
+        quantity: plan.quantities[index] ?? 1,
       })),
     };
   }).filter((purchase) => purchase.items.length > 0);
@@ -29,11 +29,22 @@ export function pickSamplePurchases(seed: string, catalog: readonly Product[]): 
 // days ago and still returnable, and one still on its way. Each plan says how long ago it
 // was placed and which delivery estimates fit that story.
 const SAMPLE_PLANS = [
-  { daysAgo: 24, productCount: 2, fits: (product: Product) => product.deliveryDays <= 14 },
-  { daysAgo: 6, productCount: 1, fits: (product: Product) => product.deliveryDays <= 4 },
+  {
+    daysAgo: 24,
+    productCount: 2,
+    quantities: [1, 2],
+    fits: (product: Product) => product.deliveryDays <= 14,
+  },
+  {
+    daysAgo: 6,
+    productCount: 1,
+    quantities: [1],
+    fits: (product: Product) => product.deliveryDays <= 4,
+  },
   {
     daysAgo: 1,
     productCount: 2,
+    quantities: [1, 2],
     fits: (product: Product) => product.deliveryDays >= 3 && product.deliveryDays <= 7,
   },
 ] as const;

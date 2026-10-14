@@ -1,4 +1,4 @@
-import { orderIdFor, orderLineFor } from "@/component";
+import { newOrder, orderIdFor } from "@/component";
 import type {
   CartLineRepository,
   Clock,
@@ -34,26 +34,25 @@ export class PlaceOrder {
     const products = await this.products.getMany(productIds);
     if (products.length === 0) return { status: "empty-cart" };
     const details = await this.productDetails.getMany(productIds);
-    const lines = cartLines.flatMap((cartLine) => {
-      const product = products.find((candidate) => candidate.id === cartLine.productId);
-      if (product === undefined) return [];
-      const productDetails = details.find((entry) => entry.productId === product.id) ?? null;
-      return [orderLineFor(product, productDetails, cartLine.quantity)];
-    });
     const placedAt = this.clock.now();
     const earlierOrders = await this.orders.listByOwner(shopper.id);
     const orderId = orderIdFor(placedAt, earlierOrders.length);
-    await this.orders.save({
-      id: orderId,
-      ownerId: shopper.id,
-      isSample: false,
-      placedAt: placedAt.toISOString(),
-      deliveryDays: Math.max(...products.map((product) => product.deliveryDays)),
-      deliveryCity: shopper.deliveryCity,
-      deliveryPostalCode: shopper.deliveryPostalCode,
-      lines,
-      returns: [],
-    });
+    await this.orders.save(
+      newOrder({
+        id: orderId,
+        ownerId: shopper.id,
+        isSample: false,
+        placedAt,
+        created: placedAt,
+        deliveryPostalCode: shopper.deliveryPostalCode,
+        items: cartLines.flatMap((cartLine) => {
+          const product = products.find((candidate) => candidate.id === cartLine.productId);
+          if (product === undefined) return [];
+          const productDetails = details.find((entry) => entry.productId === product.id) ?? null;
+          return [{ product, details: productDetails, quantity: cartLine.quantity }];
+        }),
+      }),
+    );
     for (const cartLine of cartLines) await this.cartLines.remove(shopper.id, cartLine.productId);
     return { status: "placed", orderId };
   }

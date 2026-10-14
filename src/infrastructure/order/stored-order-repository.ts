@@ -1,12 +1,15 @@
-import type { Order, OrderId, OrderRepository, ShopperId } from "@/core";
+import type { Clock, Order, OrderId, OrderRepository, ShopperId } from "@/core";
 import { NotFoundError } from "@/core";
-import { type KeyValueStorage, StoredCollection } from "../storage";
+import { type KeyValueStorage, StoredCollection, stampModified } from "../storage";
 import { parseStoredOrder } from "./stored-order-record";
 
 export class StoredOrderRepository implements OrderRepository {
   private readonly orders: StoredCollection<Order>;
 
-  constructor(storage: KeyValueStorage) {
+  constructor(
+    storage: KeyValueStorage,
+    private readonly clock: Clock,
+  ) {
     this.orders = new StoredCollection(storage, "orders", parseStoredOrder);
   }
 
@@ -33,9 +36,16 @@ export class StoredOrderRepository implements OrderRepository {
     return this.orders.list(ownerId);
   }
 
+  // Saving over a record keeps its place, so a changed line does not move in the list.
   async save(order: Order): Promise<void> {
-    const others = this.orders.list(order.ownerId).filter((stored) => stored.id !== order.id);
-    this.orders.replace(order.ownerId, [...others, order]);
+    const stored = this.orders.list(order.ownerId);
+    const existing = stored.find((candidate) => candidate.id === order.id);
+    const saved = stampModified(order, existing, this.clock.now());
+    const next =
+      existing === undefined
+        ? [...stored, saved]
+        : stored.map((candidate) => (candidate === existing ? saved : candidate));
+    this.orders.replace(order.ownerId, next);
   }
 
   private find(ownerId: ShopperId, orderId: OrderId): Order | undefined {

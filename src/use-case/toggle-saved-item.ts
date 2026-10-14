@@ -36,7 +36,8 @@ export class ToggleSavedItem {
       await this.savedItems.save({
         ownerId: shopper.id,
         productId: product.id,
-        savedAt: this.clock.now().toISOString(),
+        created: this.clock.now().toISOString(),
+        modified: null,
       });
     } else {
       await this.savedItems.remove(shopper.id, product.id);

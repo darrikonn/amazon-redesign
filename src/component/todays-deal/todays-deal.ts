@@ -1,4 +1,5 @@
 import type { Product } from "@/core";
+import { dayNumber } from "../calendar";
 import { stableHash } from "../stable-hash";
 
 export const DEAL_RULES = {
@@ -11,12 +12,10 @@ export type Deal = {
   listPriceInCents: number;
 };
 
-const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
-
 // A fresh set every day, the same for every shopper that day (ADR 0030), shown with the
 // biggest discount first.
 export function todaysDeals(catalog: readonly Product[], today: Date): Deal[] {
-  const day = Math.floor(today.getTime() / DAY_IN_MILLISECONDS);
+  const day = dayNumber(today);
   return catalog
     .filter((product) => product.discountPercent >= DEAL_RULES.minimumDiscountPercent)
     .sort((first, second) => stableHash(`${day}:${first.id}`) - stableHash(`${day}:${second.id}`))

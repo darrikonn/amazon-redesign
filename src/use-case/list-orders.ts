@@ -1,6 +1,6 @@
 import { isOnTheWay } from "@/component";
-import type { Clock, OrderRepository, SessionStore } from "@/core";
-import { newestFirst, type OrderSummaryView, toOrderSummaryView } from "./order-view";
+import type { Clock, OrderRepository, ProductRepository, SessionStore } from "@/core";
+import { newestFirst, type OrderSummaryView, photosFor, toOrderSummaryView } from "./order-view";
 import { currentShopper } from "./session-shopper";
 
 export const ORDER_FILTERS = ["all", "on-the-way"] as const;
@@ -21,6 +21,7 @@ export class ListOrders {
   constructor(
     private readonly sessions: SessionStore,
     private readonly orders: OrderRepository,
+    private readonly products: ProductRepository,
     private readonly clock: Clock,
   ) {}
 
@@ -32,7 +33,8 @@ export class ListOrders {
     const orders = (await this.orders.listByOwner(shopper.id))
       .filter((order) => show === "all" || isOnTheWay(order, now))
       .sort(newestFirst);
-    return { show, orders: orders.map((order) => toOrderSummaryView(order, now)) };
+    const photos = await photosFor(this.products, orders);
+    return { show, orders: orders.map((order) => toOrderSummaryView(order, now, photos)) };
   }
 }
 

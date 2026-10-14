@@ -6,8 +6,14 @@ import {
   StoredCollection,
 } from "@/infrastructure";
 
-function parseNote(value: unknown, context: string): { text: string } {
-  return { text: requireString(requireRecord(value, context), "text", context) };
+type Note = { ownerId: string; text: string };
+
+function parseNote(value: unknown, context: string): Note {
+  const record = requireRecord(value, context);
+  return {
+    ownerId: requireString(record, "ownerId", context),
+    text: requireString(record, "text", context),
+  };
 }
 
 describe("StoredCollection", () => {
@@ -17,22 +23,26 @@ describe("StoredCollection", () => {
     const notes = new StoredCollection(storage, "notes", parseNote);
 
     // Act
-    notes.replace("robin", [{ text: "hello" }]);
+    notes.replace("robin", [{ ownerId: "robin", text: "hello" }]);
 
     // Assert
-    expect(notes.list("robin")).toEqual([{ text: "hello" }]);
+    expect(notes.list("robin")).toEqual([{ ownerId: "robin", text: "hello" }]);
     expect(notes.list("sam")).toEqual([]);
-    expect(storage.storedValue("shop:v1:notes:robin")).toEqual([{ text: "hello" }]);
+    expect(storage.storedValue("shop:v1:notes:robin")).toEqual([
+      { ownerId: "robin", text: "hello" },
+    ]);
   });
 
   it("reads a list that no longer parses as empty", () => {
     const storage = new InMemoryKeyValueStorage();
-    storage.seedValue("shop:v1:notes:robin", [{ text: 4 }]);
+    storage.seedValue("shop:v1:notes:robin", [{ ownerId: "robin", text: 4 }]);
+    storage.seedValue("shop:v1:notes:kim", [{ ownerId: "sam", text: "not kim's" }]);
     storage.seedValue("shop:v1:notes:sam", { not: "a list" });
     const notes = new StoredCollection(storage, "notes", parseNote);
 
     expect(notes.list("robin")).toEqual([]);
     expect(notes.list("sam")).toEqual([]);
+    expect(notes.list("kim")).toEqual([]);
   });
 });
 

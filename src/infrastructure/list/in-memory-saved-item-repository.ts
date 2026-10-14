@@ -1,5 +1,7 @@
-import type { ProductId, SavedItem, SavedItemRepository, ShopperId } from "@/core";
+import type { Clock, ProductId, SavedItem, SavedItemRepository, ShopperId } from "@/core";
 import { NotFoundError } from "@/core";
+import { FixedClock } from "../clock";
+import { stampModified } from "../storage";
 
 export type SavedItemRepositoryCall = {
   method: "get" | "demand" | "getMany" | "demandMany" | "listByOwner" | "save" | "remove";
@@ -10,6 +12,8 @@ export type SavedItemRepositoryCall = {
 export class InMemorySavedItemRepository implements SavedItemRepository {
   readonly calls: SavedItemRepositoryCall[] = [];
   private readonly items: SavedItem[] = [];
+
+  constructor(private readonly clock: Clock = new FixedClock()) {}
 
   seedItem(item: SavedItem): void {
     this.items.push(item);
@@ -49,8 +53,10 @@ export class InMemorySavedItemRepository implements SavedItemRepository {
 
   async save(item: SavedItem): Promise<void> {
     this.record("save", item.ownerId, [item.productId]);
-    this.removeStored(item.ownerId, item.productId);
-    this.items.push(item);
+    const existing = this.find(item.ownerId, item.productId);
+    const saved = stampModified(item, existing, this.clock.now());
+    if (existing === undefined) this.items.push(saved);
+    else this.items.splice(this.items.indexOf(existing), 1, saved);
   }
 
   async remove(ownerId: ShopperId, productId: ProductId): Promise<void> {

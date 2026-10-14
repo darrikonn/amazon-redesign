@@ -1,4 +1,5 @@
 import type { Order } from "@/core";
+import { DAY_IN_MILLISECONDS, HOUR_IN_MILLISECONDS } from "../calendar";
 
 export const TRACKING_RULES = {
   hoursUntilShipped: 20,
@@ -20,9 +21,6 @@ export type OrderTracking = {
   steps: readonly TrackingStep[];
   deliveredAt: Date;
 };
-
-const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
-const DAY_IN_MILLISECONDS = 24 * HOUR_IN_MILLISECONDS;
 
 // An order ships within a day (sooner for overnight delivery), goes out for delivery the
 // morning it arrives, and arrives after its delivery estimate.

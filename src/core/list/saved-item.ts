@@ -4,5 +4,7 @@ import type { ShopperId } from "../shopper/shopper";
 export type SavedItem = {
   ownerId: ShopperId;
   productId: ProductId;
-  savedAt: string;
+  created: string;
+  // Null until the item is first changed, then set by the repository (ADR 0007).
+  modified: string | null;
 };

@@ -1,3 +1,4 @@
+import { CART_RULES } from "@/component";
 import type {
   CartLine,
   CartLineRepository,
@@ -24,6 +25,7 @@ export type CartView = CartSummary & {
   lines: readonly CartLineView[];
   subtotalInCents: number;
   isSignedIn: boolean;
+  maximumQuantity: number;
 };
 
 export class ViewCart {
@@ -70,5 +72,6 @@ export async function toCartView(
     lines: views,
     subtotalInCents: views.reduce((total, view) => total + view.lineTotalInCents, 0),
     isSignedIn,
+    maximumQuantity: CART_RULES.maximumQuantity,
   };
 }

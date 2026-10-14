@@ -29,7 +29,6 @@ export class FetchSessionEndpoint implements SessionEndpoint {
   }
 }
 
-// The browser's side of the fake sign-in (ADR 0030).
 export class BrowserSessionStore implements SessionStore {
   constructor(
     private readonly endpoint: SessionEndpoint = new FetchSessionEndpoint(),

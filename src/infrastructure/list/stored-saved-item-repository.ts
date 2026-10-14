@@ -1,11 +1,14 @@
-import type { ProductId, SavedItem, SavedItemRepository, ShopperId } from "@/core";
-import { NotFoundError, requireRecord, requireString } from "@/core";
-import { type KeyValueStorage, StoredCollection } from "../storage";
+import type { Clock, ProductId, SavedItem, SavedItemRepository, ShopperId } from "@/core";
+import { NotFoundError, optionalString, requireRecord, requireString } from "@/core";
+import { type KeyValueStorage, StoredCollection, stampModified } from "../storage";
 
 export class StoredSavedItemRepository implements SavedItemRepository {
   private readonly items: StoredCollection<SavedItem>;
 
-  constructor(storage: KeyValueStorage) {
+  constructor(
+    storage: KeyValueStorage,
+    private readonly clock: Clock,
+  ) {
     this.items = new StoredCollection(storage, "saved", parseSavedItem);
   }
 
@@ -32,11 +35,16 @@ export class StoredSavedItemRepository implements SavedItemRepository {
     return this.items.list(ownerId);
   }
 
+  // Saving over a record keeps its place, so a changed line does not move in the list.
   async save(item: SavedItem): Promise<void> {
-    const others = this.items
-      .list(item.ownerId)
-      .filter((stored) => stored.productId !== item.productId);
-    this.items.replace(item.ownerId, [...others, item]);
+    const stored = this.items.list(item.ownerId);
+    const existing = stored.find((candidate) => candidate.productId === item.productId);
+    const saved = stampModified(item, existing, this.clock.now());
+    const next =
+      existing === undefined
+        ? [...stored, saved]
+        : stored.map((candidate) => (candidate === existing ? saved : candidate));
+    this.items.replace(item.ownerId, next);
   }
 
   async remove(ownerId: ShopperId, productId: ProductId): Promise<void> {
@@ -54,6 +62,7 @@ function parseSavedItem(value: unknown, context: string): SavedItem {
   return {
     ownerId: requireString(record, "ownerId", context),
     productId: requireString(record, "productId", context),
-    savedAt: requireString(record, "savedAt", context),
+    created: requireString(record, "created", context),
+    modified: optionalString(record, "modified", context),
   };
 }

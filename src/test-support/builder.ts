@@ -1,4 +1,13 @@
-import type { Order, OrderLine, Product, ProductDetails, Session, Shopper } from "@/core";
+import type {
+  CartLine,
+  Order,
+  OrderLine,
+  Product,
+  ProductDetails,
+  SavedItem,
+  Session,
+  Shopper,
+} from "@/core";
 
 export function aProduct(overrides: Partial<Product> = {}): Product {
   return {
@@ -64,10 +73,11 @@ export function anOrder(overrides: Partial<Order> = {}): Order {
     isSample: false,
     placedAt: "2026-10-01T12:00:00.000Z",
     deliveryDays: 2,
-    deliveryCity: "Minneapolis",
     deliveryPostalCode: "55401",
     lines: [anOrderLine()],
     returns: [],
+    created: "2026-10-01T12:00:00.000Z",
+    modified: null,
     ...overrides,
   };
 }
@@ -77,10 +87,31 @@ export function anOrderLine(overrides: Partial<OrderLine> = {}): OrderLine {
     productId: "dummyjson-0001",
     name: "Test laptop",
     category: "laptops",
-    image: null,
     priceInCents: 99_900,
     quantity: 1,
     returnWindowDays: 30,
+    ...overrides,
+  };
+}
+
+// Both stand at the test clock's moment (FixedClock), never changed since.
+export function aCartLine(overrides: Partial<CartLine> = {}): CartLine {
+  return {
+    ownerId: "shopper:robin.lee@example.com",
+    productId: "dummyjson-0001",
+    quantity: 1,
+    created: "2026-10-14T12:00:00.000Z",
+    modified: null,
+    ...overrides,
+  };
+}
+
+export function aSavedItem(overrides: Partial<SavedItem> = {}): SavedItem {
+  return {
+    ownerId: "shopper:robin.lee@example.com",
+    productId: "dummyjson-0001",
+    created: "2026-10-14T12:00:00.000Z",
+    modified: null,
     ...overrides,
   };
 }

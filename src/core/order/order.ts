@@ -14,12 +14,11 @@ export const RETURN_REASONS = [
 export type ReturnReason = (typeof RETURN_REASONS)[number];
 
 // A snapshot taken when the order is placed, so later catalogue changes never rewrite
-// what was bought (ADR 0030).
+// what was bought (ADR 0030). The photo is not part of it: it is looked up when shown.
 export type OrderLine = {
   productId: ProductId;
   name: string;
   category: CategoryId;
-  image: string | null;
   priceInCents: number;
   quantity: number;
   returnWindowDays: number;
@@ -37,10 +36,12 @@ export type Order = {
   isSample: boolean;
   placedAt: string;
   deliveryDays: number;
-  deliveryCity: string | null;
   deliveryPostalCode: string;
   lines: readonly OrderLine[];
   returns: readonly OrderReturn[];
+  created: string;
+  // Null until the order is first changed, then set by the repository (ADR 0007).
+  modified: string | null;
 };
 
 export function isReturnReason(value: string): value is ReturnReason {

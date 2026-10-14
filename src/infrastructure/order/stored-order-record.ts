@@ -20,7 +20,6 @@ export function parseStoredOrder(value: unknown, context: string): Order {
     isSample: record.isSample,
     placedAt: requireString(record, "placedAt", context),
     deliveryDays: requireNumber(record, "deliveryDays", context),
-    deliveryCity: optionalString(record, "deliveryCity", context),
     deliveryPostalCode: requireString(record, "deliveryPostalCode", context),
     lines: requireArray(record.lines, `${context} lines`).map((line, index) =>
       parseLine(line, `${context} line ${index}`),
@@ -28,6 +27,8 @@ export function parseStoredOrder(value: unknown, context: string): Order {
     returns: requireArray(record.returns, `${context} returns`).map((orderReturn, index) =>
       parseReturn(orderReturn, `${context} return ${index}`),
     ),
+    created: requireString(record, "created", context),
+    modified: optionalString(record, "modified", context),
   };
 }
 
@@ -39,7 +40,6 @@ function parseLine(value: unknown, context: string): OrderLine {
     productId: requireString(record, "productId", context),
     name: requireString(record, "name", context),
     category,
-    image: optionalString(record, "image", context),
     priceInCents: requireNumber(record, "priceInCents", context),
     quantity: requireNumber(record, "quantity", context),
     returnWindowDays: requireNumber(record, "returnWindowDays", context),

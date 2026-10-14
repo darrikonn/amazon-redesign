@@ -4,6 +4,7 @@ import { NotFoundError } from "@/core";
 import {
   createOrderListLoader,
   createOrderLoader,
+  FixedClock,
   InMemoryKeyValueStorage,
   InMemoryOrderRepository,
   StoredOrderRepository,
@@ -21,7 +22,10 @@ const second = anOrder({
 const someoneElses = anOrder({ id: "theirs", ownerId: "sam" });
 
 const implementations: [string, () => OrderRepository][] = [
-  ["StoredOrderRepository", () => new StoredOrderRepository(new InMemoryKeyValueStorage())],
+  [
+    "StoredOrderRepository",
+    () => new StoredOrderRepository(new InMemoryKeyValueStorage(), new FixedClock()),
+  ],
   ["InMemoryOrderRepository", () => new InMemoryOrderRepository()],
 ];
 
@@ -66,8 +70,21 @@ describe.each(implementations)("%s", (_, create) => {
 
     // Assert
     const orders = await repository.listByOwner("robin");
-    expect(orders).toHaveLength(2);
-    expect(orders.find((order) => order.id === "first")?.deliveryDays).toBe(9);
+    expect(orders.map((order) => order.id)).toEqual(["first", "second"]);
+    expect(orders[0]).toEqual({ ...first, deliveryDays: 9, modified: "2026-10-14T12:00:00.000Z" });
+  });
+
+  it("keeps two shoppers' orders apart even when their ids match", async () => {
+    // Arrange
+    const repository = create();
+    await repository.save(anOrder({ id: "order-1", ownerId: "robin" }));
+
+    // Act
+    await repository.save(anOrder({ id: "order-1", ownerId: "sam", deliveryDays: 9 }));
+
+    // Assert
+    expect((await repository.get("robin", "order-1"))?.deliveryDays).toBe(2);
+    expect((await repository.get("sam", "order-1"))?.deliveryDays).toBe(9);
   });
 
   it("loads single orders and owners' lists in batches", async () => {
@@ -89,7 +106,9 @@ describe("StoredOrderRepository", () => {
     const storage = new InMemoryKeyValueStorage();
     storage.seedValue("shop:v1:orders:robin", [{ ...first, returns: [{ reason: "bored" }] }]);
 
-    expect(await new StoredOrderRepository(storage).listByOwner("robin")).toEqual([]);
+    expect(await new StoredOrderRepository(storage, new FixedClock()).listByOwner("robin")).toEqual(
+      [],
+    );
   });
 });
 

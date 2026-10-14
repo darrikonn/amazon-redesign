@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { type Container, createTestContainer, type TestFakes } from "@/composition";
-import { aProduct, aSession } from "@/test-support";
+import { aCartLine, aProduct, aSession } from "@/test-support";
 
 let container: Container;
 let fakes: TestFakes;
@@ -18,8 +18,8 @@ describe("ViewCart", () => {
   it("lists only the signed in shopper's lines, with line totals and a subtotal", async () => {
     // Arrange
     fakes.sessions.seedSession(aSession());
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 2 });
-    fakes.cartLines.seedLine({ ownerId: "someone-else", productId: "bag", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 2 }));
+    fakes.cartLines.seedLine(aCartLine({ ownerId: "someone-else", productId: "bag", quantity: 1 }));
 
     // Act
     const cart = await container.viewCart.execute();
@@ -30,6 +30,7 @@ describe("ViewCart", () => {
       itemCount: 2,
       subtotalInCents: 5_000,
       isSignedIn: true,
+      maximumQuantity: 10,
       lines: [
         {
           productId: "lamp",
@@ -47,7 +48,7 @@ describe("ViewCart", () => {
 
   it("shows a signed-out visitor the guest's cart", async () => {
     // Arrange
-    fakes.cartLines.seedLine({ ownerId: "guest", productId: "bag", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: "guest", productId: "bag", quantity: 1 }));
 
     // Act
     const cart = await container.viewCart.execute();
@@ -59,8 +60,8 @@ describe("ViewCart", () => {
   it("leaves out a line whose product left the catalogue", async () => {
     // Arrange
     fakes.sessions.seedSession(aSession());
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "ghost", quantity: 1 });
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "bag", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "ghost", quantity: 1 }));
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "bag", quantity: 1 }));
 
     // Act
     const cart = await container.viewCart.execute();

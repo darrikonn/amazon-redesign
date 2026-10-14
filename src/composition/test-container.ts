@@ -20,14 +20,15 @@ export type TestFakes = {
 };
 
 export function createTestContainer(): { container: Container; fakes: TestFakes } {
+  const clock = new FixedClock();
   const fakes: TestFakes = {
     products: new InMemoryProductRepository(),
     productDetails: new InMemoryProductDetailsRepository(),
-    cartLines: new InMemoryCartLineRepository(),
-    orders: new InMemoryOrderRepository(),
-    savedItems: new InMemorySavedItemRepository(),
+    cartLines: new InMemoryCartLineRepository(clock),
+    orders: new InMemoryOrderRepository(clock),
+    savedItems: new InMemorySavedItemRepository(clock),
     sessions: new InMemorySessionStore(),
-    clock: new FixedClock(),
+    clock,
   };
   return { container: assembleContainer(fakes), fakes };
 }

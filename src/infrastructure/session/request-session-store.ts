@@ -18,7 +18,6 @@ export type RequestCookieJar = {
   delete(name: string): unknown;
 };
 
-// The server's side of the fake sign-in (ADR 0030).
 export class RequestSessionStore implements SessionStore {
   constructor(private readonly cookies: RequestCookieJar) {}
 

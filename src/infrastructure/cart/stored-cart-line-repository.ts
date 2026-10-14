@@ -1,14 +1,15 @@
-import type { CartLine, CartLineRepository, ProductId, ShopperId } from "@/core";
-import { NotFoundError, requireNumber, requireRecord, requireString } from "@/core";
-import { type KeyValueStorage, StoredCollection } from "../storage";
+import type { CartLine, CartLineRepository, Clock, ProductId, ShopperId } from "@/core";
+import { NotFoundError, optionalString, requireNumber, requireRecord, requireString } from "@/core";
+import { type KeyValueStorage, StoredCollection, stampModified } from "../storage";
 import { cartLineKey } from "./cart-line-key";
 
-// The cart in the browser's storage (ADR 0030), so it survives moving between pages and
-// reloading.
 export class StoredCartLineRepository implements CartLineRepository {
   private readonly lines: StoredCollection<CartLine>;
 
-  constructor(storage: KeyValueStorage) {
+  constructor(
+    storage: KeyValueStorage,
+    private readonly clock: Clock,
+  ) {
     this.lines = new StoredCollection(storage, "cart", parseCartLine);
   }
 
@@ -35,11 +36,16 @@ export class StoredCartLineRepository implements CartLineRepository {
     return this.lines.list(ownerId);
   }
 
+  // Saving over a record keeps its place, so a changed line does not move in the list.
   async save(line: CartLine): Promise<void> {
-    const others = this.lines
-      .list(line.ownerId)
-      .filter((stored) => stored.productId !== line.productId);
-    this.lines.replace(line.ownerId, [...others, line]);
+    const stored = this.lines.list(line.ownerId);
+    const existing = stored.find((candidate) => candidate.productId === line.productId);
+    const saved = stampModified(line, existing, this.clock.now());
+    const next =
+      existing === undefined
+        ? [...stored, saved]
+        : stored.map((candidate) => (candidate === existing ? saved : candidate));
+    this.lines.replace(line.ownerId, next);
   }
 
   async remove(ownerId: ShopperId, productId: ProductId): Promise<void> {
@@ -58,5 +64,7 @@ function parseCartLine(value: unknown, context: string): CartLine {
     ownerId: requireString(record, "ownerId", context),
     productId: requireString(record, "productId", context),
     quantity: requireNumber(record, "quantity", context),
+    created: requireString(record, "created", context),
+    modified: optionalString(record, "modified", context),
   };
 }

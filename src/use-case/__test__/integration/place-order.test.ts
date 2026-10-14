@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { type Container, createTestContainer, type TestFakes } from "@/composition";
-import { aProduct, aProductDetails, aSession } from "@/test-support";
+import { aCartLine, aProduct, aProductDetails, aSession } from "@/test-support";
 
 let container: Container;
 let fakes: TestFakes;
@@ -21,8 +21,8 @@ describe("PlaceOrder", () => {
   it("turns the cart into an order delivered to the shopper's location, and empties the cart", async () => {
     // Arrange
     fakes.sessions.seedSession(aSession({ deliveryPostalCode: "10001" }));
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 2 });
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "bag", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 2 }));
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "bag", quantity: 1 }));
 
     // Act
     const result = await container.placeOrder.execute();
@@ -35,9 +35,10 @@ describe("PlaceOrder", () => {
       isSample: false,
       placedAt: "2026-10-14T12:00:00.000Z",
       deliveryDays: 5,
-      deliveryCity: "New York",
       deliveryPostalCode: "10001",
       returns: [],
+      created: "2026-10-14T12:00:00.000Z",
+      modified: null,
     });
     expect(
       order?.lines.map((line) => [line.productId, line.quantity, line.returnWindowDays]),
@@ -49,7 +50,7 @@ describe("PlaceOrder", () => {
   });
 
   it("needs a signed-in shopper and something in the cart", async () => {
-    fakes.cartLines.seedLine({ ownerId: "guest", productId: "lamp", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: "guest", productId: "lamp", quantity: 1 }));
     const signedOut = await container.placeOrder.execute();
     fakes.sessions.seedSession(aSession());
 
@@ -62,9 +63,9 @@ describe("PlaceOrder", () => {
 
   it("gives each order its own id", async () => {
     fakes.sessions.seedSession(aSession());
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
     const first = await container.placeOrder.execute();
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
 
     const second = await container.placeOrder.execute();
 

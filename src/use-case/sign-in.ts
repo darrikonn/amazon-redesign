@@ -1,10 +1,11 @@
 import {
+  addDays,
   DEFAULT_POSTAL_CODE,
   GUEST_SHOPPER_ID,
   mergeIntoCart,
+  newOrder,
   normaliseEmail,
   orderIdFor,
-  orderLineFor,
   pickSamplePurchases,
   type SamplePurchase,
   shopperFromSession,
@@ -28,8 +29,6 @@ export type SignInRequest = {
 export type SignInResult =
   | { status: "signed-in"; shopper: ShopperView }
   | { status: "invalid-email" };
-
-const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
 // Any well-formed email signs in (ADR 0030). The guest's cart moves to the shopper, and a
 // shopper with no orders yet gets the sample orders.
@@ -61,7 +60,8 @@ export class SignIn {
   private async moveGuestCart(shopper: Shopper): Promise<void> {
     const guestLines = await this.cartLines.listByOwner(GUEST_SHOPPER_ID);
     const shopperLines = await this.cartLines.listByOwner(shopper.id);
-    for (const line of mergeIntoCart(shopperLines, guestLines, shopper.id)) {
+    const now = this.clock.now();
+    for (const line of mergeIntoCart(shopperLines, guestLines, shopper.id, now)) {
       await this.cartLines.save(line);
     }
     for (const line of guestLines) await this.cartLines.remove(GUEST_SHOPPER_ID, line.productId);
@@ -82,26 +82,23 @@ export class SignIn {
     index: number,
     now: Date,
   ): Promise<Order> {
-    const placedAt = new Date(now.getTime() - purchase.daysAgo * DAY_IN_MILLISECONDS);
+    const placedAt = addDays(now, -purchase.daysAgo);
     const productIds = purchase.items.map((item) => item.productId);
     const products = await this.products.demandMany(productIds);
     const details = await this.productDetails.getMany(productIds);
-    const lines = purchase.items.flatMap((item) => {
-      const product = products.find((candidate) => candidate.id === item.productId);
-      if (product === undefined) return [];
-      const productDetails = details.find((entry) => entry.productId === item.productId) ?? null;
-      return [orderLineFor(product, productDetails, item.quantity)];
-    });
-    return {
+    return newOrder({
       id: orderIdFor(placedAt, index),
       ownerId: shopper.id,
       isSample: true,
-      placedAt: placedAt.toISOString(),
-      deliveryDays: Math.max(...products.map((product) => product.deliveryDays)),
-      deliveryCity: shopper.deliveryCity,
+      placedAt,
+      created: now,
       deliveryPostalCode: shopper.deliveryPostalCode,
-      lines,
-      returns: [],
-    };
+      items: purchase.items.flatMap((item) => {
+        const product = products.find((candidate) => candidate.id === item.productId);
+        if (product === undefined) return [];
+        const productDetails = details.find((entry) => entry.productId === item.productId) ?? null;
+        return [{ product, details: productDetails, quantity: item.quantity }];
+      }),
+    });
   }
 }

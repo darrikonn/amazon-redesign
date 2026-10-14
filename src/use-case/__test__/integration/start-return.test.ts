@@ -33,69 +33,6 @@ beforeEach(() => {
   }
 });
 
-describe("ListOrders", () => {
-  it("lists the shopper's orders newest first, with their stage and totals", async () => {
-    const list = await container.listOrders.execute({ show: "all" });
-
-    expect(list?.show).toBe("all");
-    expect(
-      list?.orders.map((order) => [
-        order.id,
-        order.stage,
-        order.totalInCents,
-        order.itemCount,
-        order.isSample,
-      ]),
-    ).toEqual([
-      ["on-its-way", "shipped", 99_900, 1, true],
-      ["delivered", "delivered", 4_500, 3, false],
-    ]);
-  });
-
-  it("shows only orders still on their way when asked, and all for an unknown filter", async () => {
-    const onTheWay = await container.listOrders.execute({ show: "on-the-way" });
-    const unknown = await container.listOrders.execute({ show: "everything" });
-
-    expect(onTheWay?.orders.map((order) => order.id)).toEqual(["on-its-way"]);
-    expect(unknown?.show).toBe("all");
-  });
-
-  it("is null for a signed-out visitor", async () => {
-    fakes.sessions.reset();
-
-    expect(await container.listOrders.execute({ show: "all" })).toBeNull();
-  });
-});
-
-describe("ViewOrder", () => {
-  it("shows the tracking steps and which lines can be returned", async () => {
-    // Act
-    const order = await container.viewOrder.execute({ orderId: "delivered" });
-
-    // Assert
-    expect(order?.steps.map((step) => [step.label, step.isReached])).toEqual([
-      ["Ordered", true],
-      ["Shipped", true],
-      ["Out for delivery", true],
-      ["Delivered", true],
-    ]);
-    expect(
-      order?.lines.map((line) => [line.productId, line.isReturnable, line.returnableUntil]),
-    ).toEqual([
-      ["lamp", true, "2026-11-11T12:00:00.000Z"],
-      ["mascara", false, null],
-    ]);
-  });
-
-  it("does not show another shopper's order, or any order when signed out", async () => {
-    const theirs = await container.viewOrder.execute({ orderId: "theirs" });
-    fakes.sessions.reset();
-
-    expect(theirs).toBeNull();
-    expect(await container.viewOrder.execute({ orderId: "delivered" })).toBeNull();
-  });
-});
-
 describe("StartReturn", () => {
   it("records a return for returnable lines and says so on the order", async () => {
     // Act

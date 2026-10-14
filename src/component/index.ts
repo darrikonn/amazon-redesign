@@ -1,3 +1,4 @@
+export * from "./calendar";
 export * from "./catalog-enrichment";
 export * from "./catalog-vocabulary";
 export * from "./order-history";
@@ -7,4 +8,4 @@ export * from "./query-interpretation";
 export * from "./shopper-account";
 export * from "./shopping-cart";
 export * from "./stable-hash";
-export * from "./todays-deals";
+export * from "./todays-deal";

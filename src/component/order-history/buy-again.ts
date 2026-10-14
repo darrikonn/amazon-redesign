@@ -6,9 +6,14 @@ export const BUY_AGAIN_RULES = {
   maximumProducts: 24,
 } as const;
 
-// Products from delivered orders that were kept: the ones bought most often first, then
-// the most recently bought.
-export function buyAgainProductIds(orders: readonly Order[], now: Date): ProductId[] {
+export type Purchase = {
+  productId: ProductId;
+  timesBought: number;
+};
+
+// Products from delivered orders that were kept, counted in units: the ones bought most
+// often first, then the most recently bought.
+export function buyAgainPurchases(orders: readonly Order[], now: Date): Purchase[] {
   const purchases = new Map<ProductId, { count: number; lastPlacedAt: number }>();
   for (const order of orders) {
     if (trackOrder(order, now).stage !== "delivered") continue;
@@ -28,5 +33,5 @@ export function buyAgainProductIds(orders: readonly Order[], now: Date): Product
         second.count - first.count || second.lastPlacedAt - first.lastPlacedAt,
     )
     .slice(0, BUY_AGAIN_RULES.maximumProducts)
-    .map(([productId]) => productId);
+    .map(([productId, purchase]) => ({ productId, timesBought: purchase.count }));
 }

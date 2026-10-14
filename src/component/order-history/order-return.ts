@@ -1,12 +1,11 @@
 import type { Order, OrderLine, ProductId } from "@/core";
+import { addDays } from "../calendar";
 import { trackOrder } from "./order-tracking";
 
 export const RETURN_RULES = {
   // For products whose source states no policy at all.
   defaultWindowDays: 30,
 } as const;
-
-const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
 // Reads the source's wording: "30 days return policy" is 30 days, "No return policy" is 0.
 export function returnWindowDaysFrom(returnPolicy: string | null): number {
@@ -20,7 +19,7 @@ export function returnWindowDaysFrom(returnPolicy: string | null): number {
 export function returnableUntil(order: Order, line: OrderLine, now: Date): Date | null {
   if (line.returnWindowDays <= 0) return null;
   const { deliveredAt } = trackOrder(order, now);
-  return new Date(deliveredAt.getTime() + line.returnWindowDays * DAY_IN_MILLISECONDS);
+  return addDays(deliveredAt, line.returnWindowDays);
 }
 
 export function isReturned(order: Order, productId: ProductId): boolean {

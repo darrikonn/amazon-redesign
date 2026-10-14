@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { type Container, createTestContainer, type TestFakes } from "@/composition";
 import { NotFoundError } from "@/core";
-import { aProduct, aSession } from "@/test-support";
+import { aCartLine, aProduct, aSession } from "@/test-support";
 
 let container: Container;
 let fakes: TestFakes;
@@ -24,14 +24,14 @@ describe("ToggleCartItem", () => {
     // Assert
     expect(cart).toEqual({ productIds: ["lamp"], itemCount: 1 });
     expect(fakes.cartLines.storedLines()).toEqual([
-      { ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 },
+      aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }),
     ]);
   });
 
   it("removes a product that is already in the cart", async () => {
     // Arrange
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 });
-    fakes.cartLines.seedLine({ ownerId: SHOPPER_ID, productId: "bag", quantity: 1 });
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "bag", quantity: 1 }));
 
     // Act
     const cart = await container.toggleCartItem.execute({ productId: "lamp" });
@@ -42,7 +42,9 @@ describe("ToggleCartItem", () => {
 
   it("never touches another shopper's cart", async () => {
     // Arrange
-    fakes.cartLines.seedLine({ ownerId: "someone-else", productId: "lamp", quantity: 1 });
+    fakes.cartLines.seedLine(
+      aCartLine({ ownerId: "someone-else", productId: "lamp", quantity: 1 }),
+    );
 
     // Act
     const cart = await container.toggleCartItem.execute({ productId: "lamp" });
@@ -50,8 +52,8 @@ describe("ToggleCartItem", () => {
     // Assert
     expect(cart.productIds).toEqual(["lamp"]);
     expect(fakes.cartLines.storedLines()).toEqual([
-      { ownerId: "someone-else", productId: "lamp", quantity: 1 },
-      { ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 },
+      aCartLine({ ownerId: "someone-else", productId: "lamp", quantity: 1 }),
+      aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }),
     ]);
     expect(fakes.cartLines.calls.every((call) => call.ownerId === SHOPPER_ID)).toBe(true);
   });
@@ -66,7 +68,7 @@ describe("ToggleCartItem", () => {
     // Assert
     expect(cart).toEqual({ productIds: ["bag"], itemCount: 1 });
     expect(fakes.cartLines.storedLines()).toEqual([
-      { ownerId: "guest", productId: "bag", quantity: 1 },
+      aCartLine({ ownerId: "guest", productId: "bag", quantity: 1 }),
     ]);
   });
 

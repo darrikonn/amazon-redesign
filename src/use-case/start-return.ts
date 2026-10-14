@@ -1,7 +1,7 @@
 import { isReturnable } from "@/component";
-import type { Clock, OrderRepository, SessionStore } from "@/core";
+import type { Clock, OrderRepository, ProductRepository, SessionStore } from "@/core";
 import { isReturnReason } from "@/core";
-import { type OrderView, toOrderView } from "./order-view";
+import { type OrderView, photosFor, toOrderView } from "./order-view";
 import { currentShopper } from "./session-shopper";
 
 export type StartReturnRequest = {
@@ -21,6 +21,7 @@ export class StartReturn {
   constructor(
     private readonly sessions: SessionStore,
     private readonly orders: OrderRepository,
+    private readonly products: ProductRepository,
     private readonly clock: Clock,
   ) {}
 
@@ -41,6 +42,10 @@ export class StartReturn {
       returns: [...order.returns, { productIds, reason, requestedAt: now.toISOString() }],
     };
     await this.orders.save(updated);
-    return { status: "started", order: toOrderView(updated, now) };
+    const saved = (await this.orders.get(shopper.id, updated.id)) ?? updated;
+    return {
+      status: "started",
+      order: toOrderView(saved, now, await photosFor(this.products, [saved])),
+    };
   }
 }
