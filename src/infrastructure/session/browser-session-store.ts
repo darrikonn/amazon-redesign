@@ -8,8 +8,8 @@ export interface SessionEndpoint {
   clear(): Promise<void>;
 }
 
-// The server sets and clears the cookie (handleSessionRequest), so the browser only ever
-// reads it.
+// The server sets and clears the cookie when the session endpoint is called, so the
+// browser only ever reads it.
 export class FetchSessionEndpoint implements SessionEndpoint {
   async save(session: Session): Promise<void> {
     await this.send("PUT", JSON.stringify(session));

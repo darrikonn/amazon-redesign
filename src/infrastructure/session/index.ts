@@ -5,12 +5,11 @@ export {
   type SessionEndpoint,
 } from "./browser-session-store";
 export { InMemorySessionStore } from "./in-memory-session-store";
-export { RequestSessionStore } from "./request-session-store";
+export { type RequestCookieJar, RequestSessionStore } from "./request-session-store";
 export {
   decodeSession,
-  expiredSessionCookie,
+  encodeSession,
   SESSION_COOKIE_NAME,
-  sessionCookie,
+  SESSION_MAXIMUM_AGE_IN_SECONDS,
   sessionCookieValue,
 } from "./session-cookie";
-export { handleSessionRequest } from "./session-request-handler";

@@ -1,1 +1,0 @@
-export { handleSessionRequest } from "@/infrastructure";

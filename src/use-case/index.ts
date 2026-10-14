@@ -26,6 +26,11 @@ export type {
 export { RETURN_REASON_LABELS } from "./order-view";
 export { PlaceOrder, type PlaceOrderResult } from "./place-order";
 export {
+  RememberSession,
+  type RememberSessionRequest,
+  type RememberSessionResult,
+} from "./remember-session";
+export {
   type DealPriceView,
   type NavigationDepartmentView,
   type NavigationLinkView,

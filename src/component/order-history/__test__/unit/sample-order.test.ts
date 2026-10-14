@@ -18,7 +18,12 @@ describe("pickSamplePurchases", () => {
       [1, 2],
     ]);
     expect(purchases[1]?.items.every((item) => deliveryDaysOf(item.productId) <= 4)).toBe(true);
-    expect(purchases[2]?.items.every((item) => deliveryDaysOf(item.productId) >= 3)).toBe(true);
+    expect(
+      purchases[2]?.items.every((item) => {
+        const days = deliveryDaysOf(item.productId);
+        return days >= 3 && days <= 7;
+      }),
+    ).toBe(true);
   });
 
   it("is the same for the same email, never repeats a product, and differs between emails", () => {

@@ -31,7 +31,11 @@ export function pickSamplePurchases(seed: string, catalog: readonly Product[]): 
 const SAMPLE_PLANS = [
   { daysAgo: 24, productCount: 2, fits: (product: Product) => product.deliveryDays <= 14 },
   { daysAgo: 6, productCount: 1, fits: (product: Product) => product.deliveryDays <= 4 },
-  { daysAgo: 1, productCount: 2, fits: (product: Product) => product.deliveryDays >= 3 },
+  {
+    daysAgo: 1,
+    productCount: 2,
+    fits: (product: Product) => product.deliveryDays >= 3 && product.deliveryDays <= 7,
+  },
 ] as const;
 
 function rank(seed: string, planIndex: number, product: Product): number {

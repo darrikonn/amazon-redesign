@@ -18,10 +18,12 @@ describe.each([
 
   it("reads the session from the request's cookie on the server", async () => {
     // Arrange
-    const value = encodeURIComponent(
-      JSON.stringify({ email: "darri.konn@gmail.com", deliveryPostalCode: "10001" }),
-    );
-    const container = create({ get: (name) => (name === "shop-session" ? { value } : undefined) });
+    const value = JSON.stringify({ email: "darri.konn@gmail.com", deliveryPostalCode: "10001" });
+    const container = create({
+      get: (name) => (name === "shop-session" ? { value } : undefined),
+      set: () => undefined,
+      delete: () => undefined,
+    });
 
     // Act
     const session = await container.viewSession.execute();

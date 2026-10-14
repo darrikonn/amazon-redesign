@@ -3,83 +3,97 @@ import type { Session, SessionStore } from "@/core";
 import {
   BrowserSessionStore,
   decodeSession,
-  handleSessionRequest,
+  encodeSession,
   InMemorySessionStore,
+  type RequestCookieJar,
   RequestSessionStore,
   type SessionEndpoint,
-  sessionCookie,
   sessionCookieValue,
 } from "@/infrastructure";
 import { aSession } from "@/test-support";
 
-// Stands in for the server: what it would set is what the browser then reads.
-class CookieServer implements SessionEndpoint {
-  cookies = "theme=dark";
+// The request's cookies as the framework keeps them: values stored unencoded.
+class CookieJar implements RequestCookieJar {
+  readonly values = new Map<string, string>();
+
+  get(name: string): { value: string } | undefined {
+    const value = this.values.get(name);
+    return value === undefined ? undefined : { value };
+  }
+
+  set(name: string, value: string): void {
+    this.values.set(name, value);
+  }
+
+  delete(name: string): void {
+    this.values.delete(name);
+  }
+
+  // How the browser sees them in document.cookie: encoded, beside other cookies.
+  header(): string {
+    return [
+      "theme=dark",
+      ...[...this.values].map(([name, value]) => `${name}=${encodeURIComponent(value)}`),
+    ].join("; ");
+  }
+}
+
+// Stands in for the session endpoint: the server saves into the jar the browser reads.
+class SessionServer implements SessionEndpoint {
+  readonly jar = new CookieJar();
+  private readonly store = new RequestSessionStore(this.jar);
 
   async save(session: Session): Promise<void> {
-    const response = await handleSessionRequest(
-      new Request("http://shop.test/api/session", { method: "PUT", body: JSON.stringify(session) }),
-    );
-    this.cookies = `theme=dark; ${(response.headers.get("Set-Cookie") ?? "").split(";")[0]}`;
+    await this.store.save(session);
   }
 
   async clear(): Promise<void> {
-    this.cookies = "theme=dark";
+    await this.store.clear();
   }
 }
 
 describe("the session cookie", () => {
-  it("round trips a session through its cookie value", () => {
+  it("round trips a session", () => {
     const session = aSession({ email: "darri.konn@gmail.com", deliveryPostalCode: "10001" });
-    const cookies = `theme=dark; ${sessionCookie(session).split(";")[0]}`;
+    const header = `theme=dark; shop-session=${encodeURIComponent(encodeSession(session))}`;
 
-    expect(decodeSession(sessionCookieValue(cookies))).toEqual(session);
+    expect(decodeSession(sessionCookieValue(header))).toEqual(session);
   });
 
   it("reads anything unreadable as signed out", () => {
     expect(decodeSession(null)).toBeNull();
     expect(decodeSession("")).toBeNull();
-    expect(decodeSession("%7Bnot-json")).toBeNull();
-    expect(decodeSession(encodeURIComponent(JSON.stringify({ email: 4 })))).toBeNull();
+    expect(decodeSession("{not-json")).toBeNull();
+    expect(decodeSession(JSON.stringify({ email: 4 }))).toBeNull();
     expect(sessionCookieValue("theme=dark")).toBeNull();
+    expect(sessionCookieValue("shop-session=%E0%A4%A")).toBeNull();
   });
 });
 
-describe("handleSessionRequest", () => {
-  it("sets the cookie on PUT and expires it on DELETE", async () => {
-    const put = await handleSessionRequest(
-      new Request("http://shop.test/api/session", {
-        method: "PUT",
-        body: JSON.stringify(aSession()),
-      }),
-    );
-    const remove = await handleSessionRequest(
-      new Request("http://shop.test/api/session", { method: "DELETE" }),
-    );
+describe("RequestSessionStore", () => {
+  it("reads, saves, and clears the request's session cookie", async () => {
+    // Arrange
+    const jar = new CookieJar();
+    const store: SessionStore = new RequestSessionStore(jar);
 
-    expect(put.status).toBe(204);
-    expect(put.headers.get("Set-Cookie")).toMatch(
-      /^shop-session=.+; Path=\/; Max-Age=\d+; SameSite=Lax$/,
-    );
-    expect(remove.headers.get("Set-Cookie")).toBe("shop-session=; Path=/; Max-Age=0; SameSite=Lax");
-  });
+    // Act
+    const before = await store.current();
+    await store.save(aSession());
+    const saved = await store.current();
+    await store.clear();
 
-  it("refuses a body that is not a session, and other methods", async () => {
-    const bad = await handleSessionRequest(
-      new Request("http://shop.test/api/session", { method: "PUT", body: "{}" }),
-    );
-    const get = await handleSessionRequest(new Request("http://shop.test/api/session"));
-
-    expect(bad.status).toBe(400);
-    expect(get.status).toBe(405);
+    // Assert
+    expect(before).toBeNull();
+    expect(saved).toEqual(aSession());
+    expect(await store.current()).toBeNull();
   });
 });
 
 describe("BrowserSessionStore", () => {
-  it("signs in and out through the endpoint and reads the cookie it set", async () => {
+  it("signs in and out through the endpoint and reads the cookie the server set", async () => {
     // Arrange
-    const server = new CookieServer();
-    const store = new BrowserSessionStore(server, () => server.cookies);
+    const server = new SessionServer();
+    const store = new BrowserSessionStore(server, () => server.jar.header());
 
     // Act
     await store.save(aSession({ email: "darri.konn@gmail.com" }));
@@ -89,18 +103,6 @@ describe("BrowserSessionStore", () => {
     // Assert
     expect(signedIn).toEqual(aSession({ email: "darri.konn@gmail.com" }));
     expect(await store.current()).toBeNull();
-  });
-});
-
-describe("RequestSessionStore", () => {
-  it("reads the request's session and cannot change it", async () => {
-    const value = sessionCookieValue(sessionCookie(aSession()).split(";")[0] ?? "");
-    const store: SessionStore = new RequestSessionStore(value);
-
-    expect(await store.current()).toEqual(aSession());
-    expect(await new RequestSessionStore(null).current()).toBeNull();
-    await expect(store.save(aSession())).rejects.toThrow("saved in the browser");
-    await expect(store.clear()).rejects.toThrow("cleared in the browser");
   });
 });
 

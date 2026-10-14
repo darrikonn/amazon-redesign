@@ -12,6 +12,7 @@ import {
   ChangeDeliveryLocation,
   ListOrders,
   PlaceOrder,
+  RememberSession,
   SearchCatalog,
   SignIn,
   SignOut,
@@ -34,6 +35,7 @@ export type Container = {
   viewProduct: ViewProduct;
   viewSession: ViewSession;
   signIn: SignIn;
+  rememberSession: RememberSession;
   signOut: SignOut;
   changeDeliveryLocation: ChangeDeliveryLocation;
   viewCart: ViewCart;
@@ -67,6 +69,7 @@ export function assembleContainer(ports: Ports): Container {
     viewProduct: new ViewProduct(products, productDetails),
     viewSession: new ViewSession(sessions),
     signIn: new SignIn(sessions, cartLines, orders, products, productDetails, clock),
+    rememberSession: new RememberSession(sessions),
     signOut: new SignOut(sessions),
     changeDeliveryLocation: new ChangeDeliveryLocation(sessions),
     viewCart: new ViewCart(sessions, cartLines, products),

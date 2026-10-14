@@ -6,7 +6,6 @@ import type { RequestCookies } from "./shop-port";
 export type { Container } from "./container";
 export { createLocalContainer } from "./local-container";
 export { createProductionContainer } from "./production-container";
-export { handleSessionRequest } from "./session-route";
 export type { RequestCookies } from "./shop-port";
 export { createTestContainer, type TestFakes } from "./test-container";
 

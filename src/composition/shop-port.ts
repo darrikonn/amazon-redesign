@@ -3,8 +3,8 @@ import {
   BrowserSessionStore,
   CatalogProductDetailsRepository,
   CatalogProductRepository,
+  type RequestCookieJar,
   RequestSessionStore,
-  SESSION_COOKIE_NAME,
   StoredCartLineRepository,
   StoredOrderRepository,
   StoredSavedItemRepository,
@@ -13,12 +13,10 @@ import {
 import type { Ports } from "./container";
 
 // What the server knows about the request: only its session cookie (ADR 0030).
-export type RequestCookies = {
-  get(name: string): { value: string } | undefined;
-};
+export type RequestCookies = RequestCookieJar;
 
-// The shop's ports for one environment: the browser reads and signs in through the
-// session endpoint; the server, given the request's cookies, can only read the session.
+// The shop's ports for one environment: in the browser the session goes through the
+// session endpoint; on the server it is the request's own cookie.
 export function shopPorts(requestCookies: RequestCookies | null): Ports {
   const storage = new BrowserKeyValueStorage();
   return {
@@ -28,9 +26,7 @@ export function shopPorts(requestCookies: RequestCookies | null): Ports {
     orders: new StoredOrderRepository(storage),
     savedItems: new StoredSavedItemRepository(storage),
     sessions:
-      requestCookies === null
-        ? new BrowserSessionStore()
-        : new RequestSessionStore(requestCookies.get(SESSION_COOKIE_NAME)?.value ?? null),
+      requestCookies === null ? new BrowserSessionStore() : new RequestSessionStore(requestCookies),
     clock: new SystemClock(),
   };
 }
