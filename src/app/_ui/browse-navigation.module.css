@@ -1,9 +1,6 @@
-/* The panel is sticky on desktop and never taller than the window; the department list
-   scrolls inside it. Padding with a matching negative margin keeps focus rings visible. */
 .navigation {
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 32px);
 }
 
 .sectionHeading {
@@ -16,14 +13,8 @@
 }
 
 .departments {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-  margin: -4px;
-  padding: 4px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
 }
 
 .departmentRow {
@@ -123,14 +114,9 @@
 
 @media (max-width: 760px) {
   .navigation {
-    max-height: none;
     padding: 20px;
     border: 1px solid var(--color-glass-border);
     border-radius: 16px;
     background: var(--color-glass);
-  }
-
-  .departments {
-    overflow-y: visible;
   }
 }

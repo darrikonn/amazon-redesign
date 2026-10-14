@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { type MouseEvent, type RefObject, useEffect, useId, useRef, useState } from "react";
+import { type MouseEvent, useId, useState } from "react";
 import type { SearchSort } from "@/core";
 import type { NavigationDepartmentView, NavigationLinkView, NavigationView } from "@/use-case";
 import styles from "./browse-navigation.module.css";
@@ -18,9 +18,6 @@ type BrowseNavigationProps = {
 // closed by hand, and that choice is kept while the shopper clicks through the panel.
 export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigationProps) {
   const [openedByHand, setOpenedByHand] = useState<ReadonlyMap<string, boolean>>(new Map());
-  const listRef = useRef<HTMLUListElement>(null);
-  const resultDepartment = navigation.departments.find((department) => department.containsResults);
-  useRevealResultDepartment(listRef, resultDepartment?.link.text ?? null);
 
   function isOpen(department: NavigationDepartmentView): boolean {
     return openedByHand.get(department.link.text) ?? department.containsResults;
@@ -39,7 +36,7 @@ export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigatio
   return (
     <nav aria-label="Departments" className={styles.navigation}>
       <h2 className={styles.sectionHeading}>Departments</h2>
-      <ul ref={listRef} className={styles.departments}>
+      <ul className={styles.departments}>
         {navigation.departments.map((department) => (
           <DepartmentItem
             key={department.link.text}
@@ -55,25 +52,6 @@ export function BrowseNavigation({ navigation, sort, onBrowse }: BrowseNavigatio
   );
 }
 
-// On desktop the list scrolls inside the sticky panel; the department holding the results
-// is brought into view there, without moving the page.
-function useRevealResultDepartment(
-  listRef: RefObject<HTMLUListElement | null>,
-  departmentText: string | null,
-) {
-  useEffect(() => {
-    const list = listRef.current;
-    if (list === null || departmentText === null) return;
-    const item = list.querySelector<HTMLElement>("[data-contains-results]");
-    if (item === null) return;
-    const isAbove = item.offsetTop < list.scrollTop;
-    const isBelow = item.offsetTop + item.offsetHeight > list.scrollTop + list.clientHeight;
-    if (isAbove || isBelow) list.scrollTop = item.offsetTop - REVEAL_MARGIN_IN_PIXELS;
-  }, [listRef, departmentText]);
-}
-
-const REVEAL_MARGIN_IN_PIXELS = 12;
-
 type DepartmentItemProps = {
   department: NavigationDepartmentView;
   sort: SearchSort;
@@ -86,13 +64,13 @@ function DepartmentItem({ department, sort, isOpen, onToggle, onBrowse }: Depart
   const groupsId = useId();
   const { link, containsResults, groups } = department;
   return (
-    <li data-contains-results={containsResults || undefined}>
+    <li>
       <div className={styles.departmentRow}>
         <BrowseLink
           link={link}
           sort={sort}
           className={containsResults ? styles.resultDepartment : styles.department}
-          isInResultDepartment={containsResults}
+          isResultDepartment={containsResults}
           onBrowse={onBrowse}
         />
         {groups.length > 0 && (
@@ -117,7 +95,7 @@ function DepartmentItem({ department, sort, isOpen, onToggle, onBrowse }: Depart
                   link={group}
                   sort={sort}
                   className={group.isCurrent ? styles.currentGroup : styles.group}
-                  isInResultDepartment={false}
+                  isResultDepartment={false}
                   onBrowse={onBrowse}
                 />
               </li>
@@ -133,13 +111,13 @@ type BrowseLinkProps = {
   link: NavigationLinkView;
   sort: SearchSort;
   className: string | undefined;
-  isInResultDepartment: boolean;
+  isResultDepartment: boolean;
   onBrowse: (link: NavigationLinkView) => void;
 };
 
 // A real link, so it can open in a new tab, but a plain click searches in place instead
 // of reloading the page.
-function BrowseLink({ link, sort, className, isInResultDepartment, onBrowse }: BrowseLinkProps) {
+function BrowseLink({ link, sort, className, isResultDepartment, onBrowse }: BrowseLinkProps) {
   function navigate(event: MouseEvent<HTMLAnchorElement>) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
       return;
@@ -151,7 +129,7 @@ function BrowseLink({ link, sort, className, isInResultDepartment, onBrowse }: B
     <Link
       href={searchUrl({ text: link.text, sort })}
       className={className}
-      aria-current={currentMarker(link, isInResultDepartment)}
+      aria-current={currentMarker(link, isResultDepartment)}
       onClick={navigate}
     >
       <span className={styles.label}>{link.label}</span>
@@ -162,7 +140,7 @@ function BrowseLink({ link, sort, className, isInResultDepartment, onBrowse }: B
 
 // "page" when the search is exactly this entry; "true" for the department the results
 // belong to, so screen readers hear where the shopper is even on a narrower search.
-function currentMarker(link: NavigationLinkView, isInResultDepartment: boolean) {
+function currentMarker(link: NavigationLinkView, isResultDepartment: boolean) {
   if (link.isCurrent) return "page";
-  return isInResultDepartment ? "true" : undefined;
+  return isResultDepartment ? "true" : undefined;
 }

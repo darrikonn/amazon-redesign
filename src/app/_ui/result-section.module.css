@@ -9,8 +9,6 @@
 }
 
 .sidebar {
-  position: sticky;
-  top: 16px;
   grid-row: 1;
   grid-column: 1;
   align-self: start;
@@ -149,10 +147,9 @@
     margin-top: 32px;
   }
 
-  /* On a phone the browse panel follows the results, as it does in the DOM. */
+  /* On a phone the department panel follows the results, as it does in the DOM. */
   .sidebar,
   .main {
-    position: static;
     grid-row: auto;
     grid-column: auto;
   }
