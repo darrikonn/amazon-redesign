@@ -1,4 +1,5 @@
 export { CATALOG } from "./catalog";
+export { parseCatalogFile } from "./catalog-file";
 export { CatalogProductRepository } from "./catalog-product-repository";
 export {
   InMemoryProductRepository,

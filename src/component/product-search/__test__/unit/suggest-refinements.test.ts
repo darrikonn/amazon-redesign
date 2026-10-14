@@ -3,71 +3,84 @@ import { filterProducts, interpretQuery, REFINEMENT_RULES, suggestRefinements } 
 import type { Product } from "@/core";
 import { aProduct } from "@/test-support";
 
+const bag = { category: "bags", categoryLabel: "bag", categoryPlural: "bags" } as const;
+
 const catalog: Product[] = [
   aProduct({
+    ...bag,
     id: "a",
     priceInCents: 1000,
     rating: 4.8,
     deliveryDays: 1,
-    features: ["dimmable", "usb"],
+    tags: ["leather", "women"],
   }),
-  aProduct({ id: "b", priceInCents: 2000, rating: 4.2, deliveryDays: 2, features: ["dimmable"] }),
-  aProduct({ id: "c", priceInCents: 3000, rating: 4.0, deliveryDays: 3, features: ["clamp"] }),
-  aProduct({ id: "d", category: "headphones", priceInCents: 9000, rating: 4.6, deliveryDays: 1 }),
+  aProduct({
+    ...bag,
+    id: "b",
+    priceInCents: 2000,
+    rating: 4.2,
+    deliveryDays: 2,
+    tags: ["leather"],
+  }),
+  aProduct({ ...bag, id: "c", priceInCents: 3000, rating: 4.0, deliveryDays: 3, tags: ["casual"] }),
+  aProduct({ id: "d", priceInCents: 9000, rating: 4.6, deliveryDays: 1 }),
 ];
 
-function refinementsFor(text: string) {
+function refinementsFor(text: string, products: readonly Product[] = catalog) {
   const interpretation = interpretQuery(text);
-  const matches = filterProducts(catalog, interpretation.intent);
-  return suggestRefinements(catalog, text, interpretation, matches);
+  const matches = filterProducts(products, interpretation.intent);
+  return suggestRefinements(products, text, interpretation, matches);
 }
 
 describe("suggestRefinements", () => {
-  it("offers a price just above the median, delivery, rating, then common features", () => {
-    expect(refinementsFor("lamp")).toEqual([
-      { label: "Under $25", text: "lamp under $25", resultCount: 2 },
-      { label: "Arrives tomorrow", text: "lamp arrives tomorrow", resultCount: 1 },
-      { label: "Rated 4.5 and up", text: "lamp top rated", resultCount: 1 },
-      { label: "Dimmable", text: "lamp dimmable", resultCount: 2 },
-      { label: "USB", text: "lamp usb", resultCount: 1 },
-      { label: "Clamp", text: "lamp clamp", resultCount: 1 },
+  it("offers a price just above the median, delivery, rating, then common tags", () => {
+    expect(refinementsFor("bags")).toEqual([
+      { label: "Under $25", text: "bags under $25", resultCount: 2 },
+      { label: "Arrives tomorrow", text: "bags arrives tomorrow", resultCount: 1 },
+      { label: "Rated 4.5 and up", text: "bags top rated", resultCount: 1 },
+      { label: "Leather", text: "bags leather", resultCount: 2 },
+      { label: "For women", text: "bags women", resultCount: 1 },
+      { label: "Casual", text: "bags casual", resultCount: 1 },
     ]);
   });
 
   it("offers categories first when none was named", () => {
     expect(refinementsFor("arrives tomorrow")[0]).toEqual({
-      label: "Desk lamp",
-      text: "arrives tomorrow desk lamp",
+      label: "Bags",
+      text: "arrives tomorrow bags",
       resultCount: 1,
     });
   });
 
-  it("skips what is already asked for and anything that would not narrow the results", () => {
-    const labels = refinementsFor("dimmable lamp under $25").map((refinement) => refinement.label);
+  it("rounds the price suggestion to $50 steps above $500", () => {
+    const laptops = [
+      aProduct({ id: "one", priceInCents: 99_999 }),
+      aProduct({ id: "two", priceInCents: 139_999 }),
+      aProduct({ id: "three", priceInCents: 179_999 }),
+    ];
 
-    expect(labels).toEqual(["Arrives tomorrow", "Rated 4.5 and up", "USB"]);
+    expect(refinementsFor("laptops", laptops)[0]).toMatchObject({
+      label: "Under $1,400",
+      resultCount: 2,
+    });
+  });
+
+  it("skips what is already asked for and anything that would not narrow the results", () => {
+    const labels = refinementsFor("leather bags under $25").map((refinement) => refinement.label);
+
+    expect(labels).toEqual(["Arrives tomorrow", "Rated 4.5 and up", "For women"]);
   });
 
   it("offers nothing for a single result", () => {
-    expect(refinementsFor("clamp lamp")).toEqual([]);
+    expect(refinementsFor("casual bags")).toEqual([]);
   });
 
   it("stops at the maximum number of suggestions", () => {
-    const manyFeatures = aProduct({
-      id: "e",
-      features: ["rechargeable", "foldable", "travel", "compact"],
-      priceInCents: 4000,
-    });
-    const interpretation = interpretQuery("lamp");
-    const larger = [...catalog, manyFeatures];
+    const larger = [
+      ...catalog,
+      aProduct({ ...bag, id: "e", tags: ["luxury", "durable", "portable"], priceInCents: 4000 }),
+    ];
 
-    const refinements = suggestRefinements(
-      larger,
-      "lamp",
-      interpretation,
-      filterProducts(larger, interpretation.intent),
-    );
-
-    expect(refinements).toHaveLength(REFINEMENT_RULES.maximumSuggestions);
+    expect(refinementsFor("bags", larger)).toHaveLength(REFINEMENT_RULES.maximumSuggestions);
   });
 });

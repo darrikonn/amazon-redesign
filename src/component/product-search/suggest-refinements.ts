@@ -1,18 +1,14 @@
-import type { Feature, Interpretation, Product, SearchIntent } from "@/core";
-import { demandCategory } from "@/core";
-import {
-  appendPhrase,
-  featureLabel,
-  featurePhrase,
-  formatDollars,
-  INTERPRETATION_RULES,
-} from "../query-interpretation";
+import type { Interpretation, Product, SearchIntent, Tag } from "@/core";
+import { CATEGORY_MAP, capitalize, tagLabel, tagPhrase } from "../catalog-vocabulary";
+import { appendPhrase, formatDollars, INTERPRETATION_RULES } from "../query-interpretation";
 import { countResults } from "./count-results";
 
 export const REFINEMENT_RULES = {
   maximumSuggestions: 6,
-  maximumFeatureSuggestions: 4,
+  maximumTagSuggestions: 4,
   priceStepInCents: 500,
+  largePriceStepInCents: 5000,
+  largePriceThresholdInCents: 50000,
   minimumMatchesToRefine: 2,
 } as const;
 
@@ -52,7 +48,7 @@ function candidatesFor(intent: SearchIntent, matches: readonly Product[]): Candi
     ...priceCandidates(intent, matches),
     ...deliveryCandidates(intent),
     ...ratingCandidates(intent),
-    ...featureCandidates(intent, matches),
+    ...tagCandidates(intent, matches),
   ];
 }
 
@@ -64,7 +60,7 @@ function categoryCandidates(intent: SearchIntent, matches: readonly Product[]): 
   if (intent.category !== null) return [];
   const categories = [...new Set(matches.map((product) => product.category))];
   return categories.map((id) => {
-    const name = demandCategory(id).singularName;
+    const name = CATEGORY_MAP[id].plural;
     return { label: capitalize(name), phrase: name };
   });
 }
@@ -85,35 +81,35 @@ function ratingCandidates(intent: SearchIntent): Candidate[] {
   return [{ label: `Rated ${INTERPRETATION_RULES.topRatedMinimum} and up`, phrase: "top rated" }];
 }
 
-function featureCandidates(intent: SearchIntent, matches: readonly Product[]): Candidate[] {
-  return mostCommonFeatures(intent, matches)
-    .slice(0, REFINEMENT_RULES.maximumFeatureSuggestions)
-    .map((feature) => ({ label: featureLabel(feature), phrase: featurePhrase(feature) }));
-}
-
-function capitalize(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1);
+function tagCandidates(intent: SearchIntent, matches: readonly Product[]): Candidate[] {
+  return mostCommonTags(intent, matches)
+    .slice(0, REFINEMENT_RULES.maximumTagSuggestions)
+    .map((tag) => ({ label: tagLabel(tag), phrase: tagPhrase(tag) }));
 }
 
 // The ceiling sits just above the median price, so the suggestion roughly halves the results.
+// Above $500 it rounds to the next $50, so a laptop search offers "under $1,050", not "under $1,005".
 function medianPriceCeilingInCents(matches: readonly Product[]): number {
   const pricesInCents = matches
     .map((product) => product.priceInCents)
     .sort((first, second) => first - second);
   const medianInCents = pricesInCents[Math.floor((pricesInCents.length - 1) / 2)] ?? 0;
-  const stepInCents = REFINEMENT_RULES.priceStepInCents;
+  const stepInCents =
+    medianInCents > REFINEMENT_RULES.largePriceThresholdInCents
+      ? REFINEMENT_RULES.largePriceStepInCents
+      : REFINEMENT_RULES.priceStepInCents;
   return Math.ceil((medianInCents + 1) / stepInCents) * stepInCents;
 }
 
-function mostCommonFeatures(intent: SearchIntent, matches: readonly Product[]): Feature[] {
-  const frequency = new Map<Feature, number>();
+function mostCommonTags(intent: SearchIntent, matches: readonly Product[]): Tag[] {
+  const frequency = new Map<Tag, number>();
   for (const product of matches) {
-    for (const feature of product.features) {
-      if (intent.features.includes(feature)) continue;
-      frequency.set(feature, (frequency.get(feature) ?? 0) + 1);
+    for (const tag of product.tags) {
+      if (intent.tags.includes(tag)) continue;
+      frequency.set(tag, (frequency.get(tag) ?? 0) + 1);
     }
   }
   return [...frequency.entries()]
     .sort(([, firstCount], [, secondCount]) => secondCount - firstCount)
-    .map(([feature]) => feature);
+    .map(([tag]) => tag);
 }

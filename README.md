@@ -1,1 +1,42 @@
 # amazon-redesign
+
+A minimal, search-first redesign of the amazon.com storefront. The search bar is the page: shoppers describe what they want in plain words, and the filters set themselves while they type.
+
+## Running it
+
+```bash
+yarn install
+yarn dev
+```
+
+| Command | What it does |
+| --- | --- |
+| `yarn dev` | Runs the app at http://localhost:3000 |
+| `yarn format` | Formats with Biome |
+| `yarn lint` | Biome, ESLint, and the strict TypeScript check |
+| `yarn test` | All Vitest tests |
+| `yarn build` | Production build |
+| `yarn catalog:build` | Fetches the product source and regenerates the catalogue (see Data) |
+| `yarn shots` | Screenshots every storefront state at 1440px and 390px into `docs/screenshots/` (run `yarn build` first; uses the installed Google Chrome) |
+
+The engineering rules are in `CLAUDE.md`, and every architectural decision is an ADR in `docs/adr/`.
+
+## Data
+
+The products come from [DummyJSON](https://dummyjson.com/docs/products), a free public fake-store API: `GET https://dummyjson.com/products?limit=0`, 194 products. If DummyJSON is unreachable, the build falls back to [FakeStoreAPI](https://fakestoreapi.com/) (20 products).
+
+- **Fetched once, then committed.** `yarn catalog:build` fetches the source a single time and saves the response verbatim to `src/infrastructure/product/data/raw/dummyjson.json`. It then writes the app's catalogue to `src/infrastructure/product/data/catalog.json` and the search vocabulary to `src/component/catalog-vocabulary/vocabulary.json`. All three files are committed, and the app never calls the API at runtime. `yarn catalog:build --from-raw` rebuilds from the committed response with no network call, and rebuilding is byte-for-byte reproducible.
+- **Re-tagged by rules.** Shopper-facing category groups, feature tags, colours, and delivery estimates are derived by the pure rules in `src/component/catalog-enrichment/enrich.ts`. They use the dictionaries in `src/component/catalog-vocabulary/` (`category-map.ts`, `tag-rules.ts`, `color-word.ts`). Where the rules get an item wrong, `src/component/catalog-enrichment/override.json` corrects it, with a reason for each entry. Tags that fewer than two products share are dropped, so a suggestion never leads to a dead end.
+- **Ratings and review counts are the source's own.** Ratings are rounded to one decimal. DummyJSON ships exactly three sample reviews per product, so cards hide the review count rather than show a number that means nothing. No counts are invented.
+- **Images are the source's placeholders.** They are DummyJSON's thumbnails, loaded from its CDN through `next/image`. When an image is missing or fails to load, the card shows a drawn category glyph instead.
+- **Delivery estimates are derived.** They come from DummyJSON's shipping text ("Ships overnight" means tomorrow, "Ships in 1 week" means 7 days, and so on).
+
+None of this is real retail data: the products, prices, ratings, stock, and images are DummyJSON's sample data.
+
+## Search assistant
+
+There is no real AI behind the search. The assistant is simulated. The search bar parses what the shopper writes against the catalogue's own tagging system: categories, tags, colours, prices, delivery, and rating. It then finds the best matching products and suggests the next filters with exact result counts.
+
+When unknown words leave a search with nothing to show, the "Assistant" row suggests the closest wording the catalogue understands, by spelling ("wireles headphnes" becomes "wireless headphones"). The "Drop" suggestions offer the way back. All of it is deterministic code in `src/component/`, with no model, API key, or network call. ADR 0026 records the decision.
+
+If you want to see how I work with LLMs, take a look at [mintoagent.com](https://mintoagent.com) and [snaphost.ai](https://snaphost.ai). I'm behind both products and their sole developer.

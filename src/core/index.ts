@@ -1,18 +1,24 @@
 export type { CartLine } from "./cart/cart-line";
 export type { CartLineRepository } from "./cart/cart-line-repository";
 export { NotFoundError } from "./error/not-found-error";
-export type { Category, CategoryId } from "./product/category";
-export { CATEGORIES, demandCategory } from "./product/category";
+export {
+  isRecord,
+  optionalString,
+  requireArray,
+  requireNumber,
+  requireRecord,
+  requireString,
+  requireStringArray,
+} from "./json/json-reader";
+export type { CategoryId } from "./product/category";
+export { CATEGORY_IDS, isCategoryId } from "./product/category";
 export type { Color } from "./product/color";
-export type { Feature } from "./product/feature";
-export type { Illustration, IllustrationShape } from "./product/illustration";
-export type { Product, ProductId } from "./product/product";
+export { COLORS, isColor } from "./product/color";
+export type { Product, ProductId, ProductSource } from "./product/product";
+export { isProductSource, PRODUCT_SOURCES } from "./product/product";
 export type { ProductRepository } from "./product/product-repository";
-export type {
-  AssistantVocabulary,
-  QueryAssistant,
-  RephraseRequest,
-} from "./search/query-assistant";
+export type { Tag } from "./product/tag";
+export { isTag, TAGS } from "./product/tag";
 export type {
   Interpretation,
   SearchIntent,

@@ -12,7 +12,7 @@ beforeEach(() => {
   fakes.identity.seedSignedInShopper(shopper);
   fakes.products.seedProducts([
     aProduct({ id: "lamp" }),
-    aProduct({ id: "bag", category: "backpack" }),
+    aProduct({ id: "bag", category: "bags", categoryLabel: "bag", categoryPlural: "bags" }),
   ]);
 });
 

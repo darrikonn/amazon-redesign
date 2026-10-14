@@ -1,6 +1,6 @@
 import type { CategoryId } from "../product/category";
 import type { Color } from "../product/color";
-import type { Feature } from "../product/feature";
+import type { Tag } from "../product/tag";
 
 export type SearchIntent = {
   category: CategoryId | null;
@@ -10,7 +10,7 @@ export type SearchIntent = {
   minimumRating: number | null;
   prefersLowestPrice: boolean;
   color: Color | null;
-  features: readonly Feature[];
+  tags: readonly Tag[];
   keywords: readonly string[];
 };
 
@@ -21,7 +21,7 @@ export type UnderstoodTermKind =
   | "rating"
   | "lowest-price"
   | "color"
-  | "feature"
+  | "tag"
   | "keyword";
 
 export type UnderstoodTerm = {

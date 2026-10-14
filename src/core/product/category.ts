@@ -1,24 +1,30 @@
-import { NotFoundError } from "../error/not-found-error";
+export const CATEGORY_IDS = [
+  "phones",
+  "tablets",
+  "laptops",
+  "audio",
+  "phone-accessories",
+  "computer-accessories",
+  "watches",
+  "fragrances",
+  "makeup",
+  "skincare",
+  "groceries",
+  "kitchenware",
+  "home-decor",
+  "furniture",
+  "clothing",
+  "shoes",
+  "bags",
+  "jewellery",
+  "sunglasses",
+  "sports",
+  "cars",
+  "motorcycles",
+] as const;
 
-export const CATEGORIES = [
-  { id: "desk-lamp", singularName: "desk lamp", pluralName: "desk lamps" },
-  { id: "headphones", singularName: "headphones", pluralName: "headphones" },
-  { id: "backpack", singularName: "backpack", pluralName: "backpacks" },
-  { id: "coffee-maker", singularName: "coffee maker", pluralName: "coffee makers" },
-] as const satisfies readonly CategoryShape[];
+export type CategoryId = (typeof CATEGORY_IDS)[number];
 
-export type Category = (typeof CATEGORIES)[number];
-
-export type CategoryId = Category["id"];
-
-type CategoryShape = {
-  id: string;
-  singularName: string;
-  pluralName: string;
-};
-
-export function demandCategory(id: CategoryId): Category {
-  const category = CATEGORIES.find((candidate) => candidate.id === id);
-  if (category === undefined) throw new NotFoundError("category", id);
-  return category;
+export function isCategoryId(value: string): value is CategoryId {
+  return CATEGORY_IDS.some((id) => id === value);
 }

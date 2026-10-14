@@ -7,7 +7,7 @@ import {
 import { aProduct } from "@/test-support";
 
 const lamp = aProduct({ id: "lamp" });
-const bag = aProduct({ id: "bag", category: "backpack" });
+const bag = aProduct({ id: "bag", category: "bags", categoryLabel: "bag", categoryPlural: "bags" });
 
 function seeded(): InMemoryProductRepository {
   const repository = new InMemoryProductRepository();
@@ -41,7 +41,7 @@ describe("createProductListLoader", () => {
     const loader = createProductListLoader(repository);
 
     // Act
-    const loaded = await loader.loadMany(["backpack", "headphones"]);
+    const loaded = await loader.loadMany(["bags", "audio"]);
 
     // Assert
     expect(loaded).toEqual([[bag], []]);

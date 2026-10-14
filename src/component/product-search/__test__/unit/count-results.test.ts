@@ -3,15 +3,15 @@ import { countResults } from "@/component";
 import { aProduct } from "@/test-support";
 
 const catalog = [
-  aProduct({ id: "lamp", features: ["dimmable"] }),
-  aProduct({ id: "bag", category: "backpack" }),
+  aProduct({ id: "laptop", tags: ["compact"] }),
+  aProduct({ id: "bag", category: "bags", categoryLabel: "bag", categoryPlural: "bags" }),
 ];
 
 describe("countResults", () => {
   it("counts the products the text would match", () => {
-    expect(countResults(catalog, "lamp")).toBe(1);
-    expect(countResults(catalog, "dimmable")).toBe(1);
+    expect(countResults(catalog, "laptop")).toBe(1);
+    expect(countResults(catalog, "compact")).toBe(1);
     expect(countResults(catalog, "")).toBe(2);
-    expect(countResults(catalog, "headphones")).toBe(0);
+    expect(countResults(catalog, "watches")).toBe(0);
   });
 });

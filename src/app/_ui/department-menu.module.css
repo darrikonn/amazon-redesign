@@ -25,7 +25,9 @@
   top: 52px;
   left: 0;
   width: 260px;
+  max-height: min(70vh, 560px);
   padding: 10px;
+  overflow-y: auto;
   border-radius: 16px;
   background: var(--color-surface);
   color: var(--color-ink);

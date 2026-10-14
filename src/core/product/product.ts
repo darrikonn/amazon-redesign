@@ -1,19 +1,31 @@
 import type { CategoryId } from "./category";
 import type { Color } from "./color";
-import type { Feature } from "./feature";
-import type { Illustration } from "./illustration";
+import type { Tag } from "./tag";
+
+export const PRODUCT_SOURCES = ["dummyjson", "fakestore"] as const;
+
+export type ProductSource = (typeof PRODUCT_SOURCES)[number];
 
 export type ProductId = string;
 
 export type Product = {
   id: ProductId;
-  title: string;
+  source: ProductSource;
+  sourceId: number;
+  name: string;
   category: CategoryId;
+  categoryLabel: string;
+  categoryPlural: string;
   priceInCents: number;
   rating: number;
   reviewCount: number;
   deliveryDays: number;
-  color: Color;
-  features: readonly Feature[];
-  illustration: Illustration;
+  color: Color | null;
+  tags: readonly Tag[];
+  image: string | null;
+  brand: string | null;
 };
+
+export function isProductSource(value: string): value is ProductSource {
+  return PRODUCT_SOURCES.some((source) => source === value);
+}

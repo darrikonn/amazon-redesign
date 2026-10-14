@@ -1,6 +1,5 @@
 import type { Product, SearchIntent } from "@/core";
-import { demandCategory } from "@/core";
-import { featurePhrase } from "../query-interpretation";
+import { tagPhrase } from "../catalog-vocabulary";
 
 export function filterProducts(products: readonly Product[], intent: SearchIntent): Product[] {
   return products.filter((product) => matchesIntent(product, intent));
@@ -13,7 +12,7 @@ function matchesIntent(product: Product, intent: SearchIntent): boolean {
     matchesDelivery(product, intent) &&
     matchesRating(product, intent) &&
     matchesColor(product, intent) &&
-    hasEveryFeature(product, intent) &&
+    hasEveryTag(product, intent) &&
     containsEveryKeyword(product, intent)
   );
 }
@@ -42,8 +41,8 @@ function matchesColor(product: Product, intent: SearchIntent): boolean {
   return intent.color === null || product.color === intent.color;
 }
 
-function hasEveryFeature(product: Product, intent: SearchIntent): boolean {
-  return intent.features.every((feature) => product.features.includes(feature));
+function hasEveryTag(product: Product, intent: SearchIntent): boolean {
+  return intent.tags.every((tag) => product.tags.includes(tag));
 }
 
 function containsEveryKeyword(product: Product, intent: SearchIntent): boolean {
@@ -53,7 +52,14 @@ function containsEveryKeyword(product: Product, intent: SearchIntent): boolean {
 }
 
 function describeForKeywords(product: Product): string {
-  const features = product.features.map(featurePhrase).join(" ");
-  const category = demandCategory(product.category).pluralName;
-  return `${product.title} ${features} ${product.color} ${category}`.toLowerCase();
+  return [
+    product.name,
+    product.brand ?? "",
+    product.tags.map(tagPhrase).join(" "),
+    product.color ?? "",
+    product.categoryLabel,
+    product.categoryPlural,
+  ]
+    .join(" ")
+    .toLowerCase();
 }

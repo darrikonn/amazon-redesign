@@ -5,14 +5,14 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      // `server-only` throws outside a React server build; tests run server code directly.
-      "server-only": fileURLToPath(new URL("./src/test-support/empty-module.ts", import.meta.url)),
     },
   },
   test: {
-    include: ["src/**/__test__/**/*.test.ts", "src/**/__test__/**/*.test.tsx"],
-    // Sandbox tests call real external systems and need secrets; `yarn test:sandbox` runs them.
-    exclude: ["**/node_modules/**", "src/**/__test__/sandbox/**"],
+    include: [
+      "src/**/__test__/**/*.test.ts",
+      "src/**/__test__/**/*.test.tsx",
+      "scripts/**/__test__/**/*.test.ts",
+    ],
     environment: "node",
   },
 });

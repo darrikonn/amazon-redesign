@@ -1,5 +1,5 @@
 import type { Product, SearchIntent, SearchSort } from "@/core";
-import { colorLabel, featureLabel } from "../query-interpretation";
+import { capitalize, colorLabel, tagLabel } from "../catalog-vocabulary";
 
 export const LISTING_RULES = {
   maximumExtraDetails: 2,
@@ -54,11 +54,14 @@ function highlightFor(
   return isLowestPrice ? "lowest-price" : null;
 }
 
-// Features the shopper already asked for are left out: they are true of every result.
+// Tags the shopper already asked for are left out: they are true of every result. A card
+// always has a detail line, falling back to the brand and then the category.
 function detailsFor(product: Product, intent: SearchIntent): string[] {
-  const extraFeatures = product.features
-    .filter((feature) => !intent.features.includes(feature))
+  const extraTags = product.tags
+    .filter((tag) => !intent.tags.includes(tag))
     .slice(0, LISTING_RULES.maximumExtraDetails)
-    .map(featureLabel);
-  return [colorLabel(product.color), ...extraFeatures];
+    .map(tagLabel);
+  const details = [...(product.color === null ? [] : [colorLabel(product.color)]), ...extraTags];
+  if (details.length > 0) return details;
+  return [product.brand ?? capitalize(product.categoryLabel)];
 }

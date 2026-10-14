@@ -1,6 +1,8 @@
+// Each example must parse to a category plus at least two other filters and find 2 to
+// 12 products; a catalogue test enforces that whenever the catalogue is rebuilt.
 export const STARTER_QUERIES: readonly string[] = [
-  "dimmable desk lamp under $40 that arrives tomorrow",
-  "wireless noise cancelling headphones, top rated",
-  "waterproof laptop backpack under $80",
-  "cheapest compact coffee maker",
+  "wireless headphones under $150",
+  "phone with a good camera under $300",
+  "top rated sports shoes under $150",
+  "luxury watches that arrive this week",
 ];

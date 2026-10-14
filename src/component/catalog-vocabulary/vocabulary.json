@@ -1,0 +1,296 @@
+{
+  "categories": [
+    {
+      "id": "phones",
+      "productCount": 16
+    },
+    {
+      "id": "tablets",
+      "productCount": 3
+    },
+    {
+      "id": "laptops",
+      "productCount": 5
+    },
+    {
+      "id": "audio",
+      "productCount": 5
+    },
+    {
+      "id": "phone-accessories",
+      "productCount": 8
+    },
+    {
+      "id": "computer-accessories",
+      "productCount": 0
+    },
+    {
+      "id": "watches",
+      "productCount": 12
+    },
+    {
+      "id": "fragrances",
+      "productCount": 5
+    },
+    {
+      "id": "makeup",
+      "productCount": 5
+    },
+    {
+      "id": "skincare",
+      "productCount": 3
+    },
+    {
+      "id": "groceries",
+      "productCount": 27
+    },
+    {
+      "id": "kitchenware",
+      "productCount": 30
+    },
+    {
+      "id": "home-decor",
+      "productCount": 5
+    },
+    {
+      "id": "furniture",
+      "productCount": 5
+    },
+    {
+      "id": "clothing",
+      "productCount": 15
+    },
+    {
+      "id": "shoes",
+      "productCount": 10
+    },
+    {
+      "id": "bags",
+      "productCount": 5
+    },
+    {
+      "id": "jewellery",
+      "productCount": 3
+    },
+    {
+      "id": "sunglasses",
+      "productCount": 5
+    },
+    {
+      "id": "sports",
+      "productCount": 17
+    },
+    {
+      "id": "cars",
+      "productCount": 5
+    },
+    {
+      "id": "motorcycles",
+      "productCount": 5
+    }
+  ],
+  "tags": [
+    {
+      "id": "wireless",
+      "productCount": 4
+    },
+    {
+      "id": "leather",
+      "productCount": 6
+    },
+    {
+      "id": "steel",
+      "productCount": 2
+    },
+    {
+      "id": "portable",
+      "productCount": 7
+    },
+    {
+      "id": "long-lasting",
+      "productCount": 4
+    },
+    {
+      "id": "wooden",
+      "productCount": 4
+    },
+    {
+      "id": "glass",
+      "productCount": 2
+    },
+    {
+      "id": "luxury",
+      "productCount": 16
+    },
+    {
+      "id": "compact",
+      "productCount": 8
+    },
+    {
+      "id": "lightweight",
+      "productCount": 3
+    },
+    {
+      "id": "ergonomic",
+      "productCount": 5
+    },
+    {
+      "id": "fresh",
+      "productCount": 7
+    },
+    {
+      "id": "smart",
+      "productCount": 3
+    },
+    {
+      "id": "floral",
+      "productCount": 2
+    },
+    {
+      "id": "elegant",
+      "productCount": 7
+    },
+    {
+      "id": "casual",
+      "productCount": 12
+    },
+    {
+      "id": "durable",
+      "productCount": 9
+    },
+    {
+      "id": "camera",
+      "productCount": 12
+    },
+    {
+      "id": "magsafe",
+      "productCount": 2
+    },
+    {
+      "id": "retina",
+      "productCount": 3
+    },
+    {
+      "id": "fruit",
+      "productCount": 8
+    },
+    {
+      "id": "vegetables",
+      "productCount": 7
+    },
+    {
+      "id": "drinks",
+      "productCount": 10
+    },
+    {
+      "id": "dairy",
+      "productCount": 2
+    },
+    {
+      "id": "meat",
+      "productCount": 2
+    },
+    {
+      "id": "pet-food",
+      "productCount": 2
+    },
+    {
+      "id": "women",
+      "productCount": 11
+    },
+    {
+      "id": "men",
+      "productCount": 6
+    },
+    {
+      "id": "sport",
+      "productCount": 22
+    },
+    {
+      "id": "cricket",
+      "productCount": 4
+    },
+    {
+      "id": "baseball",
+      "productCount": 4
+    },
+    {
+      "id": "basketball",
+      "productCount": 3
+    },
+    {
+      "id": "tennis",
+      "productCount": 2
+    },
+    {
+      "id": "golf",
+      "productCount": 2
+    }
+  ],
+  "colors": [
+    {
+      "id": "rose gold",
+      "productCount": 0
+    },
+    {
+      "id": "black",
+      "productCount": 9
+    },
+    {
+      "id": "white",
+      "productCount": 4
+    },
+    {
+      "id": "grey",
+      "productCount": 4
+    },
+    {
+      "id": "silver",
+      "productCount": 2
+    },
+    {
+      "id": "gold",
+      "productCount": 3
+    },
+    {
+      "id": "blue",
+      "productCount": 3
+    },
+    {
+      "id": "navy",
+      "productCount": 0
+    },
+    {
+      "id": "green",
+      "productCount": 5
+    },
+    {
+      "id": "red",
+      "productCount": 7
+    },
+    {
+      "id": "pink",
+      "productCount": 0
+    },
+    {
+      "id": "purple",
+      "productCount": 1
+    },
+    {
+      "id": "brown",
+      "productCount": 1
+    },
+    {
+      "id": "beige",
+      "productCount": 0
+    },
+    {
+      "id": "yellow",
+      "productCount": 2
+    },
+    {
+      "id": "orange",
+      "productCount": 0
+    }
+  ]
+}

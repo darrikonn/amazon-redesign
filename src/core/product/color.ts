@@ -1,10 +1,25 @@
-export type Color =
-  | "black"
-  | "white"
-  | "blue"
-  | "green"
-  | "red"
-  | "grey"
-  | "brass"
-  | "wood"
-  | "navy";
+// Ordered so that "rose gold" is tried before "gold".
+export const COLORS = [
+  "rose gold",
+  "black",
+  "white",
+  "grey",
+  "silver",
+  "gold",
+  "blue",
+  "navy",
+  "green",
+  "red",
+  "pink",
+  "purple",
+  "brown",
+  "beige",
+  "yellow",
+  "orange",
+] as const;
+
+export type Color = (typeof COLORS)[number];
+
+export function isColor(value: string): value is Color {
+  return COLORS.some((color) => color === value);
+}

@@ -1,117 +1,32 @@
-import type { CategoryId, Color, Feature } from "@/core";
-import { NotFoundError } from "@/core";
+import type { CategoryId, Color, Tag } from "@/core";
+import {
+  CATEGORY_MAP,
+  COLOR_WORDS,
+  capitalize,
+  KNOWN_COLORS,
+  LIVE_CATEGORIES,
+  LIVE_TAGS,
+  TAG_RULES,
+} from "../catalog-vocabulary";
 
-export type CategoryVocabulary = {
-  category: CategoryId;
-  label: string;
-  synonyms: readonly string[];
-};
-
-export type FeatureVocabulary = {
-  feature: Feature;
-  label: string;
-  inSentence: string;
+export type VocabularyPhrase<Id> = {
+  id: Id;
   phrase: string;
-  synonyms: readonly string[];
 };
 
-export type ColorVocabulary = {
-  color: Color;
-  label: string;
-  synonyms: readonly string[];
-};
+// Every phrase is tried longest first across the whole list, so "phone case" wins over
+// "phone" and "noise cancelling" is taken before anything shorter can split it.
+export const CATEGORY_PHRASES: readonly VocabularyPhrase<CategoryId>[] = longestFirst(
+  LIVE_CATEGORIES.flatMap((id) => CATEGORY_MAP[id].synonyms.map((phrase) => ({ id, phrase }))),
+);
 
-// Longer synonyms come first inside each list so "desk lamps" wins over "lamp".
-// Features are read before categories, so "machine" and "maker" catch what is left of
-// "espresso machine" or "filter coffee maker" once the feature has been taken.
-export const CATEGORY_VOCABULARY: readonly CategoryVocabulary[] = [
-  {
-    category: "desk-lamp",
-    label: "Desk lamps",
-    synonyms: [
-      "desk lamps",
-      "desk lamp",
-      "reading lamps",
-      "reading lamp",
-      "desk light",
-      "lamps",
-      "lamp",
-      "light",
-    ],
-  },
-  {
-    category: "headphones",
-    label: "Headphones",
-    synonyms: ["headphones", "headphone", "earbuds", "earphones", "headset"],
-  },
-  {
-    category: "backpack",
-    label: "Backpacks",
-    synonyms: ["backpacks", "backpack", "rucksack", "school bag", "daypack", "bag"],
-  },
-  {
-    category: "coffee-maker",
-    label: "Coffee makers",
-    synonyms: [
-      "coffee makers",
-      "coffee maker",
-      "coffee machine",
-      "espresso machine",
-      "coffee",
-      "machine",
-      "maker",
-    ],
-  },
-];
+export const TAG_PHRASES: readonly VocabularyPhrase<Tag>[] = longestFirst(
+  LIVE_TAGS.flatMap((id) => TAG_RULES[id].keywords.map((phrase) => ({ id, phrase }))),
+);
 
-// "wireless charging" precedes "wireless" so a charging base is not read as Bluetooth.
-export const FEATURE_VOCABULARY: readonly FeatureVocabulary[] = [
-  feature("wireless-charging", "Wireless charging", ["wireless charging", "charging base"]),
-  feature("noise-cancelling", "Noise cancelling", [
-    "noise cancelling",
-    "noise canceling",
-    "noise-cancelling",
-    "noise-canceling",
-    "anc",
-  ]),
-  feature("wireless", "Wireless", ["wireless", "bluetooth"]),
-  feature("dimmable", "Dimmable", ["dimmable", "dimmer", "dimming"]),
-  feature("rechargeable", "Rechargeable", ["rechargeable", "battery powered", "cordless"]),
-  feature("clamp", "Clamp", ["clamp", "clip-on", "clip on"]),
-  { ...feature("usb", "USB", ["usb"]), inSentence: "USB" },
-  feature("foldable", "Foldable", ["foldable", "folding", "packable"]),
-  feature("over-ear", "Over-ear", ["over-ear", "over ear"]),
-  feature("in-ear", "In-ear", ["in-ear", "in ear"]),
-  feature("waterproof", "Waterproof", [
-    "waterproof",
-    "water resistant",
-    "water-resistant",
-    "sweatproof",
-    "rain",
-  ]),
-  feature("microphone", "Microphone", ["microphone", "mic", "for calls"]),
-  feature("laptop", "Laptop", ["laptop"]),
-  feature("travel", "Travel", ["travel", "carry-on", "carry on"]),
-  feature("lightweight", "Lightweight", ["lightweight", "light weight"]),
-  feature("school", "School", ["school", "kids"]),
-  feature("espresso", "Espresso", ["espresso"]),
-  feature("drip", "Drip", ["drip", "filter coffee"]),
-  feature("grinder", "Grinder", ["grinder", "bean to cup", "bean-to-cup"]),
-  feature("compact", "Compact", ["compact", "small"]),
-  feature("programmable", "Programmable", ["programmable", "timer"]),
-];
-
-export const COLOR_VOCABULARY: readonly ColorVocabulary[] = [
-  { color: "black", label: "Black", synonyms: ["black"] },
-  { color: "white", label: "White", synonyms: ["white"] },
-  { color: "blue", label: "Blue", synonyms: ["blue"] },
-  { color: "green", label: "Green", synonyms: ["green"] },
-  { color: "red", label: "Red", synonyms: ["red"] },
-  { color: "grey", label: "Grey", synonyms: ["grey", "gray"] },
-  { color: "brass", label: "Brass", synonyms: ["brass"] },
-  { color: "wood", label: "Wood", synonyms: ["wooden", "wood"] },
-  { color: "navy", label: "Navy", synonyms: ["navy"] },
-];
+export const COLOR_PHRASES: readonly VocabularyPhrase<Color>[] = longestFirst(
+  KNOWN_COLORS.flatMap((id) => COLOR_WORDS[id].map((phrase) => ({ id, phrase }))),
+);
 
 export const STOP_WORDS: ReadonlySet<string> = new Set([
   "a",
@@ -181,30 +96,10 @@ export const STOP_WORDS: ReadonlySet<string> = new Set([
   "any",
 ]);
 
-export function featureLabel(target: Feature): string {
-  return demandFeatureVocabulary(target).label;
+export function categoryChipLabel(category: CategoryId): string {
+  return capitalize(CATEGORY_MAP[category].plural);
 }
 
-export function featureInSentence(target: Feature): string {
-  return demandFeatureVocabulary(target).inSentence;
-}
-
-export function featurePhrase(target: Feature): string {
-  return demandFeatureVocabulary(target).phrase;
-}
-
-export function colorLabel(target: Color): string {
-  const entry = COLOR_VOCABULARY.find((candidate) => candidate.color === target);
-  return entry === undefined ? target : entry.label;
-}
-
-function feature(target: Feature, label: string, synonyms: readonly string[]): FeatureVocabulary {
-  const phrase = synonyms[0] ?? label.toLowerCase();
-  return { feature: target, label, inSentence: phrase, phrase, synonyms };
-}
-
-function demandFeatureVocabulary(target: Feature): FeatureVocabulary {
-  const entry = FEATURE_VOCABULARY.find((candidate) => candidate.feature === target);
-  if (entry === undefined) throw new NotFoundError("feature vocabulary", target);
-  return entry;
+function longestFirst<Id>(phrases: readonly VocabularyPhrase<Id>[]): VocabularyPhrase<Id>[] {
+  return [...phrases].sort((first, second) => second.phrase.length - first.phrase.length);
 }

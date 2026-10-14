@@ -15,17 +15,13 @@ export type PriceParts = {
 };
 
 export function splitPrice(priceInCents: number): PriceParts {
-  const dollars = String(Math.floor(priceInCents / CENTS_PER_DOLLAR));
+  const dollars = Math.floor(priceInCents / CENTS_PER_DOLLAR).toLocaleString("en-US");
   const cents = String(priceInCents % CENTS_PER_DOLLAR).padStart(2, "0");
   return { dollars, cents, spoken: `$${dollars}.${cents}` };
 }
 
 export function deliveryLabel(deliveryDays: number): string {
   return deliveryDays === 1 ? "Tomorrow" : `in ${deliveryDays} days`;
-}
-
-export function formatReviewCount(reviewCount: number): string {
-  return reviewCount.toLocaleString("en-US");
 }
 
 export function formatRating(rating: number): string {

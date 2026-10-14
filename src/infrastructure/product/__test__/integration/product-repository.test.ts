@@ -5,7 +5,7 @@ import { CATALOG, CatalogProductRepository, InMemoryProductRepository } from "@/
 import { aProduct } from "@/test-support";
 
 const lamp = aProduct({ id: "lamp" });
-const bag = aProduct({ id: "bag", category: "backpack" });
+const bag = aProduct({ id: "bag", category: "bags", categoryLabel: "bag", categoryPlural: "bags" });
 
 function seededFake(): InMemoryProductRepository {
   const repository = new InMemoryProductRepository();

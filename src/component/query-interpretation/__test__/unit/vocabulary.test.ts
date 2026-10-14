@@ -1,33 +1,49 @@
 import { describe, expect, it } from "vitest";
 import {
-  colorLabel,
-  FEATURE_VOCABULARY,
-  featureInSentence,
-  featureLabel,
-  featurePhrase,
+  CATEGORY_MAP,
+  CATEGORY_PHRASES,
+  COLOR_PHRASES,
+  interpretQuery,
+  LIVE_CATEGORIES,
+  LIVE_TAGS,
+  TAG_PHRASES,
+  TAG_RULES,
+  tagPhrase,
 } from "@/component";
 
-describe("feature vocabulary", () => {
-  it("names each feature once", () => {
-    const features = FEATURE_VOCABULARY.map((entry) => entry.feature);
-
-    expect(new Set(features).size).toBe(features.length);
+describe("search vocabulary", () => {
+  it("is ordered longest phrase first", () => {
+    for (const phrases of [CATEGORY_PHRASES, TAG_PHRASES, COLOR_PHRASES]) {
+      const lengths = phrases.map((entry) => entry.phrase.length);
+      expect(lengths).toEqual([...lengths].sort((first, second) => second - first));
+    }
   });
 
-  it("uses the first synonym as the phrase to type", () => {
-    expect(featurePhrase("noise-cancelling")).toBe("noise cancelling");
-    expect(featureLabel("noise-cancelling")).toBe("Noise cancelling");
+  it("reads every live category's label and plural back as that category", () => {
+    for (const category of LIVE_CATEGORIES) {
+      expect(interpretQuery(CATEGORY_MAP[category].label).intent.category).toBe(category);
+      expect(interpretQuery(CATEGORY_MAP[category].plural).intent.category).toBe(category);
+    }
   });
 
-  it("keeps USB capitalized in sentences", () => {
-    expect(featureLabel("usb")).toBe("USB");
-    expect(featureInSentence("usb")).toBe("USB");
-    expect(featureInSentence("dimmable")).toBe("dimmable");
+  it("reads every live tag's suggestion phrase back as that tag", () => {
+    for (const tag of LIVE_TAGS) {
+      expect(interpretQuery(tagPhrase(tag)).intent.tags).toEqual([tag]);
+    }
   });
-});
 
-describe("colorLabel", () => {
-  it("capitalizes the colour", () => {
-    expect(colorLabel("navy")).toBe("Navy");
+  it("never lets a tag keyword shadow a category synonym or a colour word", () => {
+    const tagKeywords = new Set(Object.values(TAG_RULES).flatMap((rule) => rule.keywords));
+    const shadowed = [...CATEGORY_PHRASES, ...COLOR_PHRASES].filter((entry) =>
+      tagKeywords.has(entry.phrase),
+    );
+
+    expect(shadowed).toEqual([]);
+  });
+
+  it("gives each category phrase to one category only", () => {
+    const phrases = CATEGORY_PHRASES.map((entry) => entry.phrase);
+
+    expect(new Set(phrases).size).toBe(phrases.length);
   });
 });

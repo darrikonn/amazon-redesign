@@ -1,0 +1,66 @@
+import { describe, expect, it } from "vitest";
+import { parseDummyJsonResponse, parseFakeStoreResponse } from "@/component";
+
+const dummyJsonProduct = {
+  id: 1,
+  title: "Essence Mascara Lash Princess",
+  description: "Volumizing mascara.",
+  category: "beauty",
+  price: 9.99,
+  rating: 2.56,
+  tags: ["beauty", "mascara"],
+  brand: "Essence",
+  thumbnail: "https://cdn.dummyjson.com/x/thumbnail.webp",
+  shippingInformation: "Ships in 3-5 business days",
+  reviews: [{}, {}, {}],
+};
+
+describe("parseDummyJsonResponse", () => {
+  it("reads the fields the app uses and counts the reviews", () => {
+    expect(parseDummyJsonResponse({ products: [dummyJsonProduct] })).toEqual([
+      {
+        id: 1,
+        title: "Essence Mascara Lash Princess",
+        description: "Volumizing mascara.",
+        category: "beauty",
+        priceInDollars: 9.99,
+        rating: 2.56,
+        tags: ["beauty", "mascara"],
+        brand: "Essence",
+        thumbnail: "https://cdn.dummyjson.com/x/thumbnail.webp",
+        shippingInformation: "Ships in 3-5 business days",
+        reviewCount: 3,
+      },
+    ]);
+  });
+
+  it("accepts a product without a brand", () => {
+    const { brand: _, ...withoutBrand } = dummyJsonProduct;
+
+    expect(parseDummyJsonResponse({ products: [withoutBrand] })[0]?.brand).toBeNull();
+  });
+
+  it("fails loudly when a field the app needs is missing", () => {
+    const { shippingInformation: _, ...broken } = dummyJsonProduct;
+
+    expect(() => parseDummyJsonResponse({ products: [broken] })).toThrow('"shippingInformation"');
+  });
+});
+
+describe("parseFakeStoreResponse", () => {
+  it("reads the rating and review count from the nested rating", () => {
+    const [product] = parseFakeStoreResponse([
+      {
+        id: 3,
+        title: "Mens Cotton Jacket",
+        description: "Great outerwear.",
+        category: "men's clothing",
+        price: 55.99,
+        rating: { rate: 4.7, count: 500 },
+        image: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg",
+      },
+    ]);
+
+    expect(product).toMatchObject({ priceInDollars: 55.99, rating: 4.7, reviewCount: 500 });
+  });
+});

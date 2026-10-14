@@ -6,18 +6,13 @@ const first = aProduct({
   id: "first",
   priceInCents: 3900,
   color: "black",
-  features: ["dimmable", "usb", "clamp"],
+  tags: ["leather", "luxury", "durable"],
 });
-const cheapest = aProduct({
-  id: "cheapest",
-  priceInCents: 1449,
-  color: "white",
-  features: ["clamp"],
-});
+const cheapest = aProduct({ id: "cheapest", priceInCents: 1449, color: "white", tags: ["casual"] });
 
 function context(overrides: Partial<ListingContext> = {}): ListingContext {
   return {
-    intent: interpretQuery("lamp").intent,
+    intent: interpretQuery("laptops").intent,
     sort: "best-match",
     matchCount: 2,
     understoodTermCount: 1,
@@ -37,21 +32,25 @@ describe("toListings", () => {
   });
 
   it("calls the best match a lowest price pick when sorted by price", () => {
-    const listings = toListings([cheapest, first], context({ sort: "lowest-price" }));
-
-    expect(listings[0]?.highlight).toBe("lowest-price-pick");
+    expect(toListings([cheapest, first], context({ sort: "lowest-price" }))[0]?.highlight).toBe(
+      "lowest-price-pick",
+    );
   });
 
-  it("highlights nothing for a single result or for closest matches", () => {
+  it("highlights nothing for a single result", () => {
     expect(toListings([first], context({ matchCount: 1 }))[0]).toMatchObject({
       isBestMatch: false,
       highlight: null,
     });
-    expect(
-      toListings([first, cheapest], context({ matchCount: 0, isClosestMatch: true })).map(
-        (listing) => listing.highlight,
-      ),
-    ).toEqual([null, null]);
+  });
+
+  it("highlights nothing among closest matches", () => {
+    const listings = toListings(
+      [first, cheapest],
+      context({ matchCount: 0, isClosestMatch: true }),
+    );
+
+    expect(listings.map((listing) => listing.highlight)).toEqual([null, null]);
   });
 
   it("does not crown a best match when nothing was understood", () => {
@@ -60,12 +59,22 @@ describe("toListings", () => {
     );
   });
 
-  it("lists the colour and up to two features the shopper did not ask for", () => {
+  it("lists the colour and up to two tags the shopper did not ask for", () => {
     const listings = toListings(
       [first],
-      context({ intent: interpretQuery("dimmable lamp").intent }),
+      context({ intent: interpretQuery("leather laptop").intent }),
     );
 
-    expect(listings[0]?.details).toEqual(["Black", "USB", "Clamp"]);
+    expect(listings[0]?.details).toEqual(["Black", "Luxury", "Durable"]);
+  });
+
+  it("falls back to the brand, then the category, when there is no colour or tag", () => {
+    const branded = aProduct({ id: "branded", brand: "Apple" });
+    const plain = aProduct({ id: "plain" });
+
+    expect(toListings([branded, plain], context()).map((listing) => listing.details)).toEqual([
+      ["Apple"],
+      ["Laptop"],
+    ]);
   });
 });

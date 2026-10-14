@@ -1,0 +1,13 @@
+{
+  "dummyjson": {
+    "101": {
+      "reason": "AirPods Max are wireless headphones, but neither the source tags nor the description say so, so the wireless rule misses them.",
+      "tags": ["wireless"]
+    },
+    "108": {
+      "reason": "The case colour is \"Plum\", which is not in the fixed colour list; purple is the nearest listed colour.",
+      "color": "purple"
+    }
+  },
+  "fakestore": {}
+}

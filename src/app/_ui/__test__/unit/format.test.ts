@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  deliveryLabel,
-  formatRating,
-  formatReviewCount,
-  resultCountLabel,
-  splitPrice,
-} from "@/app/_ui/format";
+import { deliveryLabel, formatRating, resultCountLabel, splitPrice } from "@/app/_ui/format";
 
 describe("format", () => {
   it("pluralizes result counts", () => {
@@ -25,8 +19,11 @@ describe("format", () => {
     expect(deliveryLabel(3)).toBe("in 3 days");
   });
 
-  it("formats ratings and review counts", () => {
+  it("formats ratings with one decimal", () => {
     expect(formatRating(4)).toBe("4.0");
-    expect(formatReviewCount(3899)).toBe("3,899");
+  });
+
+  it("separates thousands in the dollar part", () => {
+    expect(splitPrice(3_699_999)).toEqual({ dollars: "36,999", cents: "99", spoken: "$36,999.99" });
   });
 });

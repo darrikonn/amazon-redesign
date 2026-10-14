@@ -2,16 +2,21 @@ import type { Product, Shopper } from "@/core";
 
 export function aProduct(overrides: Partial<Product> = {}): Product {
   return {
-    id: "test-product",
-    title: "Test desk lamp",
-    category: "desk-lamp",
-    priceInCents: 2500,
+    id: "dummyjson-0001",
+    source: "dummyjson",
+    sourceId: 1,
+    name: "Test laptop",
+    category: "laptops",
+    categoryLabel: "laptop",
+    categoryPlural: "laptops",
+    priceInCents: 99_900,
     rating: 4.2,
-    reviewCount: 100,
+    reviewCount: 3,
     deliveryDays: 2,
-    color: "black",
-    features: [],
-    illustration: { shape: "led-desk-lamp", isMirrored: false },
+    color: null,
+    tags: [],
+    image: null,
+    brand: null,
     ...overrides,
   };
 }

@@ -1,9 +1,9 @@
 import type { Color, ProductId } from "@/core";
 import type { ProductListing } from "@/use-case";
-import { deliveryLabel, formatRating, formatReviewCount, splitPrice } from "./format";
+import { deliveryLabel, formatRating, splitPrice } from "./format";
 import { Icon } from "./icon";
 import styles from "./product-card.module.css";
-import { ProductIllustration } from "./product-illustration";
+import { ProductImage } from "./product-image";
 
 type ProductCardProps = {
   listing: ProductListing;
@@ -14,15 +14,15 @@ type ProductCardProps = {
 export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProps) {
   return (
     <article className={styles.card}>
-      <div className={styles.well} style={{ color: INK[listing.color] }}>
+      <div
+        className={styles.well}
+        style={{ color: listing.color === null ? DEFAULT_INK : INK[listing.color] }}
+      >
         {listing.isBestMatch && <span className={styles.bestMatch}>Best match</span>}
-        <ProductIllustration
-          shape={listing.illustration.shape}
-          isMirrored={listing.illustration.isMirrored}
-        />
+        <ProductImage image={listing.image} category={listing.category} />
       </div>
       <div className={styles.body}>
-        <h3 className={styles.title}>{listing.title}</h3>
+        <h3 className={styles.title}>{listing.name}</h3>
         <p className={styles.details}>
           {listing.details.map((detail, index) => (
             <span key={detail} className={index === 2 ? styles.thirdDetail : styles.detail}>
@@ -31,7 +31,7 @@ export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProp
             </span>
           ))}
         </p>
-        <Rating rating={listing.rating} reviewCount={listing.reviewCount} />
+        <Rating rating={listing.rating} />
         {listing.highlightLabel !== null && (
           <p className={styles.highlight}>
             <Icon name="check" size={15} strokeWidth={3.5} className={styles.highlightIcon} />
@@ -50,7 +50,7 @@ export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProp
             type="button"
             className={isInCart ? styles.cartButtonAdded : styles.cartButton}
             aria-label={
-              isInCart ? `Remove ${listing.title} from cart` : `Add ${listing.title} to cart`
+              isInCart ? `Remove ${listing.name} from cart` : `Add ${listing.name} to cart`
             }
             onClick={() => onToggleCart(listing.id)}
           >
@@ -66,28 +66,38 @@ export function ProductCard({ listing, isInCart, onToggleCart }: ProductCardProp
   );
 }
 
+// Glyph colours for each product colour; white is drawn off-white so it shows on the well.
 const INK: Record<Color, string> = {
+  "rose gold": "#b76e79",
   black: "#232f3e",
   white: "#fbfcfc",
+  grey: "#8a9199",
+  silver: "#a8b0b8",
+  gold: "#c9a227",
   blue: "#2f6fb5",
+  navy: "#1f3a5f",
   green: "#3f7d5a",
   red: "#c0392b",
-  grey: "#8a9199",
-  brass: "#b08d3c",
-  wood: "#a9773f",
-  navy: "#1f3a5f",
+  pink: "#d9648c",
+  purple: "#6b3fa0",
+  brown: "#7a4e2d",
+  beige: "#c8b08a",
+  yellow: "#e0b100",
+  orange: "#e07a1f",
 };
+
+const DEFAULT_INK = "#232f3e";
 
 const STARS = "★★★★★";
 const MAXIMUM_RATING = 5;
 
-function Rating({ rating, reviewCount }: { rating: number; reviewCount: number }) {
+// DummyJSON ships three sample reviews per product, so a count would mislead; only the
+// rating is shown.
+function Rating({ rating }: { rating: number }) {
   const filled = `${Math.round((rating / MAXIMUM_RATING) * 100)}%`;
   return (
     <p className={styles.rating}>
-      <span className="visually-hidden">
-        {formatRating(rating)} out of 5 stars, {formatReviewCount(reviewCount)} reviews
-      </span>
+      <span className="visually-hidden">{formatRating(rating)} out of 5 stars</span>
       <span className={styles.stars} aria-hidden="true">
         {STARS}
         <span className={styles.starsFilled} style={{ width: filled }}>
@@ -97,7 +107,6 @@ function Rating({ rating, reviewCount }: { rating: number; reviewCount: number }
       <span className={styles.ratingValue} aria-hidden="true">
         {formatRating(rating)}
       </span>
-      <span aria-hidden="true">({formatReviewCount(reviewCount)})</span>
     </p>
   );
 }

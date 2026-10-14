@@ -1,19 +1,21 @@
 import type {
   CategoryId,
   Color,
-  Feature,
   Interpretation,
   SearchIntent,
+  Tag,
   UnderstoodTerm,
   UnderstoodTermKind,
 } from "@/core";
+import { colorLabel, tagLabel } from "../catalog-vocabulary";
 import { formatDollars, parseAmountInCents } from "./money";
 import { wholePhrasePattern } from "./phrase";
 import {
-  CATEGORY_VOCABULARY,
-  COLOR_VOCABULARY,
-  FEATURE_VOCABULARY,
+  CATEGORY_PHRASES,
+  COLOR_PHRASES,
+  categoryChipLabel,
   STOP_WORDS,
+  TAG_PHRASES,
 } from "./vocabulary";
 
 export const INTERPRETATION_RULES = {
@@ -31,8 +33,7 @@ export function interpretQuery(text: string): Interpretation {
   readDelivery(scanner, draft);
   readLowestPrice(scanner, draft);
   readColor(scanner, draft);
-  readFeatures(scanner, draft);
-  readCategory(scanner, draft);
+  readTagsAndCategory(scanner, draft);
   readKeywords(scanner, draft);
   return { intent: draft.intent(), terms: inReadingOrder(draft.terms, text) };
 }
@@ -47,8 +48,10 @@ const CURRENCY_WORD = String.raw`(?:\s*(?:dollars?|bucks|usd))?`;
 // A lone single-digit word is a price only with a currency word after it, so
 // "more than one color" stays plain text while "under five bucks" is a price.
 const SMALL_NUMBER_WORD = String.raw`${UNIT_WORD}(?=\s*(?:dollars?|bucks|usd)(?![a-z0-9]))`;
-const NUMBER = String.raw`(\d+(?:\.\d{1,2})?)${CURRENCY_WORD}`;
-const AMOUNT = String.raw`(\d+(?:\.\d{1,2})?|${LARGE_NUMBER_WORD}|${SMALL_NUMBER_WORD})${CURRENCY_WORD}`;
+// Digits may carry thousands separators: "$1,500" and "$1500" are the same price.
+const DIGITS = String.raw`(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d{1,2})?`;
+const NUMBER = `(${DIGITS})${CURRENCY_WORD}`;
+const AMOUNT = `(${DIGITS}|${LARGE_NUMBER_WORD}|${SMALL_NUMBER_WORD})${CURRENCY_WORD}`;
 const RATING_PATTERN =
   /(?:top[- ]rated|best[- ]rated|highly rated|well reviewed|(?:over |at least )?(\d(?:\.\d)?)\+?\s*stars?(?: and up| or more)?)/;
 const PRICE_RANGE_PATTERN = new RegExp(
@@ -105,7 +108,7 @@ class IntentDraft {
   minimumRating: number | null = null;
   prefersLowestPrice = false;
   color: Color | null = null;
-  readonly features: Feature[] = [];
+  readonly tags: Tag[] = [];
   readonly keywords: string[] = [];
 
   understand(kind: UnderstoodTermKind, label: string, phrase: string): void {
@@ -121,7 +124,7 @@ class IntentDraft {
       minimumRating: this.minimumRating,
       prefersLowestPrice: this.prefersLowestPrice,
       color: this.color,
-      features: [...this.features],
+      tags: [...this.tags],
       keywords: [...this.keywords],
     };
   }
@@ -188,33 +191,40 @@ function readLowestPrice(scanner: QueryScanner, draft: IntentDraft): void {
 }
 
 function readColor(scanner: QueryScanner, draft: IntentDraft): void {
-  for (const entry of COLOR_VOCABULARY) {
-    const scanned = scanner.take(wholePhrasePattern(entry.synonyms), PHRASE_GROUP);
+  for (const entry of COLOR_PHRASES) {
+    const scanned = scanner.take(wholePhrasePattern([entry.phrase]), PHRASE_GROUP);
     if (scanned === null) continue;
-    draft.color = entry.color;
-    draft.understand("color", entry.label, scanned.phrase);
+    draft.color = entry.id;
+    draft.understand("color", colorLabel(entry.id), scanned.phrase);
     return;
   }
 }
 
-function readFeatures(scanner: QueryScanner, draft: IntentDraft): void {
-  for (const entry of FEATURE_VOCABULARY) {
-    const scanned = scanner.take(wholePhrasePattern(entry.synonyms), PHRASE_GROUP);
+// Tags and categories share one longest-first pass, so the category "sports gear" is
+// read before the tag "sports" can take half of it.
+function readTagsAndCategory(scanner: QueryScanner, draft: IntentDraft): void {
+  for (const entry of TAG_AND_CATEGORY_PHRASES) {
+    if (entry.kind === "tag" ? draft.tags.includes(entry.id) : draft.category !== null) continue;
+    const scanned = scanner.take(wholePhrasePattern([entry.phrase]), PHRASE_GROUP);
     if (scanned === null) continue;
-    draft.features.push(entry.feature);
-    draft.understand("feature", entry.label, scanned.phrase);
+    if (entry.kind === "tag") {
+      draft.tags.push(entry.id);
+      draft.understand("tag", tagLabel(entry.id), scanned.phrase);
+    } else {
+      draft.category = entry.id;
+      draft.understand("category", categoryChipLabel(entry.id), scanned.phrase);
+    }
   }
 }
 
-function readCategory(scanner: QueryScanner, draft: IntentDraft): void {
-  for (const entry of CATEGORY_VOCABULARY) {
-    const scanned = scanner.take(wholePhrasePattern(entry.synonyms), PHRASE_GROUP);
-    if (scanned === null) continue;
-    draft.category = entry.category;
-    draft.understand("category", entry.label, scanned.phrase);
-    return;
-  }
-}
+type TagOrCategoryPhrase =
+  | { kind: "tag"; id: Tag; phrase: string }
+  | { kind: "category"; id: CategoryId; phrase: string };
+
+const TAG_AND_CATEGORY_PHRASES: readonly TagOrCategoryPhrase[] = [
+  ...TAG_PHRASES.map((entry): TagOrCategoryPhrase => ({ kind: "tag", ...entry })),
+  ...CATEGORY_PHRASES.map((entry): TagOrCategoryPhrase => ({ kind: "category", ...entry })),
+].sort((first, second) => second.phrase.length - first.phrase.length);
 
 function readKeywords(scanner: QueryScanner, draft: IntentDraft): void {
   for (const word of scanner.leftoverWords()) {

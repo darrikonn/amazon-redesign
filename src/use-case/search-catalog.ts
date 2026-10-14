@@ -1,7 +1,7 @@
 import type { Highlight, Listing, SearchResult } from "@/component";
-import { removePhrase, requestAssistance, searchProducts } from "@/component";
-import type { Color, Illustration, ProductId, ProductRepository, SearchSort } from "@/core";
-import { demandCategory, isSearchSort, SEARCH_SORTS } from "@/core";
+import { removePhrase, searchProducts, suggestRewrite } from "@/component";
+import type { CategoryId, Color, ProductId, ProductRepository, SearchSort } from "@/core";
+import { isSearchSort, SEARCH_SORTS } from "@/core";
 
 export type SearchCatalogRequest = {
   text: string;
@@ -13,8 +13,7 @@ export type SearchOutcome = {
   requestedSort: SearchSort;
   hasQuery: boolean;
   understood: readonly UnderstoodTermView[];
-  unrecognizedWords: readonly string[];
-  needsAssistance: boolean;
+  assistantSuggestion: SuggestionView | null;
   resultCount: number;
   headline: string;
   sortOptions: readonly SortOptionView[];
@@ -45,15 +44,15 @@ export type SuggestionView = {
 
 export type ProductListing = {
   id: ProductId;
-  title: string;
-  categoryName: string;
-  color: Color;
+  name: string;
+  category: CategoryId;
+  categoryLabel: string;
+  color: Color | null;
   details: readonly string[];
   rating: number;
-  reviewCount: number;
   priceInCents: number;
   deliveryDays: number;
-  illustration: Illustration;
+  image: string | null;
   isBestMatch: boolean;
   highlightLabel: string | null;
 };
@@ -65,7 +64,18 @@ export class SearchCatalog {
     const catalog = await this.products.list();
     const requestedSort = isSearchSort(request.sort) ? request.sort : DEFAULT_SORT;
     const outcome = toOutcome(searchProducts(catalog, request.text, requestedSort), requestedSort);
-    return { ...outcome, needsAssistance: requestAssistance(catalog, request.text) !== null };
+    const rewrite = suggestRewrite(catalog, request.text);
+    return {
+      ...outcome,
+      assistantSuggestion:
+        rewrite === null
+          ? null
+          : {
+              label: `Try “${rewrite.text}”`,
+              text: rewrite.text,
+              resultCount: rewrite.resultCount,
+            },
+    };
   }
 }
 
@@ -86,7 +96,7 @@ const HIGHLIGHT_LABELS: Record<Highlight, string> = {
 function toOutcome(
   result: SearchResult,
   requestedSort: SearchSort,
-): Omit<SearchOutcome, "needsAssistance"> {
+): Omit<SearchOutcome, "assistantSuggestion"> {
   return {
     text: result.text,
     requestedSort,
@@ -95,7 +105,6 @@ function toOutcome(
       label: term.label,
       textWithoutTerm: removePhrase(result.text, term.phrase),
     })),
-    unrecognizedWords: result.interpretation.intent.keywords,
     resultCount: result.matchCount,
     headline: result.headline,
     sortOptions: sortOptionsFor(result),
@@ -141,15 +150,15 @@ function toProductListing(listing: Listing): ProductListing {
   const { product } = listing;
   return {
     id: product.id,
-    title: product.title,
-    categoryName: demandCategory(product.category).singularName,
+    name: product.name,
+    category: product.category,
+    categoryLabel: product.categoryLabel,
     color: product.color,
     details: listing.details,
     rating: product.rating,
-    reviewCount: product.reviewCount,
     priceInCents: product.priceInCents,
     deliveryDays: product.deliveryDays,
-    illustration: product.illustration,
+    image: product.image,
     isBestMatch: listing.isBestMatch,
     highlightLabel: listing.highlight === null ? null : HIGHLIGHT_LABELS[listing.highlight],
   };

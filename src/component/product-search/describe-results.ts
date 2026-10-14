@@ -1,20 +1,20 @@
 import type { SearchIntent } from "@/core";
-import { demandCategory } from "@/core";
-import { featureInSentence, formatDollars, INTERPRETATION_RULES } from "../query-interpretation";
+import { CATEGORY_MAP, tagInSentence } from "../catalog-vocabulary";
+import { formatDollars, INTERPRETATION_RULES } from "../query-interpretation";
 
 export function describeResults(intent: SearchIntent, resultCount: number): string {
   const count = resultCount === 0 ? "No" : String(resultCount);
   const noun = [intent.color, nounFor(intent, resultCount)].filter(isPresent).join(" ");
   const qualifiers = describeQualifiers(intent);
   if (qualifiers.length === 0) return `${count} ${noun}`;
-  const separator = intent.features.length > 0 ? ": " : " ";
+  const separator = intent.tags.length > 0 ? ": " : " ";
   return `${count} ${noun}${separator}${qualifiers.join(", ")}`;
 }
 
 function nounFor(intent: SearchIntent, resultCount: number): string {
   if (intent.category === null) return resultCount === 1 ? "product" : "products";
-  const category = demandCategory(intent.category);
-  return resultCount === 1 ? category.singularName : category.pluralName;
+  const category = CATEGORY_MAP[intent.category];
+  return resultCount === 1 ? category.label : category.plural;
 }
 
 function isPresent(value: string | null): value is string {
@@ -23,7 +23,7 @@ function isPresent(value: string | null): value is string {
 
 function describeQualifiers(intent: SearchIntent): string[] {
   return [
-    describeFeatures(intent),
+    describeTags(intent),
     describePrice(intent),
     describeDelivery(intent),
     describeRating(intent),
@@ -31,9 +31,9 @@ function describeQualifiers(intent: SearchIntent): string[] {
   ].filter(isPresent);
 }
 
-function describeFeatures(intent: SearchIntent): string | null {
-  if (intent.features.length === 0) return null;
-  return intent.features.map(featureInSentence).join(", ");
+function describeTags(intent: SearchIntent): string | null {
+  if (intent.tags.length === 0) return null;
+  return intent.tags.map(tagInSentence).join(", ");
 }
 
 function describePrice(intent: SearchIntent): string | null {

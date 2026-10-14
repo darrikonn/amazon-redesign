@@ -3,15 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Container, createContainer } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
-import type {
-  AssistantSuggestion,
-  CartSummary,
-  SearchOutcome,
-  Storefront as StorefrontData,
-} from "@/use-case";
-import { GlowGradient } from "./product-illustration";
+import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { ResultSection } from "./result-section";
-import { type AssistantState, SearchPanel } from "./search-panel";
+import { SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
 import { ShortcutList } from "./shortcut-list";
 import { SiteFooter } from "./site-footer";
@@ -34,7 +28,6 @@ export function Storefront({ initialOutcome, initialPreviewLabels, storefront }:
   const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
   const demo = useTypingDemo(storefront.starterQueries, text === "");
   const previewLabels = usePreviewLabels(container, demo.placeholder, initialPreviewLabels);
-  const assistant = useAssistant(container, outcome, storefront.isAssistantAvailable);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hasQuery = text.trim() !== "";
 
@@ -56,7 +49,6 @@ export function Storefront({ initialOutcome, initialPreviewLabels, storefront }:
 
   return (
     <div className={styles.page}>
-      <GlowGradient />
       <div className={styles.viewport}>
         <SiteHeader
           shopper={storefront.shopper}
@@ -72,7 +64,6 @@ export function Storefront({ initialOutcome, initialPreviewLabels, storefront }:
             outcome={outcome}
             placeholder={demo.placeholder}
             previewLabels={previewLabels}
-            assistant={assistant}
             onTextChange={setText}
             onTryExample={() => setText(demo.example)}
           />
@@ -139,50 +130,6 @@ function usePreviewLabels(
   }, [container, placeholder]);
 
   return labels;
-}
-
-// The assistant costs a model call, so it waits for the shopper to stop typing.
-const ASSISTANT_PAUSE_IN_MILLISECONDS = 700;
-
-function useAssistant(
-  container: Container,
-  outcome: SearchOutcome,
-  isAvailable: boolean,
-): AssistantState | null {
-  const [state, setState] = useState<AssistantState | null>(null);
-  const { text } = outcome;
-  const shouldAsk = isAvailable && outcome.needsAssistance;
-  const unrecognizedWords = outcome.unrecognizedWords.join(" ");
-
-  useEffect(() => {
-    if (!shouldAsk) return;
-    let isCurrent = true;
-    const timer = window.setTimeout(() => {
-      setState({ forText: text, status: "thinking", words: unrecognizedWords.split(" ") });
-      container.askAssistant.execute({ text }).then(
-        (suggestion) => {
-          if (isCurrent) setState(toAssistantState(text, suggestion));
-        },
-        (error: unknown) => {
-          reportError(error);
-          if (isCurrent) setState(null);
-        },
-      );
-    }, ASSISTANT_PAUSE_IN_MILLISECONDS);
-    return () => {
-      isCurrent = false;
-      window.clearTimeout(timer);
-    };
-  }, [container, shouldAsk, text, unrecognizedWords]);
-
-  return state !== null && state.forText === text ? state : null;
-}
-
-function toAssistantState(
-  text: string,
-  suggestion: AssistantSuggestion | null,
-): AssistantState | null {
-  return suggestion === null ? null : { forText: text, status: "suggested", suggestion };
 }
 
 function Hero() {

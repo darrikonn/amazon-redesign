@@ -27,8 +27,21 @@
   background: var(--color-well);
 }
 
+.well {
+  overflow: hidden;
+}
+
 .well svg {
   filter: var(--shadow-illustration);
+}
+
+.photoFrame {
+  position: absolute;
+  inset: 16px;
+}
+
+.photo {
+  object-fit: contain;
 }
 
 .bestMatch {
@@ -216,8 +229,12 @@
   }
 
   .well svg {
-    width: 116px;
-    height: 116px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .photoFrame {
+    inset: 16px;
   }
 
   .body {

@@ -10,11 +10,11 @@ describe.each([
     const container = create();
 
     // Act
-    const outcome = await container.searchCatalog.execute({ text: "lamp", sort: "best-match" });
+    const outcome = await container.searchCatalog.execute({ text: "laptops", sort: "best-match" });
     const storefront = await container.viewStorefront.execute();
 
     // Assert
-    expect(outcome.resultCount).toBe(8);
+    expect(outcome.resultCount).toBe(5);
     expect(storefront.shopper.firstName).toBe("Darri");
   });
 
@@ -23,11 +23,11 @@ describe.each([
     const container = create();
 
     // Act
-    await container.toggleCartItem.execute({ productId: "led-desk-lamp-with-dimmer" });
+    await container.toggleCartItem.execute({ productId: "dummyjson-0078" });
 
     // Assert
     expect(await container.viewCart.execute()).toEqual({
-      productIds: ["led-desk-lamp-with-dimmer"],
+      productIds: ["dummyjson-0078"],
       itemCount: 1,
     });
     expect(await create().viewCart.execute()).toEqual({ productIds: [], itemCount: 0 });

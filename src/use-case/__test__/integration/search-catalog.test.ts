@@ -11,77 +11,39 @@ beforeEach(() => {
 });
 
 describe("SearchCatalog", () => {
-  it("matches the reference results screen for the example sentence", async () => {
+  it("answers the first example sentence", async () => {
     // Act
     const outcome = await container.searchCatalog.execute({
-      text: "dimmable desk lamp under $40 that arrives tomorrow",
+      text: "wireless headphones under $150",
       sort: "best-match",
     });
 
     // Assert
     expect(outcome.understood.map((term) => term.label)).toEqual([
-      "Dimmable",
-      "Desk lamps",
-      "Under $40",
-      "Arrives tomorrow",
+      "Wireless",
+      "Audio devices",
+      "Under $150",
     ]);
-    expect(outcome.resultCount).toBe(4);
-    expect(outcome.headline).toBe("4 desk lamps: dimmable, under $40, arriving tomorrow");
+    expect(outcome.resultCount).toBe(2);
+    expect(outcome.headline).toBe("2 audio devices: wireless, under $150");
+    expect(outcome.refinements).toEqual([
+      { label: "Portable", text: "wireless headphones under $150 portable", resultCount: 1 },
+    ]);
     expect(
-      outcome.refinements.map((refinement) => [refinement.label, refinement.resultCount]),
+      outcome.listings.map((listing) => [listing.name, listing.details, listing.highlightLabel]),
     ).toEqual([
-      ["Rated 4.5 and up", 1],
-      ["USB", 2],
-      ["Clamp", 1],
-      ["Rechargeable", 1],
-      ["Foldable", 1],
-    ]);
-    expect(outcome.listings.map((listing) => listing.title)).toEqual([
-      "LED desk lamp with dimmer",
-      "Swing-arm architect lamp",
-      "Foldable rechargeable reading lamp",
-      "Desk lamp with wireless charging base",
+      ["Beats Flex Wireless Earphones", ["Beats"], "Top rated pick"],
+      ["Apple Airpods", ["Portable"], null],
     ]);
     expect(outcome.listings[0]).toMatchObject({
       isBestMatch: true,
-      highlightLabel: "Top rated pick",
-      details: ["Black", "USB"],
-      reviewCount: 180,
-      priceInCents: 2499,
+      category: "audio",
+      priceInCents: 4999,
+      image: expect.stringContaining("cdn.dummyjson.com"),
     });
-    expect(outcome.listings[2]?.highlightLabel).toBe("Lowest price");
   });
 
-  it("matches the reference screen for a one word lamp search", async () => {
-    // Act
-    const outcome = await container.searchCatalog.execute({ text: "lamp", sort: "best-match" });
-
-    // Assert
-    expect(outcome.headline).toBe("8 desk lamps");
-    expect(
-      outcome.refinements.map((refinement) => [refinement.label, refinement.resultCount]),
-    ).toEqual([
-      ["Under $30", 4],
-      ["Arrives tomorrow", 4],
-      ["Rated 4.5 and up", 4],
-      ["Dimmable", 5],
-      ["USB", 4],
-      ["Clamp", 2],
-    ]);
-    expect(outcome.listings.map((listing) => listing.title)).toEqual([
-      "Monitor light bar with touch control",
-      "LED desk lamp with dimmer",
-      "Wooden tripod desk lamp",
-      "Brass banker’s lamp",
-      "Swing-arm architect lamp",
-      "Foldable rechargeable reading lamp",
-      "Desk lamp with wireless charging base",
-      "Gooseneck clip-on lamp",
-    ]);
-    expect(outcome.listings.at(-1)?.highlightLabel).toBe("Lowest price");
-  });
-
-  it("matches the reference screen for headphones", async () => {
+  it("answers a one word category search with suggestions drawn from the results", async () => {
     // Act
     const outcome = await container.searchCatalog.execute({
       text: "headphones",
@@ -89,53 +51,63 @@ describe("SearchCatalog", () => {
     });
 
     // Assert
-    expect(outcome.headline).toBe("7 headphones");
+    expect(outcome.headline).toBe("5 audio devices");
     expect(
       outcome.refinements.map((refinement) => [refinement.label, refinement.resultCount]),
     ).toEqual([
-      ["Under $90", 4],
-      ["Arrives tomorrow", 3],
-      ["Rated 4.5 and up", 4],
-      ["Wireless", 6],
-      ["Over-ear", 4],
-      ["Microphone", 4],
+      ["Under $100", 3],
+      ["Rated 4.5 and up", 2],
+      ["Wireless", 3],
+      ["Smart", 2],
+      ["Compact", 1],
+      ["Portable", 1],
     ]);
-    expect(outcome.listings[0]).toMatchObject({
-      title: "Travel headphones, foldable",
-      isBestMatch: true,
-    });
-    expect(outcome.listings.at(-1)).toMatchObject({
-      title: "Budget over-ear wireless headphones",
-      highlightLabel: "Lowest price",
+    expect(outcome.listings.map((listing) => listing.name)).toEqual([
+      "Amazon Echo Plus",
+      "Apple HomePod Mini Cosmic Grey",
+      "Beats Flex Wireless Earphones",
+      "Apple Airpods",
+      "Apple AirPods Max Silver",
+    ]);
+    expect(outcome.listings[2]?.highlightLabel).toBe("Lowest price");
+  });
+
+  it("rounds the price suggestion to $50 for expensive results", async () => {
+    const outcome = await container.searchCatalog.execute({ text: "laptops", sort: "best-match" });
+
+    expect(outcome.refinements[0]).toEqual({
+      label: "Under $1,500",
+      text: "laptops under $1,500",
+      resultCount: 3,
     });
   });
 
-  it("matches the reference screen when nothing matches", async () => {
+  it("offers a way back when nothing matches", async () => {
     // Act
     const outcome = await container.searchCatalog.execute({
-      text: "red lamp between 10 and 30",
+      text: "red laptop under $1500",
       sort: "best-match",
     });
 
     // Assert
     expect(outcome.resultCount).toBe(0);
-    expect(outcome.headline).toBe("No red desk lamps between $10 and $30");
+    expect(outcome.headline).toBe("No red laptops under $1,500");
     expect(outcome.emptyMessage).toBe("Bring results back:");
     expect(outcome.relaxations).toEqual([
-      { label: "Drop “Red”", text: "lamp between 10 and 30", resultCount: 4 },
-      { label: "Drop “Desk lamps”", text: "red between 10 and 30", resultCount: 1 },
+      { label: "Drop “Red”", text: "laptop under $1500", resultCount: 3 },
+      { label: "Drop “Laptops”", text: "red under $1500", resultCount: 7 },
     ]);
-    expect(outcome.closestMatchesHeading).toBe("Closest matches, ignoring “Red”");
-    expect(outcome.listings.map((listing) => [listing.title, listing.highlightLabel])).toEqual([
-      ["LED desk lamp with dimmer", null],
-      ["Foldable rechargeable reading lamp", null],
-      ["Desk lamp with wireless charging base", null],
-      ["Gooseneck clip-on lamp", null],
-    ]);
+    expect(outcome.closestMatchesHeading).toBe("Closest matches, ignoring “Laptops”");
+    expect(outcome.listings).toHaveLength(4);
+    expect(
+      outcome.listings.every(
+        (listing) => listing.color === "red" && listing.highlightLabel === null,
+      ),
+    ).toBe(true);
   });
 
   it("explains when nothing can bring results back", async () => {
-    const outcome = await container.searchCatalog.execute({ text: "purple", sort: "best-match" });
+    const outcome = await container.searchCatalog.execute({ text: "navy", sort: "best-match" });
 
     expect(outcome.emptyMessage).toBe(
       "Nothing matches that yet. Try describing the product a different way.",
@@ -146,93 +118,111 @@ describe("SearchCatalog", () => {
 
   it("finds a way back from several unknown words", async () => {
     const outcome = await container.searchCatalog.execute({
-      text: "gift for a coffee lover",
+      text: "gift for a watch lover",
       sort: "best-match",
     });
 
     expect(outcome.relaxations).toEqual([
-      { label: "Drop “gift” and “lover”", text: "for a coffee", resultCount: 5 },
+      { label: "Drop “gift” and “lover”", text: "for a watch", resultCount: 12 },
     ]);
     expect(outcome.closestMatchesHeading).toBe("Closest matches, ignoring “gift” and “lover”");
   });
 
   it("keeps a worded price while dropping the unknown words", async () => {
     const outcome = await container.searchCatalog.execute({
-      text: "gift for a coffee lover under forty bucks",
+      text: "gift for a watch lover under a hundred bucks",
       sort: "best-match",
     });
 
     expect(outcome.understood.map((term) => term.label)).toEqual([
       "“gift”",
-      "Coffee makers",
+      "Watches",
       "“lover”",
-      "Under $40",
+      "Under $100",
     ]);
-    expect(outcome.relaxations).toEqual([
-      { label: "Drop “gift” and “lover”", text: "for a coffee under forty bucks", resultCount: 2 },
-    ]);
-  });
-
-  it("says when unknown words left nothing to show, so the assistant may help", async () => {
-    const stuck = await container.searchCatalog.execute({
-      text: "gift for a coffee lover",
-      sort: "best-match",
-    });
-    const working = await container.searchCatalog.execute({
-      text: "lamp with touch",
-      sort: "best-match",
-    });
-
-    expect(stuck.needsAssistance).toBe(true);
-    expect(working.needsAssistance).toBe(false);
+    expect(outcome.relaxations[0]?.text).toBe("for a watch under a hundred bucks");
   });
 
   it("does not double quote a dropped keyword", async () => {
     const outcome = await container.searchCatalog.execute({
-      text: "office lamp",
+      text: "watch gift",
       sort: "best-match",
     });
 
-    expect(outcome.relaxations.map((relaxation) => relaxation.label)).toEqual(["Drop “office”"]);
+    expect(outcome.relaxations.map((relaxation) => relaxation.label)).toEqual(["Drop “gift”"]);
   });
 
   it("tells each understood term what the text becomes without it", async () => {
     const outcome = await container.searchCatalog.execute({
-      text: "Dimmable lamp under $40",
+      text: "Leather bag under $150",
       sort: "best-match",
     });
 
     expect(outcome.understood).toEqual([
-      { label: "Dimmable", textWithoutTerm: "lamp under $40" },
-      { label: "Desk lamps", textWithoutTerm: "Dimmable under $40" },
-      { label: "Under $40", textWithoutTerm: "Dimmable lamp" },
+      { label: "Leather", textWithoutTerm: "bag under $150" },
+      { label: "Bags", textWithoutTerm: "Leather under $150" },
+      { label: "Under $150", textWithoutTerm: "Leather bag" },
     ]);
   });
 
   it("selects lowest price for cheapest and drops the word when another sort is picked", async () => {
     // Act
     const outcome = await container.searchCatalog.execute({
-      text: "cheapest compact coffee maker",
+      text: "cheapest leather bag",
       sort: "best-match",
     });
 
     // Assert
     expect(outcome.sortOptions).toEqual([
-      { sort: "best-match", label: "Best match", isSelected: false, text: "compact coffee maker" },
-      {
-        sort: "lowest-price",
-        label: "Lowest price",
-        isSelected: true,
-        text: "compact coffee maker",
-      },
-      { sort: "top-rated", label: "Top rated", isSelected: false, text: "compact coffee maker" },
+      { sort: "best-match", label: "Best match", isSelected: false, text: "leather bag" },
+      { sort: "lowest-price", label: "Lowest price", isSelected: true, text: "leather bag" },
+      { sort: "top-rated", label: "Top rated", isSelected: false, text: "leather bag" },
     ]);
-    expect(outcome.listings.map((listing) => listing.title)).toEqual([
-      "Pour-over coffee set",
-      "Compact drip coffee maker",
-      "Single-serve coffee maker",
+    expect(outcome.listings.map((listing) => listing.name)).toEqual([
+      "White Faux Leather Backpack",
+      "Heshe Women's Leather Bag",
     ]);
     expect(outcome.listings[0]?.highlightLabel).toBe("Lowest price pick");
+  });
+
+  it("falls back to best match for an unknown sort", async () => {
+    const outcome = await container.searchCatalog.execute({ text: "laptops", sort: "random" });
+
+    expect(outcome.requestedSort).toBe("best-match");
+    expect(outcome.sortOptions.find((option) => option.isSelected)?.sort).toBe("best-match");
+  });
+
+  it("keeps a requested sort that the text does not override", async () => {
+    const outcome = await container.searchCatalog.execute({
+      text: "laptops",
+      sort: "lowest-price",
+    });
+
+    expect(outcome.requestedSort).toBe("lowest-price");
+    expect(outcome.listings[0]?.name).toBe("Lenovo Yoga 920");
+  });
+
+  it("suggests a corrected spelling through the simulated assistant", async () => {
+    const outcome = await container.searchCatalog.execute({
+      text: "wireles headphnes",
+      sort: "best-match",
+    });
+
+    expect(outcome.assistantSuggestion).toEqual({
+      label: "Try “wireless headphones”",
+      text: "wireless headphones",
+      resultCount: 3,
+    });
+  });
+
+  it("offers no assistant suggestion when the words already find products", async () => {
+    const outcome = await container.searchCatalog.execute({
+      text: "yoga laptop",
+      sort: "best-match",
+    });
+
+    expect(outcome.resultCount).toBe(1);
+    expect(outcome.assistantSuggestion).toBeNull();
   });
 
   it("returns an empty outcome for an empty query", async () => {
@@ -245,19 +235,5 @@ describe("SearchCatalog", () => {
       refinements: [],
       emptyMessage: null,
     });
-  });
-
-  it("falls back to best match for an unknown sort", async () => {
-    const outcome = await container.searchCatalog.execute({ text: "lamp", sort: "random" });
-
-    expect(outcome.requestedSort).toBe("best-match");
-    expect(outcome.sortOptions.find((option) => option.isSelected)?.sort).toBe("best-match");
-  });
-
-  it("keeps a requested sort that the text does not override", async () => {
-    const outcome = await container.searchCatalog.execute({ text: "lamp", sort: "top-rated" });
-
-    expect(outcome.requestedSort).toBe("top-rated");
-    expect(outcome.listings[0]?.title).toBe("Monitor light bar with touch control");
   });
 });

@@ -5,7 +5,7 @@ import {
   useId,
   useLayoutEffect,
 } from "react";
-import type { AssistantSuggestion, SearchOutcome } from "@/use-case";
+import type { SearchOutcome, SuggestionView } from "@/use-case";
 import { resultCountLabel } from "./format";
 import { Icon } from "./icon";
 import styles from "./search-panel.module.css";
@@ -16,14 +16,9 @@ type SearchPanelProps = {
   outcome: SearchOutcome;
   placeholder: string;
   previewLabels: readonly string[];
-  assistant: AssistantState | null;
   onTextChange: (text: string) => void;
   onTryExample: () => void;
 };
-
-export type AssistantState =
-  | { forText: string; status: "thinking"; words: readonly string[] }
-  | { forText: string; status: "suggested"; suggestion: AssistantSuggestion };
 
 export function SearchPanel({
   inputRef,
@@ -31,7 +26,6 @@ export function SearchPanel({
   outcome,
   placeholder,
   previewLabels,
-  assistant,
   onTextChange,
   onTryExample,
 }: SearchPanelProps) {
@@ -87,7 +81,9 @@ export function SearchPanel({
       {hasQuery ? (
         <>
           <UnderstoodRow outcome={outcome} onTextChange={onTextChange} />
-          {assistant !== null && <AssistantRow assistant={assistant} onTextChange={onTextChange} />}
+          {outcome.assistantSuggestion !== null && (
+            <AssistantRow suggestion={outcome.assistantSuggestion} onTextChange={onTextChange} />
+          )}
           <RefinementRow outcome={outcome} onTextChange={onTextChange} />
         </>
       ) : (
@@ -149,39 +145,24 @@ type RowProps = {
 };
 
 type AssistantRowProps = {
-  assistant: AssistantState;
+  suggestion: SuggestionView;
   onTextChange: (text: string) => void;
 };
 
-function AssistantRow({ assistant, onTextChange }: AssistantRowProps) {
+function AssistantRow({ suggestion, onTextChange }: AssistantRowProps) {
   return (
-    <div className={styles.assistantRow} aria-live="polite">
+    <div className={styles.assistantRow}>
       <span className={styles.rowLabel}>Assistant</span>
-      <AssistantContent assistant={assistant} onTextChange={onTextChange} />
+      <button
+        type="button"
+        className={styles.assistantSuggestion}
+        onClick={() => onTextChange(suggestion.text)}
+      >
+        <Icon name="sparkle" size={16} strokeWidth={2.2} className={styles.assistantIcon} />
+        {suggestion.label}
+        <span className={styles.refinementCount}>{resultCountLabel(suggestion.resultCount)}</span>
+      </button>
     </div>
-  );
-}
-
-function AssistantContent({ assistant, onTextChange }: AssistantRowProps) {
-  if (assistant.status === "thinking") {
-    return (
-      <span className={styles.assistantNote}>
-        Thinking about {assistant.words.map((word) => `“${word}”`).join(", ")}…
-      </span>
-    );
-  }
-  return (
-    <button
-      type="button"
-      className={styles.assistantSuggestion}
-      onClick={() => onTextChange(assistant.suggestion.text)}
-    >
-      <Icon name="sparkle" size={16} strokeWidth={2.2} className={styles.assistantIcon} />
-      Try “{assistant.suggestion.text}”
-      <span className={styles.refinementCount}>
-        {resultCountLabel(assistant.suggestion.resultCount)}
-      </span>
-    </button>
   );
 }
 

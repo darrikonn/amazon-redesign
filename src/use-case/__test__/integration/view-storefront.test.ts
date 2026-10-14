@@ -16,22 +16,24 @@ describe("ViewStorefront", () => {
     expect(storefront).toEqual({
       shopper: { firstName: "Robin", deliveryCity: "Reykjavik", deliveryPostalCode: "101" },
       starterQueries: STARTER_QUERIES,
-      departments: [
-        { label: "Desk lamps", query: "desk lamps" },
-        { label: "Headphones", query: "headphones" },
-        { label: "Backpacks", query: "backpacks" },
-        { label: "Coffee makers", query: "coffee makers" },
-      ],
-      isAssistantAvailable: true,
+      departments: expect.arrayContaining([
+        { label: "Phones", query: "phones" },
+        { label: "Audio devices", query: "audio devices" },
+        { label: "Sports gear", query: "sports gear" },
+      ]),
     });
   });
 
-  it("says when the assistant is unavailable", async () => {
+  it("lists a department for every category the catalogue has", async () => {
     const { container, fakes } = createTestContainer();
     fakes.identity.seedSignedInShopper(aShopper());
-    fakes.assistant.seedAvailability(false);
 
-    expect((await container.viewStorefront.execute()).isAssistantAvailable).toBe(false);
+    const storefront = await container.viewStorefront.execute();
+
+    expect(storefront.departments.map((department) => department.query)).not.toContain(
+      "computer accessories",
+    );
+    expect(storefront.departments).toHaveLength(21);
   });
 
   it("fails when nobody is signed in", async () => {
