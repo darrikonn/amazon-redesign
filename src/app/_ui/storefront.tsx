@@ -173,7 +173,7 @@ const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };
 const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
 
 // Choosing something can fold away the very control that was used (a starter query, the
-// last chip, the example arrow, a browse link), which would leave keyboard focus nowhere.
+// last chip, the example arrow), which would leave keyboard focus nowhere.
 // Focus then moves to the results headline, or back to the input on the way home.
 function useFocusRecovery(
   chosenTextRef: RefObject<string | null>,
