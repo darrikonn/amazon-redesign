@@ -1,0 +1,113 @@
+:root {
+  --color-page: #131921;
+  --color-page-glow: #2b3a4e;
+  --color-ink: #0f1111;
+  --color-on-dark: #ffffff;
+  --color-on-dark-muted: #b8c2cc;
+  --color-on-dark-subtle: #a9b4c0;
+  --color-accent: #ff9900;
+  --color-accent-soft: #ffb84d;
+  --color-accent-tint: rgba(255, 153, 0, 0.16);
+  --color-surface: #ffffff;
+  --color-surface-alt: #f7f9fa;
+  --color-surface-quiet: #f1f3f4;
+  --color-divider: #e7e9ea;
+  --color-border: #d5d9d9;
+  --color-muted: #565959;
+  --color-teal: #007185;
+  --color-teal-ink: #3d5f66;
+  --color-teal-dashed: #5e9aa6;
+  --color-teal-tint: #edfdff;
+  --color-teal-tint-hover: #ddf6fa;
+  --color-teal-hover: #f2f8f9;
+  --color-cart: #ffd814;
+  --color-success: #067d62;
+  --color-star: #f59b12;
+  --color-star-empty: #d5d9d9;
+  --color-well: #dfe4ea;
+  --color-title-hover: #c7511f;
+  --color-glass: rgba(255, 255, 255, 0.06);
+  --color-glass-hover: rgba(255, 255, 255, 0.11);
+  --color-glass-border: rgba(255, 255, 255, 0.12);
+  --color-glass-border-hover: rgba(255, 255, 255, 0.28);
+  --color-hairline-on-dark: rgba(255, 255, 255, 0.1);
+  --duration-quick: 0.12s;
+  --duration-base: 0.15s;
+  --duration-slow: 0.18s;
+  --page-width: 1328px;
+  --content-width: 1280px;
+  --search-width: 860px;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--color-page);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-on-dark);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  background-color: var(--color-page);
+  background-image: radial-gradient(
+    1100px 600px at 50% 340px,
+    var(--color-page-glow) 0%,
+    rgba(19, 25, 33, 0) 72%
+  );
+  background-repeat: no-repeat;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-quick: 0s;
+    --duration-base: 0s;
+    --duration-slow: 0s;
+  }
+}

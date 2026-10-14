@@ -1,0 +1,261 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px 10px 18px;
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  transition:
+    transform var(--duration-slow) ease,
+    box-shadow var(--duration-slow) ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.42);
+}
+
+.well {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  border-radius: 12px;
+  background: var(--color-well);
+}
+
+.well svg {
+  filter: drop-shadow(0 8px 10px rgba(15, 17, 17, 0.24));
+}
+
+.bestMatch {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-page);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.body {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px 8px 0;
+}
+
+.title {
+  display: -webkit-box;
+  min-height: 44px;
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 22px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.details {
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail,
+.thirdDetail {
+  white-space: nowrap;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.stars {
+  position: relative;
+  display: inline-block;
+  color: var(--color-star-empty);
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.starsFilled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  color: var(--color-star);
+  white-space: nowrap;
+}
+
+.ratingValue {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.highlight {
+  display: flex;
+  gap: 6px;
+  color: var(--color-success);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.highlightIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.purchase {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.price {
+  display: flex;
+  align-items: flex-start;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.priceSymbol,
+.priceCents {
+  padding-top: 4px;
+  font-size: 14px;
+}
+
+.priceDollars {
+  font-size: 32px;
+  letter-spacing: -0.01em;
+}
+
+.delivery {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.deliveryDate {
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.cartButton,
+.cartButtonAdded {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 999px;
+  transition:
+    filter var(--duration-quick) ease,
+    transform var(--duration-quick) ease;
+}
+
+.cartButton {
+  background: var(--color-cart);
+  color: var(--color-ink);
+}
+
+.cartButtonAdded {
+  background: var(--color-page);
+  color: var(--color-on-dark);
+}
+
+.cartButton:hover,
+.cartButtonAdded:hover {
+  filter: brightness(0.95);
+}
+
+.cartButton:active,
+.cartButtonAdded:active {
+  transform: scale(0.96);
+}
+
+@media (max-width: 760px) {
+  .card {
+    padding: 6px 6px 12px;
+    border-radius: 14px;
+  }
+
+  .well {
+    height: 132px;
+  }
+
+  .well svg {
+    width: 116px;
+    height: 116px;
+  }
+
+  .body {
+    padding: 10px 6px 0;
+  }
+
+  .title {
+    min-height: 60px;
+    font-size: 15px;
+    line-height: 20px;
+    -webkit-line-clamp: 3;
+  }
+
+  .thirdDetail {
+    display: none;
+  }
+
+  .rating {
+    gap: 4px;
+    font-size: 13px;
+  }
+
+  .stars {
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+
+  .priceDollars {
+    font-size: 26px;
+  }
+
+  .delivery {
+    font-size: 13px;
+  }
+
+  .cartButton,
+  .cartButtonAdded {
+    width: 44px;
+    height: 44px;
+  }
+}
