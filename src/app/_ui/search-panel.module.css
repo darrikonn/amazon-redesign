@@ -193,6 +193,46 @@
   white-space: nowrap;
 }
 
+.assistantRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 64px;
+  padding: 12px 22px;
+  border-top: 1px solid var(--color-divider);
+}
+
+.assistantNote {
+  color: var(--color-muted);
+  font-size: 15px;
+}
+
+.assistantSuggestion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 14px 8px 12px;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  background: var(--color-accent-wash);
+  color: var(--color-ink);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  transition: background var(--duration-quick) ease;
+}
+
+.assistantSuggestion:hover {
+  background: var(--color-accent-wash-hover);
+}
+
+.assistantIcon {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
 .refinementRow {
   padding-bottom: 14px;
   background: var(--color-surface-alt);
@@ -244,6 +284,7 @@
 
   .previewRow,
   .understoodRow,
+  .assistantRow,
   .refinementRow {
     padding-right: 14px;
     padding-left: 14px;

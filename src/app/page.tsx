@@ -1,4 +1,4 @@
-import { createContainer } from "@/composition";
+import { createServerContainer } from "@/composition/server";
 import { type RawSearchParameters, readSearchParameters } from "./_ui/search-url";
 import { Storefront } from "./_ui/storefront";
 
@@ -8,7 +8,7 @@ type HomePageProps = {
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const search = readSearchParameters(await searchParams);
-  const container = createContainer();
+  const container = createServerContainer();
   const storefront = await container.viewStorefront.execute();
   const [outcome, preview] = await Promise.all([
     container.searchCatalog.execute(search),

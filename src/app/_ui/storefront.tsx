@@ -6,7 +6,7 @@ import type { ProductId, SearchSort } from "@/core";
 import type { CartSummary, SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { GlowGradient } from "./product-illustration";
 import { ResultSection } from "./result-section";
-import { SearchPanel } from "./search-panel";
+import { type AssistantState, SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
 import { ShortcutList } from "./shortcut-list";
 import { SiteFooter } from "./site-footer";
@@ -29,6 +29,7 @@ export function Storefront({ initialOutcome, initialPreviewLabels, storefront }:
   const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
   const demo = useTypingDemo(storefront.starterQueries, text === "");
   const previewLabels = usePreviewLabels(container, demo.placeholder, initialPreviewLabels);
+  const assistant = useAssistant(container, outcome);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hasQuery = text.trim() !== "";
 
@@ -66,6 +67,7 @@ export function Storefront({ initialOutcome, initialPreviewLabels, storefront }:
             outcome={outcome}
             placeholder={demo.placeholder}
             previewLabels={previewLabels}
+            assistant={assistant}
             onTextChange={setText}
             onTryExample={() => setText(demo.example)}
           />
@@ -132,6 +134,44 @@ function usePreviewLabels(
   }, [container, placeholder]);
 
   return labels;
+}
+
+// The assistant costs a model call, so it waits for the shopper to stop typing and only
+// asks about text that still has words the interpreter did not understand.
+const ASSISTANT_PAUSE_IN_MILLISECONDS = 700;
+
+function useAssistant(container: Container, outcome: SearchOutcome): AssistantState | null {
+  const [state, setState] = useState<AssistantState | null>(null);
+  const { text } = outcome;
+  const unrecognizedWords = outcome.unrecognizedWords.join(" ");
+
+  useEffect(() => {
+    if (unrecognizedWords === "") return;
+    let isCurrent = true;
+    const timer = window.setTimeout(() => {
+      setState({ forText: text, status: "thinking", words: unrecognizedWords.split(" ") });
+      container.askAssistant.execute({ text }).then(
+        (suggestion) => {
+          if (!isCurrent) return;
+          setState(
+            suggestion === null
+              ? { forText: text, status: "nothing" }
+              : { forText: text, status: "suggested", suggestion },
+          );
+        },
+        (error: unknown) => {
+          reportError(error);
+          if (isCurrent) setState({ forText: text, status: "nothing" });
+        },
+      );
+    }, ASSISTANT_PAUSE_IN_MILLISECONDS);
+    return () => {
+      isCurrent = false;
+      window.clearTimeout(timer);
+    };
+  }, [container, text, unrecognizedWords]);
+
+  return state !== null && state.forText === text ? state : null;
 }
 
 function Hero() {
