@@ -1,3 +1,4 @@
+export * from "./assistant";
 export * from "./cart";
 export * from "./data-loader";
 export * from "./identity";

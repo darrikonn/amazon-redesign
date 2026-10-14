@@ -9,6 +9,11 @@ export type { Illustration, IllustrationShape } from "./product/illustration";
 export type { Product, ProductId } from "./product/product";
 export type { ProductRepository } from "./product/product-repository";
 export type {
+  AssistantVocabulary,
+  QueryAssistant,
+  RephraseRequest,
+} from "./search/query-assistant";
+export type {
   Interpretation,
   SearchIntent,
   UnderstoodTerm,
