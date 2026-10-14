@@ -1,5 +1,8 @@
+export { AskAssistant, type AskAssistantRequest, type AssistantSuggestion } from "./ask-assistant";
 export type { CartSummary } from "./cart-summary";
 export { PreviewQuery, type QueryPreview } from "./preview-query";
+export { type RephrasedQuery, RephraseQuery, type RephraseQueryRequest } from "./rephrase-query";
+export { ASSISTANT_RULES } from "./rephrase-request";
 export {
   type ProductListing,
   SearchCatalog,

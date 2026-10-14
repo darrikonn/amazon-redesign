@@ -13,6 +13,7 @@ export type SearchOutcome = {
   requestedSort: SearchSort;
   hasQuery: boolean;
   understood: readonly UnderstoodTermView[];
+  unrecognizedWords: readonly string[];
   resultCount: number;
   headline: string;
   sortOptions: readonly SortOptionView[];
@@ -89,6 +90,7 @@ function toOutcome(result: SearchResult, requestedSort: SearchSort): SearchOutco
       label: term.label,
       textWithoutTerm: removePhrase(result.text, term.phrase),
     })),
+    unrecognizedWords: result.interpretation.intent.keywords,
     resultCount: result.matchCount,
     headline: result.headline,
     sortOptions: sortOptionsFor(result),
