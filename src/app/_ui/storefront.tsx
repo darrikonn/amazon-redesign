@@ -10,7 +10,7 @@ import { ProductModal } from "./product-modal";
 import type { ProductPreview } from "./product-preview";
 import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
-import { productIdIn, searchUrl } from "./search-url";
+import { searchUrl } from "./search-url";
 import { ShortcutList } from "./shortcut-list";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -37,6 +37,7 @@ export function Storefront({ initialOutcome, initialProductId, storefront }: Sto
   const demo = useTypingDemo(storefront.starterQueries, text === "" && isIdle);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const productModal = useProductModal(initialProductId);
+  useAddressInStepWithScreen(searchText, sort, productModal.productId);
   const [productPreview, setProductPreview] = useState<ProductPreview | null>(null);
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
@@ -180,12 +181,6 @@ function useSearchOutcome(
   useEffect(() => {
     latestRequest.current += 1;
     const request = latestRequest.current;
-    // Keeps an open product and its history marker; only the search part changes.
-    window.history.replaceState(
-      window.history.state,
-      "",
-      searchUrl({ text, sort, productId: productIdIn(window.location.href) }),
-    );
     container.searchCatalog.execute({ text, sort }).then((next) => {
       // Only the newest search may update the screen, so a slow early one never wins.
       if (request !== latestRequest.current) return;
@@ -195,6 +190,15 @@ function useSearchOutcome(
   }, [container, text, sort]);
 
   return { outcome, lastResults };
+}
+
+// The address always says what the screen shows: the search that ran, its sort, and the
+// open product. It is written after every change has rendered, including a Back or
+// Forward, so a search that landed while a product was open is never lost from it.
+function useAddressInStepWithScreen(text: string, sort: SearchSort, productId: ProductId | null) {
+  useEffect(() => {
+    window.history.replaceState(window.history.state, "", searchUrl({ text, sort, productId }));
+  }, [text, sort, productId]);
 }
 
 const EMPTY_CART: CartSummary = { productIds: [], itemCount: 0 };

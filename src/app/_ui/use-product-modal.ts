@@ -9,47 +9,42 @@ export type ProductModalState = {
 };
 
 // The open product lives in the address, so Back closes the modal, Forward reopens it,
-// and a shared link opens it straight away (ADR 0029).
+// and a shared link opens it straight away (ADR 0029). Which search the address shows is
+// kept in step with the screen by the storefront, not here.
 export function useProductModal(initialProductId: ProductId | null): ProductModalState {
   const [productId, setProductId] = useState(initialProductId);
-  // Whether the current history entry is one that opening a product pushed, so closing
-  // can step back to the entry before it instead of piling up entries. It is tracked here
-  // because the framework keeps its own data in `history.state`.
-  const isOnPushedEntryRef = useRef(false);
-  // The search may have changed while the product was open (a pending search can land),
-  // so the address that Back returns to is brought up to date with the screen.
-  const addressAfterBackRef = useRef<string | null>(null);
+  // history.back() lands later, so a second close before it lands must not step back again.
+  const isGoingBackRef = useRef(false);
 
   useEffect(() => {
     function followHistory() {
-      const address = addressAfterBackRef.current;
-      addressAfterBackRef.current = null;
-      if (address !== null) window.history.replaceState(window.history.state, "", address);
-      const shownProductId = productIdIn(window.location.href);
-      isOnPushedEntryRef.current = shownProductId !== null;
-      setProductId(shownProductId);
+      isGoingBackRef.current = false;
+      setProductId(productIdIn(window.location.href));
     }
     window.addEventListener("popstate", followHistory);
     return () => window.removeEventListener("popstate", followHistory);
   }, []);
 
   const open = useCallback((nextProductId: ProductId) => {
-    const address = withProduct(window.location.href, nextProductId);
-    window.history.pushState(window.history.state, "", address);
-    isOnPushedEntryRef.current = true;
+    const state = { ...window.history.state, [OPENED_PRODUCT]: true };
+    window.history.pushState(state, "", withProduct(window.location.href, nextProductId));
     setProductId(nextProductId);
   }, []);
 
   const close = useCallback(() => {
-    const addressWithoutProduct = withProduct(window.location.href, null);
-    if (isOnPushedEntryRef.current) {
-      addressAfterBackRef.current = addressWithoutProduct;
+    if (isGoingBackRef.current) return;
+    if (window.history.state?.[OPENED_PRODUCT] === true) {
+      isGoingBackRef.current = true;
       window.history.back();
       return;
     }
-    window.history.replaceState(window.history.state, "", addressWithoutProduct);
     setProductId(null);
   }, []);
 
   return { productId, open, close };
 }
+
+// Marks a history entry that opening a product pushed, so closing steps back to the entry
+// before it instead of piling up entries. It sits in history.state beside the framework's
+// own keys, so it survives a reload.
+const OPENED_PRODUCT = "openedProduct";
