@@ -12,7 +12,7 @@ Unit tests for components need realistic entities, and integration tests need th
 
 Builders for test data live in `src/test-support`, exported from its `index.ts`, and are named `a<Entity>` (`aProduct`, `aShopper`). Each returns a complete, valid entity and takes a `Partial` of overrides, so a test states only the fields its assertion depends on.
 
-Only test files import `@/test-support`. Production code never does, and `src/test-support` imports only `@/core` types.
+Only test files import `@/test-support`. Production code never does. Besides builders, `src/test-support` holds shared test infrastructure: `startLocalServer`, a real HTTP server on a random local port that stands in for a remote API in adapter tests, and `empty-module.ts`, which the test runner substitutes for `server-only`. Builders import only `@/core` types; test infrastructure may also use Node built-ins.
 
 Exception: acceptance tests that pin the reference screens (the result counts, suggestions, and headlines the designs show) seed the fake with the bundled `CATALOG` from `@/infrastructure`, because those screens were drawn from exactly that catalog. Every other test builds the products it needs.
 

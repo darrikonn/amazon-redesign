@@ -11,6 +11,8 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/__test__/**/*.test.ts", "src/**/__test__/**/*.test.tsx"],
+    // Sandbox tests call real external systems and need secrets; `yarn test:sandbox` runs them.
+    exclude: ["**/node_modules/**", "src/**/__test__/sandbox/**"],
     environment: "node",
   },
 });
