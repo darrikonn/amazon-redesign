@@ -35,13 +35,13 @@ describe("parseDummyJsonResponse", () => {
   });
 
   it("accepts a product without a brand", () => {
-    const { brand: _, ...withoutBrand } = dummyJsonProduct;
-
-    expect(parseDummyJsonResponse({ products: [withoutBrand] })[0]?.brand).toBeNull();
+    expect(
+      parseDummyJsonResponse({ products: [without(dummyJsonProduct, "brand")] })[0]?.brand,
+    ).toBeNull();
   });
 
   it("fails loudly when a field the app needs is missing", () => {
-    const { shippingInformation: _, ...broken } = dummyJsonProduct;
+    const broken = without(dummyJsonProduct, "shippingInformation");
 
     expect(() => parseDummyJsonResponse({ products: [broken] })).toThrow('"shippingInformation"');
   });
@@ -64,3 +64,7 @@ describe("parseFakeStoreResponse", () => {
     expect(product).toMatchObject({ priceInDollars: 55.99, rating: 4.7, reviewCount: 500 });
   });
 });
+
+function without(record: Record<string, unknown>, key: string): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(record).filter(([name]) => name !== key));
+}
