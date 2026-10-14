@@ -11,4 +11,9 @@ export {
 } from "./search-catalog";
 export { ToggleCartItem, type ToggleCartItemRequest } from "./toggle-cart-item";
 export { ViewCart } from "./view-cart";
-export { type ShopperGreeting, type Storefront, ViewStorefront } from "./view-storefront";
+export {
+  type Department,
+  type ShopperGreeting,
+  type Storefront,
+  ViewStorefront,
+} from "./view-storefront";

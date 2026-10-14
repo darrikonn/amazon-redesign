@@ -16,6 +16,12 @@ describe("ViewStorefront", () => {
     expect(storefront).toEqual({
       shopper: { firstName: "Robin", deliveryCity: "Reykjavik", deliveryPostalCode: "101" },
       starterQueries: STARTER_QUERIES,
+      departments: [
+        { label: "Desk lamps", query: "desk lamps" },
+        { label: "Headphones", query: "headphones" },
+        { label: "Backpacks", query: "backpacks" },
+        { label: "Coffee makers", query: "coffee makers" },
+      ],
     });
   });
 
