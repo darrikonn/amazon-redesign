@@ -18,7 +18,11 @@ export const BROWSER_HISTORY: AddressHistory = {
   back: () => window.history.back(),
 };
 
+// An address that is already showing is not written again: on a page's first render the
+// framework has not yet stored its own state, and a write then would leave the entry
+// without it, so stepping Back onto it would reload the page.
 export function replaceAddress(url: string) {
+  if (url === `${window.location.pathname}${window.location.search}`) return;
   window.history.replaceState(isProductEntry() ? { [OPENED_PRODUCT]: true } : {}, "", url);
 }
 

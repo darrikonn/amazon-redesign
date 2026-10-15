@@ -10,6 +10,8 @@ import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
 import { DEFAULT_SORT, searchUrl } from "./search-url";
 import { useDisclosure } from "./use-disclosure";
+import { useInertOutside } from "./use-inert-outside";
+import { PHONE_MEDIA, useMatchesMedia } from "./use-matches-media";
 
 type DepartmentMenuProps = {
   departments: readonly Department[];
@@ -18,6 +20,8 @@ type DepartmentMenuProps = {
 export function DepartmentMenu({ departments }: DepartmentMenuProps) {
   const { search } = useBrowsing();
   const { isOpen, toggle, close, panelId, containerRef, toggleRef } = useDisclosure();
+  const isDrawer = useMatchesMedia(PHONE_MEDIA);
+  useInertOutside(containerRef, isOpen && isDrawer);
 
   function dismiss() {
     close();

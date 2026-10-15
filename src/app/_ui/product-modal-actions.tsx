@@ -72,7 +72,7 @@ export function CartButton({ productId, name, availability }: CartButtonProps) {
     <button
       type="button"
       className={isInCart ? styles.cartButtonAdded : styles.cartButton}
-      aria-label={isInCart ? `Remove ${name} from cart` : `Add ${name} to cart`}
+      aria-label={isInCart ? `In cart: remove ${name}` : `Add to cart: ${name}`}
       disabled={availability === "loading" && !isInCart}
       onClick={() => {
         toggleCart(productId).catch(reportError);

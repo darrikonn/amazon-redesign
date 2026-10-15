@@ -12,6 +12,7 @@ import styles from "./cart-page-view.module.css";
 import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
 import { FieldError } from "./field-error";
+import { focusAfterRemoval } from "./focus-after-removal";
 import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
@@ -46,7 +47,12 @@ export function CartPageView() {
       return;
     }
     announce(`${line.name} removed from your cart. Subtotal ${subtotal}.`);
-    focusAfterRemoving(lines, line.productId, titleRef.current);
+    focusAfterRemoval(
+      lines.map((candidate) => candidate.productId),
+      line.productId,
+      quantityIdFor,
+      titleRef.current,
+    );
   }
 
   return (
@@ -89,22 +95,6 @@ export function CartPageView() {
       )}
     </main>
   );
-}
-
-// The deleted line's controls are gone, so focus moves to the next line's quantity, or the
-// one before it, or the heading when the cart is now empty.
-function focusAfterRemoving(
-  lines: readonly CartLineView[],
-  removedId: ProductId,
-  heading: HTMLElement | null,
-) {
-  const index = lines.findIndex((line) => line.productId === removedId);
-  const neighbour = lines[index + 1] ?? lines[index - 1];
-  requestAnimationFrame(() => {
-    const target =
-      neighbour === undefined ? null : document.getElementById(quantityIdFor(neighbour.productId));
-    (target ?? heading)?.focus();
-  });
 }
 
 function quantityIdFor(productId: ProductId): string {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type MouseEvent, useState } from "react";
+import { type MouseEvent, useRef, useState } from "react";
 import type { Department } from "@/use-case";
 import { AccountMenu } from "./account-menu";
 import { AmazonLogo } from "./amazon-logo";
@@ -30,6 +30,20 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
   const pathname = usePathname();
   const signIn = signInHref(useCurrentAddress());
   const [isChoosingLocation, setIsChoosingLocation] = useState(false);
+  // The account menu's Change button is gone once the dialog closes, so the menu says where
+  // focus goes back to instead; the browser returns it to the phone line's button itself.
+  const returnFocusRef = useRef<(() => void) | null>(null);
+
+  function chooseLocation(returnFocus: (() => void) | null) {
+    returnFocusRef.current = returnFocus;
+    setIsChoosingLocation(true);
+  }
+
+  function closeLocation() {
+    setIsChoosingLocation(false);
+    returnFocusRef.current?.();
+    returnFocusRef.current = null;
+  }
 
   // On the home page the logo clears the search in place, like a fresh visit.
   function goHome(event: MouseEvent<HTMLAnchorElement>) {
@@ -47,11 +61,11 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
         </Link>
       </div>
       <div className={styles.navigation}>
-        <AccountMenu onChangeLocation={() => setIsChoosingLocation(true)} />
+        <AccountMenu onChangeLocation={chooseLocation} />
         <Link
           href={SHOP_PLACES.cart.href}
           className={styles.cartLink}
-          aria-label={`Cart, ${pluralize(cart.itemCount, "item", "items")}`}
+          aria-label={`Cart ${pluralize(cart.itemCount, "item", "items")}`}
         >
           <Icon name="cart" size={24} />
           <span className={styles.cartWord}>Cart</span>
@@ -68,15 +82,13 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
           type="button"
           className={styles.phoneDelivery}
           aria-haspopup="dialog"
-          onClick={() => setIsChoosingLocation(true)}
+          onClick={() => chooseLocation(null)}
         >
           <Icon name="pin" size={16} />
           Delivering to {deliveryLocationLabel(shopper)}
         </button>
       )}
-      {shopper !== null && (
-        <LocationDialog isOpen={isChoosingLocation} onClose={() => setIsChoosingLocation(false)} />
-      )}
+      {shopper !== null && <LocationDialog isOpen={isChoosingLocation} onClose={closeLocation} />}
     </header>
   );
 }

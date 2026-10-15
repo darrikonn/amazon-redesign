@@ -11,7 +11,7 @@ import { useCurrentAddress } from "./use-current-address";
 import { useDisclosure } from "./use-disclosure";
 
 type AccountMenuProps = {
-  onChangeLocation: () => void;
+  onChangeLocation: (returnFocus: () => void) => void;
 };
 
 const ACCOUNT_PLACES = [
@@ -41,8 +41,8 @@ export function AccountMenu({ onChangeLocation }: AccountMenuProps) {
         aria-controls={panelId}
         aria-label={
           shopper === null
-            ? "Account and lists, signed out"
-            : `Account and lists for ${shopper.firstName}, delivering to ${location}`
+            ? "Hello, sign in, Account & Lists"
+            : `Hello, ${shopper.firstName}, delivering to ${location}, account and lists`
         }
         onClick={toggle}
       >
@@ -76,7 +76,7 @@ export function AccountMenu({ onChangeLocation }: AccountMenuProps) {
               className={styles.change}
               onClick={() => {
                 close();
-                onChangeLocation();
+                onChangeLocation(() => toggleRef.current?.focus());
               }}
             >
               Change

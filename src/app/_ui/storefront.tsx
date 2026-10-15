@@ -48,6 +48,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
     setSort,
   });
   useAddressInStepWithScreen(searchText, sort, productModal.productId);
+  useTopWhenResultsStart(isShowingResults);
   useDocumentTitle(outcome.hasQuery ? shopTitle(outcome.headline) : HOME_TITLE);
   // While the home page is open, the header's department menu and logo search in place.
   useInPlaceSearch(choose);
@@ -102,6 +103,16 @@ function useAddressInStepWithScreen(text: string, sort: SearchSort, productId: P
   useEffect(() => {
     replaceAddress(searchUrl({ text, sort, productId }));
   }, [text, sort, productId]);
+}
+
+// The hero folds away above the bar when the first results arrive, so a shopper who typed
+// from further down the home page would be left with the bar, and the caret, off screen.
+function useTopWhenResultsStart(isShowingResults: boolean) {
+  const wasShowingRef = useRef(isShowingResults);
+  useEffect(() => {
+    if (isShowingResults && !wasShowingRef.current) scrollToTop();
+    wasShowingRef.current = isShowingResults;
+  }, [isShowingResults]);
 }
 
 const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;

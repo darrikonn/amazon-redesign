@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useId, useRef, useState } from "react";
+import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import field from "./field.module.css";
 import { FieldError } from "./field-error";
 import { Icon } from "./icon";
@@ -22,6 +22,11 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
   const [error, setError] = useState<string | null>(null);
 
   useModalDialog(dialogRef, isOpen);
+  // The ZIP code is the only thing the dialog asks for, so it gets the first focus, ready to
+  // type over.
+  useEffect(() => {
+    if (isOpen) inputRef.current?.select();
+  }, [isOpen]);
 
   // An earlier mistake should not greet the shopper the next time the dialog opens.
   function close() {
