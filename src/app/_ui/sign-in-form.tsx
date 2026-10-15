@@ -1,8 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { type FormEvent, useId, useState } from "react";
+import { type FormEvent, useId, useRef, useState } from "react";
 import { AmazonLogo } from "./amazon-logo";
+import field from "./field.module.css";
+import { FieldError } from "./field-error";
 import { useSession } from "./session-context";
 import page from "./shop-page.module.css";
 import styles from "./sign-in-form.module.css";
@@ -18,6 +20,7 @@ export function SignInForm({ returnPath }: SignInFormProps) {
   const errorId = useId();
   const [error, setError] = useState<string | null>(null);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,7 +33,8 @@ export function SignInForm({ returnPath }: SignInFormProps) {
       return;
     }
     setIsSigningIn(false);
-    setError("Enter your email address, such as darri@example.com.");
+    setError("That doesn’t look like an email address. Check it reads like darri@example.com.");
+    inputRef.current?.focus();
   }
 
   return (
@@ -44,10 +48,11 @@ export function SignInForm({ returnPath }: SignInFormProps) {
           Email
         </label>
         <input
+          ref={inputRef}
           id={inputId}
           name="email"
           type="email"
-          className={styles.input}
+          className={field.input}
           autoComplete="email"
           inputMode="email"
           aria-invalid={error !== null}
@@ -59,9 +64,7 @@ export function SignInForm({ returnPath }: SignInFormProps) {
             darri.konn@example.com is greeted as Darri.
           </p>
         ) : (
-          <p id={errorId} className={styles.error} role="alert">
-            {error}
-          </p>
+          <FieldError id={errorId} message={error} />
         )}
         <button type="submit" className={page.primaryButton} disabled={isSigningIn}>
           {isSigningIn ? "Signing in" : "Continue"}

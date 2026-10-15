@@ -1,6 +1,8 @@
 "use client";
 
 import { type FormEvent, useId, useRef, useState } from "react";
+import field from "./field.module.css";
+import { FieldError } from "./field-error";
 import { Icon } from "./icon";
 import styles from "./location-dialog.module.css";
 import { useSession } from "./session-context";
@@ -14,6 +16,7 @@ type LocationDialogProps = {
 export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
   const { shopper, changeDeliveryLocation } = useSession();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const inputId = useId();
   const errorId = useId();
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +37,7 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
       close();
     } else {
       setError("Enter a five-digit US ZIP code, such as 10001.");
+      inputRef.current?.focus();
     }
   }
 
@@ -54,16 +58,17 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
           </button>
         </div>
         <p className={styles.lede}>
-          Delivery options and estimates are shown for the ZIP code you choose.
+          Your orders go to this ZIP code. Delivery is free everywhere we deliver.
         </p>
         <label htmlFor={inputId} className={styles.label}>
           ZIP code
         </label>
         <div className={styles.row}>
           <input
+            ref={inputRef}
             id={inputId}
             name="postalCode"
-            className={styles.input}
+            className={`${field.input} ${styles.input}`}
             inputMode="numeric"
             autoComplete="postal-code"
             maxLength={5}
@@ -75,11 +80,7 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
             Apply
           </button>
         </div>
-        {error !== null && (
-          <p id={errorId} className={styles.error} role="alert">
-            {error}
-          </p>
-        )}
+        {error !== null && <FieldError id={errorId} message={error} />}
       </form>
     </dialog>
   );

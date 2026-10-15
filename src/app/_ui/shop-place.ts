@@ -38,7 +38,7 @@ export const SHOP_PLACES = {
   cart: { href: "/cart", icon: "cart", title: "Your cart", description: "Ready when you are" },
   help: {
     href: "/help",
-    icon: "sparkle",
+    icon: "help",
     title: "Help",
     description: "Delivery, returns, and accessibility",
   },
