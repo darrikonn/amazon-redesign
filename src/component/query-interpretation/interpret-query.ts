@@ -99,20 +99,85 @@ type ScannedPhrase = {
   groups: RegExpExecArray;
 };
 
+// What has been read from the query so far. Each fact is recorded with the words it was
+// read from, so the chips can say what was understood.
 class IntentDraft {
   readonly terms: UnderstoodTerm[] = [];
-  category: CategoryId | null = null;
-  minimumPriceInCents: number | null = null;
-  maximumPriceInCents: number | null = null;
-  maximumDeliveryDays: number | null = null;
-  minimumRating: number | null = null;
-  prefersLowestPrice = false;
-  color: Color | null = null;
-  readonly tags: Tag[] = [];
-  readonly keywords: string[] = [];
+  private category: CategoryId | null = null;
+  private minimumPriceInCents: number | null = null;
+  private maximumPriceInCents: number | null = null;
+  private maximumDeliveryDays: number | null = null;
+  private minimumRating: number | null = null;
+  private prefersLowestPrice = false;
+  private color: Color | null = null;
+  private readonly tags: Tag[] = [];
+  private readonly keywords: string[] = [];
 
-  understand(kind: UnderstoodTermKind, label: string, phrase: string): void {
-    this.terms.push({ kind, label, phrase });
+  rateAtLeast(rating: number, phrase: string): void {
+    this.minimumRating = rating;
+    this.understand("rating", `Rated ${rating} and up`, phrase);
+  }
+
+  priceBetween(lowestInCents: number, highestInCents: number, phrase: string): void {
+    this.minimumPriceInCents = lowestInCents;
+    this.maximumPriceInCents = highestInCents;
+    this.understand(
+      "price",
+      `${formatDollars(lowestInCents)} to ${formatDollars(highestInCents)}`,
+      phrase,
+    );
+  }
+
+  priceUnder(highestInCents: number, phrase: string): void {
+    this.maximumPriceInCents = highestInCents;
+    this.understand("price", `Under ${formatDollars(highestInCents)}`, phrase);
+  }
+
+  priceOver(lowestInCents: number, phrase: string): void {
+    this.minimumPriceInCents = lowestInCents;
+    this.understand("price", `Over ${formatDollars(lowestInCents)}`, phrase);
+  }
+
+  arriveWithin(days: number, label: string, phrase: string): void {
+    this.maximumDeliveryDays = days;
+    this.understand("delivery", label, phrase);
+  }
+
+  cheapestFirst(phrase: string): void {
+    this.prefersLowestPrice = true;
+    this.understand("lowest-price", "Cheapest first", phrase);
+  }
+
+  inColor(color: Color, phrase: string): void {
+    this.color = color;
+    this.understand("color", colorLabel(color), phrase);
+  }
+
+  hasTag(tag: Tag): boolean {
+    return this.tags.includes(tag);
+  }
+
+  withTag(tag: Tag, phrase: string): void {
+    this.tags.push(tag);
+    this.understand("tag", tagLabel(tag), phrase);
+  }
+
+  hasCategory(): boolean {
+    return this.category !== null;
+  }
+
+  inCategory(category: CategoryId, phrase: string): void {
+    this.category = category;
+    this.understand("category", categoryChipLabel(category), phrase);
+  }
+
+  hasKeyword(word: string): boolean {
+    return this.keywords.includes(word);
+  }
+
+  withKeyword(word: string): void {
+    this.keywords.push(word);
+    this.understand("keyword", `“${word}”`, word);
   }
 
   intent(): SearchIntent {
@@ -128,14 +193,20 @@ class IntentDraft {
       keywords: [...this.keywords],
     };
   }
+
+  private understand(kind: UnderstoodTermKind, label: string, phrase: string): void {
+    this.terms.push({ kind, label, phrase });
+  }
 }
 
 function readRating(scanner: QueryScanner, draft: IntentDraft): void {
   const scanned = scanner.take(RATING_PATTERN);
   if (scanned === null) return;
   const stars = scanned.groups[1];
-  draft.minimumRating = stars === undefined ? INTERPRETATION_RULES.topRatedMinimum : Number(stars);
-  draft.understand("rating", `Rated ${draft.minimumRating} and up`, scanned.phrase);
+  draft.rateAtLeast(
+    stars === undefined ? INTERPRETATION_RULES.topRatedMinimum : Number(stars),
+    scanned.phrase,
+  );
 }
 
 function readPrice(scanner: QueryScanner, draft: IntentDraft): void {
@@ -149,53 +220,48 @@ function readPriceRange(scanner: QueryScanner, draft: IntentDraft): boolean {
   if (scanned === null) return false;
   const firstInCents = parseAmountInCents(scanned.groups[1]);
   const secondInCents = parseAmountInCents(scanned.groups[2]);
-  draft.minimumPriceInCents = Math.min(firstInCents, secondInCents);
-  draft.maximumPriceInCents = Math.max(firstInCents, secondInCents);
-  const label = `${formatDollars(draft.minimumPriceInCents)} to ${formatDollars(draft.maximumPriceInCents)}`;
-  draft.understand("price", label, scanned.phrase);
+  draft.priceBetween(
+    Math.min(firstInCents, secondInCents),
+    Math.max(firstInCents, secondInCents),
+    scanned.phrase,
+  );
   return true;
 }
 
 function readMaximumPrice(scanner: QueryScanner, draft: IntentDraft): void {
   const scanned = scanner.take(MAXIMUM_PRICE_PATTERN);
   if (scanned === null) return;
-  draft.maximumPriceInCents = parseAmountInCents(scanned.groups[1]);
-  draft.understand("price", `Under ${formatDollars(draft.maximumPriceInCents)}`, scanned.phrase);
+  draft.priceUnder(parseAmountInCents(scanned.groups[1]), scanned.phrase);
 }
 
 function readMinimumPrice(scanner: QueryScanner, draft: IntentDraft): void {
   const scanned = scanner.take(MINIMUM_PRICE_PATTERN);
   if (scanned === null) return;
-  draft.minimumPriceInCents = parseAmountInCents(scanned.groups[1]);
-  draft.understand("price", `Over ${formatDollars(draft.minimumPriceInCents)}`, scanned.phrase);
+  draft.priceOver(parseAmountInCents(scanned.groups[1]), scanned.phrase);
 }
 
 function readDelivery(scanner: QueryScanner, draft: IntentDraft): void {
   const tomorrow = scanner.take(TOMORROW_PATTERN);
   if (tomorrow !== null) {
-    draft.maximumDeliveryDays = INTERPRETATION_RULES.tomorrowInDays;
-    draft.understand("delivery", "Arrives tomorrow", tomorrow.phrase);
+    draft.arriveWithin(INTERPRETATION_RULES.tomorrowInDays, "Arrives tomorrow", tomorrow.phrase);
     return;
   }
   const thisWeek = scanner.take(THIS_WEEK_PATTERN);
   if (thisWeek === null) return;
-  draft.maximumDeliveryDays = INTERPRETATION_RULES.thisWeekInDays;
-  draft.understand("delivery", "Arrives this week", thisWeek.phrase);
+  draft.arriveWithin(INTERPRETATION_RULES.thisWeekInDays, "Arrives this week", thisWeek.phrase);
 }
 
 function readLowestPrice(scanner: QueryScanner, draft: IntentDraft): void {
   const scanned = scanner.take(LOWEST_PRICE_PATTERN, PHRASE_GROUP);
   if (scanned === null) return;
-  draft.prefersLowestPrice = true;
-  draft.understand("lowest-price", "Cheapest first", scanned.phrase);
+  draft.cheapestFirst(scanned.phrase);
 }
 
 function readColor(scanner: QueryScanner, draft: IntentDraft): void {
   for (const entry of COLOR_PHRASES) {
     const scanned = scanner.take(wholePhrasePattern([entry.phrase]), PHRASE_GROUP);
     if (scanned === null) continue;
-    draft.color = entry.id;
-    draft.understand("color", colorLabel(entry.id), scanned.phrase);
+    draft.inColor(entry.id, scanned.phrase);
     return;
   }
 }
@@ -204,16 +270,11 @@ function readColor(scanner: QueryScanner, draft: IntentDraft): void {
 // read before the tag "sports" can take half of it.
 function readTagsAndCategory(scanner: QueryScanner, draft: IntentDraft): void {
   for (const entry of TAG_AND_CATEGORY_PHRASES) {
-    if (entry.kind === "tag" ? draft.tags.includes(entry.id) : draft.category !== null) continue;
+    if (entry.kind === "tag" ? draft.hasTag(entry.id) : draft.hasCategory()) continue;
     const scanned = scanner.take(wholePhrasePattern([entry.phrase]), PHRASE_GROUP);
     if (scanned === null) continue;
-    if (entry.kind === "tag") {
-      draft.tags.push(entry.id);
-      draft.understand("tag", tagLabel(entry.id), scanned.phrase);
-    } else {
-      draft.category = entry.id;
-      draft.understand("category", categoryChipLabel(entry.id), scanned.phrase);
-    }
+    if (entry.kind === "tag") draft.withTag(entry.id, scanned.phrase);
+    else draft.inCategory(entry.id, scanned.phrase);
   }
 }
 
@@ -228,9 +289,8 @@ const TAG_AND_CATEGORY_PHRASES: readonly TagOrCategoryPhrase[] = [
 
 function readKeywords(scanner: QueryScanner, draft: IntentDraft): void {
   for (const word of scanner.leftoverWords()) {
-    if (!isKeyword(word) || draft.keywords.includes(word)) continue;
-    draft.keywords.push(word);
-    draft.understand("keyword", `“${word}”`, word);
+    if (!isKeyword(word) || draft.hasKeyword(word)) continue;
+    draft.withKeyword(word);
   }
 }
 

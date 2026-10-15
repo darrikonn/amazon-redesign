@@ -14,12 +14,25 @@ export type Purchase = {
 // Products from delivered orders that were kept, counted in units: the ones bought most
 // often first, then the most recently bought.
 export function buyAgainPurchases(orders: readonly Order[], now: Date): Purchase[] {
-  const purchases = new Map<ProductId, { count: number; lastPlacedAt: number }>();
-  for (const order of orders) {
-    if (!isDelivered(order, now)) continue;
+  return [...countKeptPurchases(orders, now).entries()]
+    .sort(
+      ([, first], [, second]) =>
+        second.count - first.count || second.lastPlacedAt - first.lastPlacedAt,
+    )
+    .slice(0, BUY_AGAIN_RULES.maximumProducts)
+    .map(([productId, purchase]) => ({ productId, timesBought: purchase.count }));
+}
+
+type KeptPurchase = {
+  count: number;
+  lastPlacedAt: number;
+};
+
+function countKeptPurchases(orders: readonly Order[], now: Date): Map<ProductId, KeptPurchase> {
+  const purchases = new Map<ProductId, KeptPurchase>();
+  for (const order of orders.filter((candidate) => isDelivered(candidate, now))) {
     const placedAt = new Date(order.placedAt).getTime();
-    for (const line of order.lines) {
-      if (isReturned(order, line.productId)) continue;
+    for (const line of order.lines.filter((candidate) => !isReturned(order, candidate.productId))) {
       const previous = purchases.get(line.productId);
       purchases.set(line.productId, {
         count: (previous?.count ?? 0) + line.quantity,
@@ -27,11 +40,5 @@ export function buyAgainPurchases(orders: readonly Order[], now: Date): Purchase
       });
     }
   }
-  return [...purchases.entries()]
-    .sort(
-      ([, first], [, second]) =>
-        second.count - first.count || second.lastPlacedAt - first.lastPlacedAt,
-    )
-    .slice(0, BUY_AGAIN_RULES.maximumProducts)
-    .map(([productId, purchase]) => ({ productId, timesBought: purchase.count }));
+  return purchases;
 }

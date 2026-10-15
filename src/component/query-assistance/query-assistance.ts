@@ -31,19 +31,29 @@ export function suggestRewrite(catalog: readonly Product[], text: string): Rewri
   if (trimmed === "" || trimmed.length > ASSISTANCE_RULES.maximumTextLength) return null;
   const { intent } = interpretQuery(trimmed);
   if (intent.keywords.length === 0 || filterProducts(catalog, intent).length > 0) return null;
-  const corrections = intent.keywords.map((word) => ({
-    word,
-    replacement: closestKnownPhrase(word),
-  }));
+  const corrections = intent.keywords.map(correctionFor);
   if (corrections.every((correction) => correction.replacement === null)) return null;
-  const rewritten = corrections.reduce(
+  return acceptRewrite(catalog, applyCorrections(trimmed, corrections), intent.keywords.length);
+}
+
+type Correction = {
+  word: string;
+  replacement: string | null;
+};
+
+function correctionFor(word: string): Correction {
+  return { word, replacement: closestKnownPhrase(word) };
+}
+
+// A word with no close match is dropped; the others are swapped for their match.
+function applyCorrections(text: string, corrections: readonly Correction[]): string {
+  return corrections.reduce(
     (current, { word, replacement }) =>
       replacement === null
         ? removePhrase(current, word)
         : replacePhrase(current, word, replacement),
-    trimmed,
+    text,
   );
-  return acceptRewrite(catalog, rewritten, intent.keywords.length);
 }
 
 type KnownPhrase = {
