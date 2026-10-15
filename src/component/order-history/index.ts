@@ -6,7 +6,7 @@ export {
   orderIdFor,
   orderItemsFor,
   orderLineFor,
-} from "./order-line";
+} from "./new-order";
 export {
   isReturnable,
   isReturned,

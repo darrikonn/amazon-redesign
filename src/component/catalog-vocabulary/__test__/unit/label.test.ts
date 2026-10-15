@@ -3,6 +3,7 @@ import {
   categoryLabel,
   categoryPlural,
   colorLabel,
+  departmentLabel,
   tagInSentence,
   tagLabel,
   tagPhrase,
@@ -12,6 +13,7 @@ describe("labels", () => {
   it("names categories in the singular and plural", () => {
     expect(categoryLabel("audio")).toBe("audio device");
     expect(categoryPlural("audio")).toBe("audio devices");
+    expect(departmentLabel("audio")).toBe("Audio devices");
   });
 
   it("names tags for chips, sentences, and suggestions", () => {

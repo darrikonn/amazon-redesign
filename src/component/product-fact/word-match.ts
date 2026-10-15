@@ -1,4 +1,4 @@
-import { wholePhrasePattern } from "../query-interpretation";
+import { wholePhrasePattern } from "../text";
 
 export function containsAnyWord(text: string, words: readonly string[]): boolean {
   const lowered = text.toLowerCase();

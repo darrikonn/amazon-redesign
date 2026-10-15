@@ -13,3 +13,18 @@ export function compareText(first: string, second: string): number {
   if (first === second) return 0;
   return first < second ? -1 : 1;
 }
+
+// Matches any of the phrases as whole words, so "red" never matches inside "shredder".
+// Group 1 is the leading boundary character, group 2 the phrase itself.
+export function wholePhrasePattern(phrases: readonly string[]): RegExp {
+  const alternatives = phrases.map(escapeForPattern).join("|");
+  return new RegExp(`(^|[^a-z0-9])(${alternatives})(?![a-z0-9])`);
+}
+
+export function collapseWhitespace(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+function escapeForPattern(phrase: string): string {
+  return phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

@@ -1,8 +1,8 @@
 import type { Interpretation, Product, SearchIntent, Tag } from "@/core";
-import { categoryPlural, tagLabel, tagPhrase } from "../catalog-vocabulary";
+import { categoryPlural, departmentLabel, tagLabel, tagPhrase } from "../catalog-vocabulary";
 import { mostCommonFirst } from "../collection";
 import { appendPhrase, formatDollars, INTERPRETATION_RULES } from "../query-interpretation";
-import { capitalize } from "../text";
+
 import { countResults } from "./count-results";
 
 export const REFINEMENT_RULES = {
@@ -61,10 +61,7 @@ function narrowsResults(resultCount: number, currentCount: number): boolean {
 function categoryCandidates(intent: SearchIntent, matches: readonly Product[]): Candidate[] {
   if (intent.category !== null) return [];
   const categories = [...new Set(matches.map((product) => product.category))];
-  return categories.map((id) => {
-    const name = categoryPlural(id);
-    return { label: capitalize(name), phrase: name };
-  });
+  return categories.map((id) => ({ label: departmentLabel(id), phrase: categoryPlural(id) }));
 }
 
 function priceCandidates(intent: SearchIntent, matches: readonly Product[]): Candidate[] {

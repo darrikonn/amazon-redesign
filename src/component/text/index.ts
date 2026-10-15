@@ -1,1 +1,7 @@
-export { capitalize, compareText, joinWithAnd } from "./text";
+export {
+  capitalize,
+  collapseWhitespace,
+  compareText,
+  joinWithAnd,
+  wholePhrasePattern,
+} from "./text";

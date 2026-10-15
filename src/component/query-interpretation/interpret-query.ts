@@ -8,8 +8,8 @@ import type {
   UnderstoodTermKind,
 } from "@/core";
 import { colorLabel, tagLabel } from "../catalog-vocabulary";
+import { wholePhrasePattern } from "../text";
 import { formatDollars, parseAmountInCents } from "./money";
-import { wholePhrasePattern } from "./phrase";
 import {
   CATEGORY_PHRASES,
   COLOR_PHRASES,

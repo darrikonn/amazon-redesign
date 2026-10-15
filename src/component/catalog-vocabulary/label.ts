@@ -11,6 +11,11 @@ export function categoryPlural(category: CategoryId): string {
   return CATEGORY_MAP[category].plural;
 }
 
+// "Audio devices": the plural as a department or chip names it.
+export function departmentLabel(category: CategoryId): string {
+  return capitalize(categoryPlural(category));
+}
+
 export function tagLabel(tag: Tag): string {
   return TAG_RULES[tag].label;
 }

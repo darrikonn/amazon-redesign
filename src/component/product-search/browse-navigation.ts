@@ -1,9 +1,9 @@
 import type { CategoryId, Interpretation, Product, Tag } from "@/core";
 import { CATEGORY_IDS } from "@/core";
-import { categoryPlural, tagLabel, tagPhrase } from "../catalog-vocabulary";
+import { categoryPlural, departmentLabel, tagLabel, tagPhrase } from "../catalog-vocabulary";
 import { mostCommonFirst } from "../collection";
 import { interpretQuery } from "../query-interpretation";
-import { capitalize, compareText } from "../text";
+import { compareText } from "../text";
 
 export const NAVIGATION_RULES = {
   maximumGroupLinks: 8,
@@ -72,7 +72,7 @@ function departmentEntry(context: NavigationContext, category: CategoryId): Navi
   const inCategory = catalog.filter((product) => product.category === category);
   return {
     link: {
-      label: capitalize(categoryPlural(category)),
+      label: departmentLabel(category),
       productCount: inCategory.length,
       text: categoryPlural(category),
       isCurrent: isExactly(interpretation, category, null),

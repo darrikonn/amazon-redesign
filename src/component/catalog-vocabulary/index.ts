@@ -14,6 +14,7 @@ export {
   categoryLabel,
   categoryPlural,
   colorLabel,
+  departmentLabel,
   tagInSentence,
   tagLabel,
   tagPhrase,
