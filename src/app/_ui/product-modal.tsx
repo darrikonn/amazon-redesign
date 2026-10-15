@@ -1,27 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import {
-  type KeyboardEvent,
-  type ReactNode,
-  type RefObject,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import type { ProductId } from "@/core";
-import type { ProductView, ReviewView, ViewProduct } from "@/use-case";
-import { deliveryLabel, formatRating, formatReviewDate, pluralize } from "./format";
+import type { ProductView, ViewProduct } from "@/use-case";
+import { deliveryLabel } from "./format";
 import { Icon } from "./icon";
 import { type CarouselControl, ImageCarousel } from "./image-carousel";
 import { Price } from "./price";
+import { ProductInformation } from "./product-information";
 import styles from "./product-modal.module.css";
+import { CartButton, cartAvailability, SaveButton } from "./product-modal-actions";
 import type { ProductPreview } from "./product-preview";
-import { withProduct } from "./search-url";
-import { signInHref } from "./sign-in-href";
 import { StarRating } from "./star-rating";
-import { useCurrentAddress } from "./use-current-address";
+import { useModalDialog } from "./use-modal-dialog";
 
 type ProductModalProps = {
   productId: ProductId | null;
@@ -189,15 +180,6 @@ function useProductView(
   return loaded !== null && loaded.id === productId ? loaded : null;
 }
 
-function useModalDialog(dialogRef: RefObject<HTMLDialogElement | null>, isOpen: boolean) {
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (dialog === null) return;
-    if (isOpen && !dialog.open) dialog.showModal();
-    if (!isOpen && dialog.open) dialog.close();
-  }, [dialogRef, isOpen]);
-}
-
 function previewImages(preview: ProductPreview | null): readonly string[] {
   return preview === null || preview.image === null ? [] : [preview.image];
 }
@@ -210,169 +192,5 @@ function LoadingDetails() {
       <span className={styles.loadingLine} />
       <span className={styles.loadingLineShort} />
     </div>
-  );
-}
-
-function ProductInformation({ view }: { view: ProductView }) {
-  return (
-    <>
-      {view.features.length > 0 && (
-        <ul className={styles.features} aria-label="Features">
-          {view.features.map((feature) => (
-            <li key={feature} className={styles.feature}>
-              {feature}
-            </li>
-          ))}
-        </ul>
-      )}
-      {view.description !== null && <p className={styles.description}>{view.description}</p>}
-      <dl className={styles.facts}>
-        {view.availability !== null && (
-          <Fact label="Availability">
-            <span className={view.availability.canBuy ? styles.inStock : styles.outOfStock}>
-              {view.availability.label}
-            </span>
-          </Fact>
-        )}
-        {view.facts.map((fact) => (
-          <Fact key={fact.label} label={fact.label}>
-            {fact.value}
-          </Fact>
-        ))}
-      </dl>
-      <Reviews rating={view.rating} reviews={view.reviews} />
-    </>
-  );
-}
-
-function Fact({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className={styles.fact}>
-      <dt className={styles.factLabel}>{label}</dt>
-      <dd className={styles.factValue}>{children}</dd>
-    </div>
-  );
-}
-
-type ReviewsProps = {
-  rating: number;
-  reviews: readonly ReviewView[];
-};
-
-function Reviews({ rating, reviews }: ReviewsProps) {
-  const headingId = useId();
-  return (
-    <section className={styles.reviews} aria-labelledby={headingId}>
-      <h3 id={headingId} className={styles.sectionTitle}>
-        Ratings and reviews
-      </h3>
-      <div className={styles.ratingSummary}>
-        <span className={styles.ratingValue}>{formatRating(rating)}</span>
-        <div>
-          <StarRating rating={rating} isLarge showsValue={false} />
-          <p className={styles.reviewCount}>{pluralize(reviews.length, "review", "reviews")}</p>
-        </div>
-      </div>
-      <ul className={styles.reviewList}>
-        {reviews.map((review) => (
-          <li key={review.id} className={styles.review}>
-            <span className={styles.avatar} aria-hidden="true">
-              {initialsOf(review.reviewerName)}
-            </span>
-            <div className={styles.reviewBody}>
-              <p className={styles.reviewer}>
-                <strong>{review.reviewerName}</strong>
-                <time className={styles.reviewDate} dateTime={review.date}>
-                  {formatReviewDate(review.date)}
-                </time>
-              </p>
-              <StarRating rating={review.rating} showsValue={false} />
-              <p className={styles.comment}>{review.comment}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function initialsOf(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter((part) => part !== "")
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join("");
-}
-
-type SaveButtonProps = {
-  productId: ProductId;
-  name: string;
-  isSignedIn: boolean;
-  isSaved: boolean;
-  onToggleSaved: (productId: ProductId) => void;
-};
-
-// Signed out, it asks for sign-in and comes back to this product.
-function SaveButton({ productId, name, isSignedIn, isSaved, onToggleSaved }: SaveButtonProps) {
-  const address = useCurrentAddress();
-  if (!isSignedIn) {
-    return (
-      <Link
-        href={signInHref(withProduct(address, productId))}
-        className={styles.saveButton}
-        aria-label={`Sign in to save ${name} to your list`}
-      >
-        <Icon name="heart" size={22} strokeWidth={2.2} />
-      </Link>
-    );
-  }
-  return (
-    <button
-      type="button"
-      className={isSaved ? styles.saveButtonSaved : styles.saveButton}
-      aria-label={isSaved ? `Remove ${name} from your list` : `Save ${name} to your list`}
-      onClick={() => onToggleSaved(productId)}
-    >
-      <Icon name="heart" size={22} strokeWidth={2.2} />
-    </button>
-  );
-}
-
-type CartAvailability = "loading" | "buyable" | "sold-out";
-
-// Until the details say whether the product is in stock, the button waits.
-function cartAvailability(view: ProductView | null): CartAvailability {
-  if (view === null) return "loading";
-  return view.availability?.canBuy === false ? "sold-out" : "buyable";
-}
-
-type CartButtonProps = {
-  productId: ProductId;
-  name: string;
-  availability: CartAvailability;
-  isInCart: boolean;
-  onToggleCart: (productId: ProductId) => void;
-};
-
-function CartButton({ productId, name, availability, isInCart, onToggleCart }: CartButtonProps) {
-  if (availability === "sold-out" && !isInCart) {
-    return (
-      <button type="button" className={styles.cartButton} disabled>
-        Out of stock
-      </button>
-    );
-  }
-  return (
-    <button
-      type="button"
-      className={isInCart ? styles.cartButtonAdded : styles.cartButton}
-      aria-label={isInCart ? `Remove ${name} from cart` : `Add ${name} to cart`}
-      disabled={availability === "loading" && !isInCart}
-      onClick={() => onToggleCart(productId)}
-    >
-      <Icon name={isInCart ? "check" : "add-to-cart"} size={22} strokeWidth={2.4} />
-      {isInCart ? "In cart" : "Add to cart"}
-    </button>
   );
 }

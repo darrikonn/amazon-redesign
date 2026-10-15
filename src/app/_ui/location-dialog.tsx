@@ -1,9 +1,10 @@
 "use client";
 
-import { type FormEvent, useEffect, useId, useRef, useState } from "react";
+import { type FormEvent, useId, useRef, useState } from "react";
 import { Icon } from "./icon";
 import styles from "./location-dialog.module.css";
 import { useShop } from "./shop-context";
+import { useModalDialog } from "./use-modal-dialog";
 
 type LocationDialogProps = {
   isOpen: boolean;
@@ -17,12 +18,7 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
   const errorId = useId();
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (dialog === null) return;
-    if (isOpen && !dialog.open) dialog.showModal();
-    if (!isOpen && dialog.open) dialog.close();
-  }, [isOpen]);
+  useModalDialog(dialogRef, isOpen);
 
   // An earlier mistake should not greet the shopper the next time the dialog opens.
   function close() {

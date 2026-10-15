@@ -45,6 +45,22 @@ export function ResultSection({
     if (shouldReturnToTop(mainRef.current, anchor)) scrollToTop();
   }
 
+  const grid = (
+    <ul className={styles.grid}>
+      {outcome.listings.map((listing) => (
+        <li key={listing.id} className={styles.gridItem}>
+          <ProductCard
+            listing={listing}
+            href={productHref(listing.id)}
+            isInCart={cartProductIds.includes(listing.id)}
+            onOpen={onOpenProduct}
+            onToggleCart={onToggleCart}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <section
       aria-label="Results"
@@ -74,36 +90,10 @@ export function ResultSection({
                 Nothing matches everything you asked for, so these leave that one thing out.
               </p>
             </div>
-            <ul className={styles.grid}>
-              {outcome.listings.map((listing) => (
-                <li key={listing.id} className={styles.gridItem}>
-                  <ProductCard
-                    listing={listing}
-                    href={productHref(listing.id)}
-                    isInCart={cartProductIds.includes(listing.id)}
-                    onOpen={onOpenProduct}
-                    onToggleCart={onToggleCart}
-                  />
-                </li>
-              ))}
-            </ul>
+            {grid}
           </section>
         )}
-        {outcome.closestMatchesHeading === null && outcome.listings.length > 0 && (
-          <ul className={styles.grid}>
-            {outcome.listings.map((listing) => (
-              <li key={listing.id} className={styles.gridItem}>
-                <ProductCard
-                  listing={listing}
-                  href={productHref(listing.id)}
-                  isInCart={cartProductIds.includes(listing.id)}
-                  onOpen={onOpenProduct}
-                  onToggleCart={onToggleCart}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
+        {outcome.closestMatchesHeading === null && outcome.listings.length > 0 && grid}
       </div>
       {/* After the results in the DOM, so keyboard and screen reader order puts products
           first; on desktop the grid draws the panel in the left column. */}
