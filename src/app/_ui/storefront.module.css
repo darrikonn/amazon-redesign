@@ -40,6 +40,7 @@
 }
 
 .title {
+  text-wrap: balance;
   font-size: clamp(40px, 5.4vw, 76px);
   font-weight: 800;
   letter-spacing: -0.03em;

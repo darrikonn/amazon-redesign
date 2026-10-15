@@ -1,4 +1,5 @@
 .dialog {
+  --focus-ring: var(--color-accent-deep);
   /* White surfaces draw form controls light, not in the page's dark scheme. */
   color-scheme: light;
   width: min(420px, calc(100vw - 32px));

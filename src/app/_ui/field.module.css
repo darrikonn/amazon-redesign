@@ -11,6 +11,7 @@
 }
 
 .input[aria-invalid="true"] {
+  --focus-ring: var(--color-destructive);
   border-width: 2px;
   border-color: var(--color-destructive);
 }

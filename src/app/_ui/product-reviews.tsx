@@ -1,6 +1,6 @@
 import { useId } from "react";
 import type { ReviewView } from "@/use-case";
-import { formatRating, formatReviewDate, pluralize } from "./format";
+import { formatRating, formatReviewDate, pluralize, typeset } from "./format";
 import styles from "./product-modal.module.css";
 import { StarRating } from "./star-rating";
 
@@ -38,7 +38,7 @@ export function ProductReviews({ id, rating, reviews }: ProductReviewsProps) {
                 </time>
               </p>
               <StarRating rating={review.rating} showsValue={false} />
-              <p className={styles.comment}>{review.comment}</p>
+              <p className={styles.comment}>{typeset(review.comment)}</p>
             </div>
           </li>
         ))}

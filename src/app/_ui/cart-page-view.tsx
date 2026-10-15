@@ -13,7 +13,7 @@ import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
 import { FieldError } from "./field-error";
 import { focusAfterRemoval } from "./focus-after-removal";
-import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
+import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice, typeset } from "./format";
 import { Icon } from "./icon";
 import { PageHeading } from "./page-heading";
 import { isPlainClick } from "./plain-click";
@@ -124,7 +124,7 @@ function CartLine({ line, onChangeQuantity }: CartLineProps) {
               openProduct({ ...line, id: line.productId });
             }}
           >
-            {line.name}
+            {typeset(line.name)}
           </Link>
         </h2>
         {line.shortage === null ? (
@@ -215,7 +215,8 @@ function Checkout({ cart, onPlaced }: CheckoutProps) {
       ) : (
         <>
           <p className={styles.deliverTo}>
-            Delivering to {shopper.fullName}, {deliveryLocationLabel(shopper)}
+            Delivering to {shopper.fullName},{" "}
+            <span className={styles.location}>{deliveryLocationLabel(shopper)}</span>
           </p>
           <button
             type="button"

@@ -41,6 +41,7 @@
 
 /* Photos on the left, details on the right, like Instagram's post view. */
 .frame {
+  --focus-ring: var(--color-accent-deep);
   /* White surfaces draw form controls light, not in the page's dark scheme. */
   color-scheme: light;
   position: relative;
@@ -114,9 +115,9 @@
 
 .brand {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -429,9 +430,25 @@
     overflow-y: visible;
   }
 
+  /* The price and delivery take the first row and the buttons the second, so the delivery
+     line never wraps beside them. */
   .footer {
     position: sticky;
     bottom: 0;
+    flex-wrap: wrap;
+    gap: 10px;
     padding: 12px 16px;
+  }
+
+  .footer > :first-child {
+    flex: 1 1 100%;
+  }
+
+  .actions {
+    flex: 1 1 100%;
+  }
+
+  .actions > :last-child {
+    flex: 1 1 auto;
   }
 }

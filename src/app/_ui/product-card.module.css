@@ -1,4 +1,5 @@
 .card {
+  --focus-ring: var(--color-accent-deep);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -39,6 +40,11 @@
 .photo {
   padding: 16px;
   object-fit: contain;
+}
+
+/* A badge takes the top of the well, so the photo starts below it rather than under it. */
+.well:has(.dealBadge, .bestMatch) .photo {
+  padding-top: 44px;
 }
 
 .dealBadge {
@@ -110,7 +116,7 @@
 }
 
 .titleLink:focus-visible::after {
-  outline: 3px solid var(--color-accent-soft);
+  outline: 3px solid var(--focus-ring, var(--color-accent-soft));
   outline-offset: 2px;
 }
 

@@ -120,9 +120,11 @@ ul {
   list-style: none;
 }
 
-/* One focus ring for every control, and for scrolling panes the keyboard can reach. */
+/* One focus ring for every control, and for scrolling panes the keyboard can reach. White
+   surfaces set --focus-ring to the deeper orange, since the soft one barely shows on white
+   (WCAG 1.4.11). */
 :focus-visible {
-  outline: 3px solid var(--color-accent-soft);
+  outline: 3px solid var(--focus-ring, var(--color-accent-soft));
   outline-offset: 2px;
 }
 

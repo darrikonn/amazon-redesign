@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { type FormEvent, useId, useRef, useState } from "react";
-import { AmazonLogo } from "./amazon-logo";
 import field from "./field.module.css";
 import { FieldError } from "./field-error";
 import { useSession } from "./session-context";
@@ -45,9 +44,6 @@ export function SignInForm({ returnPath }: SignInFormProps) {
   return (
     <main className={`${page.main} ${page.narrow}`}>
       <form className={`${page.panel} ${styles.form}`} onSubmit={submit} noValidate>
-        <div className={styles.logo}>
-          <AmazonLogo />
-        </div>
         <h1 className={styles.title}>Sign in</h1>
         <label htmlFor={inputId} className={styles.label}>
           Email

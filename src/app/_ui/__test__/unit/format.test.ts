@@ -8,6 +8,7 @@ import {
   formatReviewDate,
   resultCountLabel,
   splitPrice,
+  typeset,
 } from "@/app/_ui/format";
 
 describe("format", () => {
@@ -53,5 +54,10 @@ describe("format", () => {
 
   it("separates thousands in the dollar part", () => {
     expect(splitPrice(3_699_999)).toEqual({ dollars: "36,999", cents: "99", spoken: "$36,999.99" });
+  });
+
+  it("sets catalogue apostrophes the way the shop's own copy does", () => {
+    expect(typeset("Women's Wrist Watch")).toBe("Women’s Wrist Watch");
+    expect(typeset("'Quoted' text")).toBe("'Quoted' text");
   });
 });

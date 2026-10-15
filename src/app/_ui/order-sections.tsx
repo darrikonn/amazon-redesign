@@ -24,7 +24,9 @@ export function TrackingSection({ order }: SectionProps) {
           <li key={step.stage} className={step.isReached ? styles.stepReached : styles.step}>
             <span className={styles.stepDot} aria-hidden="true" />
             <span className={styles.stepLabel}>{step.label}</span>
-            <span className={styles.stepDate}>{formatOrderDate(step.at)}</span>
+            <span className={step.isReached ? styles.stepDate : styles.stepDateExpected}>
+              {step.isReached ? formatOrderDate(step.at) : `Expected ${formatOrderDate(step.at)}`}
+            </span>
             <span className="visually-hidden">{step.isReached ? ", done" : ", to come"}</span>
           </li>
         ))}

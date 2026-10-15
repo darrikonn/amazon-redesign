@@ -67,3 +67,9 @@ const DAY_AND_DATE = new Intl.DateTimeFormat("en-US", {
 export function formatRating(rating: number): string {
   return rating.toFixed(1);
 }
+
+// The catalogue's text uses straight apostrophes ("Women's"); the shop's own copy uses
+// typographic ones, so names and descriptions are shown the same way.
+export function typeset(text: string): string {
+  return text.replace(/(\p{L})'(\p{L})/gu, "$1’$2");
+}

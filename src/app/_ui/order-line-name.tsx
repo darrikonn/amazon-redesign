@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { OrderLineView } from "@/use-case";
 import { useBrowsing } from "./browsing-context";
+import { typeset } from "./format";
 import { isPlainClick } from "./plain-click";
 import { withProduct } from "./search-url";
 
@@ -18,7 +19,7 @@ export function OrderLineName({ line, className }: OrderLineNameProps) {
   const { openProduct } = useBrowsing();
   const pathname = usePathname();
   const { rating } = line;
-  if (rating === null) return <span className={className}>{line.name}</span>;
+  if (rating === null) return <span className={className}>{typeset(line.name)}</span>;
   return (
     <Link
       href={withProduct(pathname, line.productId)}
@@ -30,7 +31,7 @@ export function OrderLineName({ line, className }: OrderLineNameProps) {
         openProduct({ ...line, id: line.productId, rating });
       }}
     >
-      {line.name}
+      {typeset(line.name)}
     </Link>
   );
 }

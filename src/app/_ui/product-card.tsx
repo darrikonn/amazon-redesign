@@ -3,7 +3,7 @@ import type { MouseEvent, ReactNode } from "react";
 import type { Color } from "@/core";
 import type { ProductListing } from "@/use-case";
 import type { CartProduct } from "./cart-context";
-import { deliveryLabel, splitPrice } from "./format";
+import { deliveryLabel, splitPrice, typeset } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
 import { Price } from "./price";
@@ -60,7 +60,7 @@ export function ProductCard({
       <div className={styles.body}>
         <h3 className={styles.title}>
           <Link href={href} className={styles.titleLink} prefetch={false} onClick={open}>
-            {listing.name}
+            {typeset(listing.name)}
           </Link>
         </h3>
         <p className={styles.details}>

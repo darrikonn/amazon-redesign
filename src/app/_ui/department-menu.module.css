@@ -20,6 +20,7 @@
 }
 
 .panel {
+  --focus-ring: var(--color-accent-deep);
   position: absolute;
   z-index: 10;
   top: 52px;
@@ -165,6 +166,21 @@
   color: var(--color-muted);
   font-size: 13px;
   font-weight: 400;
+}
+
+/* On a wider screen every department shows at once, in two columns, so none waits below
+   the panel's edge with nothing to say it is there. */
+@media (min-width: 761px) {
+  .panel {
+    width: 540px;
+  }
+
+  .departments {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    column-gap: 8px;
+  }
 }
 
 /* On a phone the menu is a drawer from the left over a dimmed page, tall enough to show

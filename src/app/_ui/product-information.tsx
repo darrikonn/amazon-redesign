@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { ProductView } from "@/use-case";
+import { typeset } from "./format";
 import styles from "./product-modal.module.css";
 import { ProductReviews } from "./product-reviews";
 
@@ -15,12 +16,14 @@ export function ProductInformation({ view, reviewsId }: ProductInformationProps)
         <ul className={styles.features} aria-label="Features">
           {view.features.map((feature) => (
             <li key={feature} className={styles.feature}>
-              {feature}
+              {typeset(feature)}
             </li>
           ))}
         </ul>
       )}
-      {view.description !== null && <p className={styles.description}>{view.description}</p>}
+      {view.description !== null && (
+        <p className={styles.description}>{typeset(view.description)}</p>
+      )}
       <dl className={styles.facts}>
         {view.availability !== null && (
           <Fact label="Availability">

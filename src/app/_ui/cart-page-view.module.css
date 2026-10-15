@@ -127,8 +127,12 @@
 }
 
 .subtotal {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 800;
+}
+
+.location {
+  white-space: nowrap;
 }
 
 .deliverTo {

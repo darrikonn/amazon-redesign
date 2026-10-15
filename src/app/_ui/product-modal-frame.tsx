@@ -1,5 +1,5 @@
 import type { ProductView } from "@/use-case";
-import { deliveryLabel, pluralize } from "./format";
+import { deliveryLabel, pluralize, typeset } from "./format";
 import { Icon } from "./icon";
 import { prefersReducedMotion } from "./motion";
 import { Price } from "./price";
@@ -31,7 +31,7 @@ export function ProductModalHeader({
       <div className={styles.titleBlock}>
         {view !== null && view.brand !== null && <p className={styles.brand}>{view.brand}</p>}
         <h2 id={titleId} className={styles.title}>
-          {summary === null ? "Loading product" : summary.name}
+          {summary === null ? "Loading product" : typeset(summary.name)}
         </h2>
         {summary !== null && (
           <div className={styles.ratingLine}>

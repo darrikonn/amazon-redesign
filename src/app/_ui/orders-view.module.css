@@ -1,4 +1,5 @@
 .order {
+  --focus-ring: var(--color-accent-deep);
   /* White surfaces draw form controls light, not in the page's dark scheme. */
   color-scheme: light;
   overflow: hidden;
@@ -29,7 +30,7 @@
   color: var(--color-muted);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 

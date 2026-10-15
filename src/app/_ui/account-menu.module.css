@@ -59,6 +59,7 @@
 }
 
 .panel {
+  --focus-ring: var(--color-accent-deep);
   position: absolute;
   z-index: 10;
   top: 58px;

@@ -1,5 +1,6 @@
 .bar,
 .barOverResults {
+  --focus-ring: var(--color-accent-deep);
   width: 100%;
   max-width: var(--search-width);
   overflow: hidden;

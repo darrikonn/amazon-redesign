@@ -24,9 +24,17 @@
   position: absolute;
   top: calc(100% - 7px);
   left: 5%;
-  width: 76%;
+  width: 63%;
   height: 13px;
   overflow: visible;
+}
+
+/* Thicker in the middle than at its ends, as the mark's swoosh is. */
+.swoosh {
+  fill: var(--color-accent);
+}
+
+.arrowhead {
   fill: none;
   stroke: var(--color-accent);
   stroke-linecap: round;

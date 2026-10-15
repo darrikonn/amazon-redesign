@@ -215,11 +215,19 @@
 }
 
 @media (max-width: 760px) {
-  /* Finger-sized rows on phones, where the panel follows the results. */
+  /* Finger-sized rows on phones, where the panel follows the results; departments are as
+     tall as the rows inside them. */
+  .departmentRow,
   .group,
   .currentGroup,
   .teaser {
     min-height: 44px;
+  }
+
+  .toggle,
+  .toggleOpen {
+    width: 44px;
+    height: 44px;
   }
 
   .navigation {

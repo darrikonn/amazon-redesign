@@ -3,11 +3,6 @@
   margin-top: clamp(0px, 6vh, 56px);
 }
 
-.logo {
-  display: flex;
-  margin-bottom: 4px;
-}
-
 .title {
   font-size: 26px;
   font-weight: 800;

@@ -30,9 +30,11 @@
   color: var(--color-on-dark-muted);
   font-size: 17px;
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
 .panel {
+  --focus-ring: var(--color-accent-deep);
   /* White surfaces draw form controls light, not in the page's dark scheme. */
   color-scheme: light;
   display: flex;
@@ -232,4 +234,12 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
+}
+
+@media (max-width: 760px) {
+  /* One action per row on a phone, so none is left alone on a line of its own. */
+  .emptyActions {
+    flex-direction: column;
+    align-self: stretch;
+  }
 }

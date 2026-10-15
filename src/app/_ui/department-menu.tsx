@@ -59,7 +59,7 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
             <Icon name="close" size={18} strokeWidth={2.6} />
           </button>
         </div>
-        <ul>
+        <ul className={styles.departments}>
           {departments.map((department) => (
             <DepartmentEntry key={department.query} department={department} onPick={pick} />
           ))}
