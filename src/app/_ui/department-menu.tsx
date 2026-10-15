@@ -19,6 +19,11 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
   const { search } = useBrowsing();
   const { isOpen, toggle, close, panelId, containerRef, toggleRef } = useDisclosure();
 
+  function dismiss() {
+    close();
+    toggleRef.current?.focus();
+  }
+
   function pick(query: string) {
     close();
     search(query);
@@ -37,8 +42,19 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
       >
         <Icon name="menu" size={22} strokeWidth={2.2} />
       </button>
+      {isOpen && <div className={styles.scrim} aria-hidden="true" onClick={dismiss} />}
       <nav id={panelId} aria-label="Departments" className={styles.panel} hidden={!isOpen}>
-        <p className={styles.heading}>Shop by department</p>
+        <div className={styles.panelHeader}>
+          <p className={styles.heading}>Shop by department</p>
+          <button
+            type="button"
+            className={styles.close}
+            aria-label="Close departments"
+            onClick={dismiss}
+          >
+            <Icon name="close" size={18} strokeWidth={2.6} />
+          </button>
+        </div>
         <ul>
           {departments.map((department) => (
             <DepartmentEntry key={department.query} department={department} onPick={pick} />

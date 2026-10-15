@@ -38,6 +38,32 @@
   display: none;
 }
 
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Only the phone drawer needs its own close button; the desktop menu hangs off its toggle. */
+.close {
+  display: none;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.close:hover {
+  background: var(--color-surface-quiet);
+}
+
+.scrim {
+  display: none;
+}
+
 .heading {
   margin-top: 6px;
   padding: 8px 12px;
@@ -139,4 +165,31 @@
   color: var(--color-muted);
   font-size: 13px;
   font-weight: 400;
+}
+
+/* On a phone the menu is a drawer from the left over a dimmed page, tall enough to show
+   the whole list without a cut-off row. */
+@media (max-width: 760px) {
+  .scrim {
+    position: fixed;
+    z-index: 20;
+    inset: 0;
+    display: block;
+    background: var(--color-scrim);
+  }
+
+  .panel {
+    position: fixed;
+    z-index: 21;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(320px, 86vw);
+    max-height: none;
+    border-radius: 0 16px 16px 0;
+  }
+
+  .close {
+    display: grid;
+  }
 }
