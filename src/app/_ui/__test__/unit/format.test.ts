@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   deliveryLabel,
+  deliveryLocationLabel,
   formatDayAndDate,
   formatOrderDate,
   formatRating,
@@ -35,6 +36,15 @@ describe("format", () => {
   it("says tomorrow for next day delivery", () => {
     expect(deliveryLabel(1)).toBe("Tomorrow");
     expect(deliveryLabel(3)).toBe("in 3 days");
+  });
+
+  it("names the delivery location by city and ZIP code, or the ZIP code alone", () => {
+    expect(deliveryLocationLabel({ deliveryCity: "Seattle", deliveryPostalCode: "98101" })).toBe(
+      "Seattle 98101",
+    );
+    expect(deliveryLocationLabel({ deliveryCity: null, deliveryPostalCode: "00501" })).toBe(
+      "00501",
+    );
   });
 
   it("formats ratings with one decimal", () => {

@@ -6,7 +6,7 @@ import { useCallback, useId, useState } from "react";
 import type { ProductId } from "@/core";
 import type { CartLineView, CartView } from "@/use-case";
 import styles from "./cart-page-view.module.css";
-import { deliveryLabel, pluralize, splitPrice } from "./format";
+import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
 import { Icon } from "./icon";
 import { ProductThumbnail } from "./product-thumbnail";
 import { useShop } from "./shop-context";
@@ -161,8 +161,7 @@ function Checkout({ cart, onPlaced }: CheckoutProps) {
       ) : (
         <>
           <p className={styles.deliverTo}>
-            Delivering to {shopper.fullName},{" "}
-            {[shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ")}
+            Delivering to {shopper.fullName}, {deliveryLocationLabel(shopper)}
           </p>
           <button
             type="button"

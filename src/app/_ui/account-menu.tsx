@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useId, useRef, useState } from "react";
 import styles from "./account-menu.module.css";
+import { deliveryLocationLabel } from "./format";
 import { Icon } from "./icon";
 import { useShop } from "./shop-context";
 import { signInHref } from "./sign-in-href";
@@ -35,10 +36,7 @@ export function AccountMenu({ onChangeLocation }: AccountMenuProps) {
     setIsOpen(false);
     toggleRef.current?.focus();
   });
-  const location =
-    shopper === null
-      ? null
-      : [shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ");
+  const location = shopper === null ? null : deliveryLocationLabel(shopper);
 
   function close() {
     setIsOpen(false);

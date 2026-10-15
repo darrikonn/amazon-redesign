@@ -7,7 +7,7 @@ import type { Department } from "@/use-case";
 import { AccountMenu } from "./account-menu";
 import { AmazonLogo } from "./amazon-logo";
 import { DepartmentMenu } from "./department-menu";
-import { pluralize } from "./format";
+import { deliveryLocationLabel, pluralize } from "./format";
 import { Icon } from "./icon";
 import { LocationDialog } from "./location-dialog";
 import { isPlainClick } from "./plain-click";
@@ -66,8 +66,7 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
           onClick={() => setIsChoosingLocation(true)}
         >
           <Icon name="pin" size={16} />
-          Delivering to{" "}
-          {[shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ")}
+          Delivering to {deliveryLocationLabel(shopper)}
         </button>
       )}
       {shopper !== null && (

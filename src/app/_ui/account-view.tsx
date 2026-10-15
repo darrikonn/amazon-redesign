@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import styles from "./account-view.module.css";
+import { deliveryLocationLabel } from "./format";
 import { Icon, type IconName } from "./icon";
 import { LocationDialog } from "./location-dialog";
 import { useShop } from "./shop-context";
@@ -32,7 +33,7 @@ export function AccountView() {
   const { shopper, signOut } = useShop();
   const [isChoosingLocation, setIsChoosingLocation] = useState(false);
   if (shopper === null) return null;
-  const location = [shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ");
+  const location = deliveryLocationLabel(shopper);
 
   return (
     <main className={page.main}>

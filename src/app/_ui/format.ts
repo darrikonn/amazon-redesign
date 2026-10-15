@@ -24,6 +24,16 @@ export function deliveryLabel(deliveryDays: number): string {
   return deliveryDays === 1 ? "Tomorrow" : `in ${deliveryDays} days`;
 }
 
+type DeliveryLocation = {
+  deliveryCity: string | null;
+  deliveryPostalCode: string;
+};
+
+// "Minneapolis 55401", or just the ZIP code where it names no city we know.
+export function deliveryLocationLabel(location: DeliveryLocation): string {
+  return [location.deliveryCity, location.deliveryPostalCode].filter(Boolean).join(" ");
+}
+
 const SHORT_DATE = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
   month: "short",

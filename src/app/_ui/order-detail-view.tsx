@@ -4,7 +4,7 @@ import Link from "next/link";
 import { type FormEvent, useCallback, useId, useState } from "react";
 import type { ProductId } from "@/core";
 import type { OrderView } from "@/use-case";
-import { formatDayAndDate, formatOrderDate, splitPrice } from "./format";
+import { deliveryLocationLabel, formatDayAndDate, formatOrderDate, splitPrice } from "./format";
 import styles from "./order-detail-view.module.css";
 import { orderStatus } from "./order-status";
 import { ProductThumbnail } from "./product-thumbnail";
@@ -86,9 +86,7 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
             </li>
           ))}
         </ol>
-        <p className={page.muted}>
-          Delivering to {[order.deliveryCity, order.deliveryPostalCode].filter(Boolean).join(" ")}
-        </p>
+        <p className={page.muted}>Delivering to {deliveryLocationLabel(order)}</p>
       </section>
       <section className={page.panel} aria-labelledby="items-heading">
         <h2 id="items-heading" className={styles.sectionTitle}>
