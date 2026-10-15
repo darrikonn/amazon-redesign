@@ -1,5 +1,9 @@
 {
   "dummyjson": {
+    "96": {
+      "reason": "DummyJSON has two watches named \"Rolex Cellini Moonphase\", one in men's and one in women's watches; the name says which, so the cards can be told apart.",
+      "name": "Rolex Cellini Moonphase, men’s"
+    },
     "101": {
       "reason": "AirPods Max are wireless headphones, but neither the source tags nor the description say so, so the wireless rule misses them.",
       "tags": ["wireless"]
@@ -7,6 +11,10 @@
     "108": {
       "reason": "The case colour is \"Plum\", which is not in the fixed colour list; purple is the nearest listed colour.",
       "color": "purple"
+    },
+    "191": {
+      "reason": "The women's watch of the two named \"Rolex Cellini Moonphase\"; see 96.",
+      "name": "Rolex Cellini Moonphase, women’s"
     }
   },
   "fakestore": {}
