@@ -4,6 +4,7 @@ import { type RefObject, useCallback, useEffect, useRef, useState } from "react"
 import type { Container } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
 import type { SearchOutcome, Storefront as StorefrontData } from "@/use-case";
+import { replaceAddress } from "./address-history";
 import { useBrowsing, useInPlaceSearch } from "./browsing-context";
 import { useCart } from "./cart-context";
 import { Collapsible } from "./collapsible";
@@ -158,7 +159,7 @@ function useSearchOutcome(
 // Forward, so a search that landed while a product was open is never lost from it.
 function useAddressInStepWithScreen(text: string, sort: SearchSort, productId: ProductId | null) {
   useEffect(() => {
-    window.history.replaceState(window.history.state, "", searchUrl({ text, sort, productId }));
+    replaceAddress(searchUrl({ text, sort, productId }));
   }, [text, sort, productId]);
 }
 

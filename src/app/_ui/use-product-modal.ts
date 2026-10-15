@@ -1,6 +1,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ProductId } from "@/core";
+import { isProductEntry, pushProductEntry, replaceAddress } from "./address-history";
 import { PRODUCT_PARAMETER, productIdIn, withProduct } from "./search-url";
 
 export type ProductModalState = {
@@ -36,25 +37,20 @@ export function useProductModal(): ProductModalState {
   }, []);
 
   const open = useCallback((nextProductId: ProductId) => {
-    const state = { ...window.history.state, [OPENED_PRODUCT]: true };
-    window.history.pushState(state, "", withProduct(window.location.href, nextProductId));
+    pushProductEntry(withProduct(window.location.href, nextProductId));
     setProductId(nextProductId);
   }, []);
 
   const close = useCallback(() => {
     if (isGoingBackRef.current) return;
-    if (window.history.state?.[OPENED_PRODUCT] === true) {
+    if (isProductEntry()) {
       isGoingBackRef.current = true;
       window.history.back();
       return;
     }
+    replaceAddress(withProduct(window.location.href, null));
     setProductId(null);
   }, []);
 
   return { productId, open, close };
 }
-
-// Marks a history entry that opening a product pushed, so closing steps back to the entry
-// before it instead of piling up entries. It sits in history.state beside the framework's
-// own keys, so it survives a reload.
-const OPENED_PRODUCT = "openedProduct";
