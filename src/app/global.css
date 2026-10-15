@@ -33,6 +33,7 @@
   --color-glass-border-hover: rgba(255, 255, 255, 0.28);
   --color-scrim: rgba(10, 14, 19, 0.72);
   --color-deal: #cc0c39;
+  --color-destructive: #b3261e;
   --color-hairline-on-dark: rgba(255, 255, 255, 0.1);
   --color-hover-on-dark: rgba(255, 255, 255, 0.08);
   --shadow-search:

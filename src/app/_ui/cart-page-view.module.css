@@ -82,20 +82,25 @@
   transform: translateY(-50%) rotate(90deg);
 }
 
+/* Text only, in the destructive colour: removing a line is the one action here that
+   loses something. */
 .deleteButton {
   height: 40px;
-  padding: 0 16px;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  background: var(--color-surface);
-  color: var(--color-ink);
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--color-destructive);
   font-size: 15px;
-  font-weight: 600;
-  transition: background var(--duration-quick) ease;
+  font-weight: 700;
 }
 
-.quantity:hover,
 .deleteButton:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.quantity:hover {
   background: var(--color-divider);
 }
 
