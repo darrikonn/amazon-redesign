@@ -32,13 +32,13 @@ describe("SearchCatalog", () => {
     expect(
       outcome.listings.map((listing) => [listing.name, listing.details, listing.highlightLabel]),
     ).toEqual([
-      ["Beats Flex Wireless Earphones", ["Beats"], "Top rated pick"],
-      ["Apple Airpods", ["Portable"], null],
+      ["Apple Airpods", ["Portable"], "Top rated pick"],
+      ["Beats Flex Wireless Earphones", ["Beats"], "Lowest price"],
     ]);
     expect(outcome.listings[0]).toMatchObject({
       isBestMatch: true,
       category: "audio",
-      priceInCents: 4999,
+      priceInCents: 12999,
       image: expect.stringContaining("cdn.dummyjson.com"),
     });
   });
@@ -56,20 +56,19 @@ describe("SearchCatalog", () => {
       outcome.refinements.map((refinement) => [refinement.label, refinement.resultCount]),
     ).toEqual([
       ["Under $100", 3],
-      ["Rated 4.5 and up", 2],
       ["Wireless", 3],
       ["Smart", 2],
-      ["Compact", 1],
       ["Portable", 1],
+      ["Compact", 1],
     ]);
     expect(outcome.listings.map((listing) => listing.name)).toEqual([
-      "Amazon Echo Plus",
+      "Apple AirPods Max Silver",
+      "Apple Airpods",
       "Apple HomePod Mini Cosmic Grey",
       "Beats Flex Wireless Earphones",
-      "Apple Airpods",
-      "Apple AirPods Max Silver",
+      "Amazon Echo Plus",
     ]);
-    expect(outcome.listings[2]?.highlightLabel).toBe("Lowest price");
+    expect(outcome.listings[3]?.highlightLabel).toBe("Lowest price");
   });
 
   it("rounds the price suggestion to $50 for expensive results", async () => {

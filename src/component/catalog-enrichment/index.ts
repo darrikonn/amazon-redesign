@@ -1,6 +1,7 @@
 export { CATALOG_OVERRIDES } from "./catalog-override";
 export {
   applyOverrides,
+  averageRating,
   buildCatalog,
   buildVocabulary,
   type Catalog,

@@ -64,7 +64,7 @@ export function normaliseDummyJsonProduct(raw: RawDummyJsonProduct): Product {
     sourceTags: raw.tags,
     priceInDollars: raw.priceInDollars,
     discountPercent: Math.round(raw.discountPercentage),
-    rating: raw.rating,
+    rating: averageRating(raw.reviews) ?? raw.rating,
     reviewCount: raw.reviews.length,
     deliveryDays: deliveryDaysFrom(raw.shippingInformation),
     image: raw.thumbnail,
@@ -86,6 +86,14 @@ export function normaliseFakeStoreProduct(raw: RawFakeStoreProduct): Product {
     image: raw.image,
     brand: null,
   });
+}
+
+// The rating shown is what the reviews say. DummyJSON's own rating field disagrees with
+// its reviews (4.8 beside reviews of 5, 4, and 1), so the reviews win wherever there are
+// any; a source without reviews keeps its own rating.
+export function averageRating(reviews: readonly { rating: number }[]): number | null {
+  if (reviews.length === 0) return null;
+  return reviews.reduce((total, review) => total + review.rating, 0) / reviews.length;
 }
 
 export function mapCategory(sourceCategory: string, title: string): CategoryId {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   applyOverrides,
+  averageRating,
   buildCatalog,
   deliveryDaysFrom,
   deriveTags,
@@ -125,6 +126,25 @@ describe("trimName", () => {
   });
 });
 
+describe("averageRating", () => {
+  it("is what the reviews say, and nothing without reviews", () => {
+    expect(averageRating([{ rating: 5 }, { rating: 4 }, { rating: 1 }])).toBeCloseTo(10 / 3);
+    expect(averageRating([])).toBeNull();
+  });
+
+  it("rounds to one decimal on the product, so 5, 4, and 1 show as 3.3", () => {
+    const reviews = [5, 4, 1].map((rating) => ({
+      reviewerName: "Reviewer",
+      rating,
+      comment: "Fine.",
+      date: "2025-04-30T09:41:02.053Z",
+    }));
+    const product = normaliseDummyJsonProduct({ ...dummyJsonProduct, rating: 4.8, reviews });
+
+    expect(product.rating).toBe(3.3);
+  });
+});
+
 describe("normaliseDummyJsonProduct", () => {
   it("builds the app's product from a DummyJSON product", () => {
     expect(normaliseDummyJsonProduct(dummyJsonProduct)).toEqual({
@@ -137,7 +157,7 @@ describe("normaliseDummyJsonProduct", () => {
       categoryPlural: "watches",
       priceInCents: 8999,
       discountPercent: 13,
-      rating: 4.2,
+      rating: 2,
       reviewCount: 3,
       deliveryDays: 4,
       color: "brown",

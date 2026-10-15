@@ -3,6 +3,6 @@
 export const STARTER_QUERIES: readonly string[] = [
   "wireless headphones under $150",
   "phone with a good camera under $300",
-  "top rated sports shoes under $150",
+  "top rated shoes under $150",
   "luxury watches that arrive this week",
 ];
