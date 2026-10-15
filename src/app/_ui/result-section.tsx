@@ -22,6 +22,8 @@ type ResultSectionProps = {
 
 export const RESULTS_HEADLINE_ID = "results-headline";
 
+const CLOSEST_HEADING_ID = "closest-matches-heading";
+
 export function ResultSection({
   outcome,
   isUpdating,
@@ -60,10 +62,34 @@ export function ResultSection({
           )}
         </div>
         {outcome.emptyMessage !== null && <EmptyState outcome={outcome} onSearch={onSearch} />}
-        {outcome.closestMatchesHeading !== null && (
-          <h3 className={styles.closestHeading}>{outcome.closestMatchesHeading}</h3>
+        {/* Closest matches are not results: they sit apart, under their own heading, so
+            nobody mistakes them for products that match everything asked for. */}
+        {outcome.closestMatchesHeading !== null && outcome.listings.length > 0 && (
+          <section className={styles.closest} aria-labelledby={CLOSEST_HEADING_ID}>
+            <div className={styles.closestIntro}>
+              <h3 id={CLOSEST_HEADING_ID} className={styles.closestHeading}>
+                {outcome.closestMatchesHeading}
+              </h3>
+              <p className={styles.closestLede}>
+                Nothing matches everything you asked for, so these leave that one thing out.
+              </p>
+            </div>
+            <ul className={styles.grid}>
+              {outcome.listings.map((listing) => (
+                <li key={listing.id} className={styles.gridItem}>
+                  <ProductCard
+                    listing={listing}
+                    href={productHref(listing.id)}
+                    isInCart={cartProductIds.includes(listing.id)}
+                    onOpen={onOpenProduct}
+                    onToggleCart={onToggleCart}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
-        {outcome.listings.length > 0 && (
+        {outcome.closestMatchesHeading === null && outcome.listings.length > 0 && (
           <ul className={styles.grid}>
             {outcome.listings.map((listing) => (
               <li key={listing.id} className={styles.gridItem}>
