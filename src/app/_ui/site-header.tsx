@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type MouseEvent, useState } from "react";
 import type { Department } from "@/use-case";
+import { AccountMenu } from "./account-menu";
 import { AmazonLogo } from "./amazon-logo";
 import { DepartmentMenu } from "./department-menu";
 import { pluralize } from "./format";
@@ -40,41 +41,8 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
           <AmazonLogo />
         </Link>
       </div>
-      <nav aria-label="Account and cart" className={styles.navigation}>
-        {shopper === null ? (
-          <Link href={signIn} className={styles.wideLink}>
-            <Icon name="pin" size={20} />
-            <Stacked eyebrow="Deliver to" strong="Sign in to choose" />
-          </Link>
-        ) : (
-          <button
-            type="button"
-            className={styles.wideLink}
-            aria-haspopup="dialog"
-            onClick={() => setIsChoosingLocation(true)}
-          >
-            <Icon name="pin" size={20} />
-            <Stacked
-              eyebrow={`Deliver to ${shopper.firstName}`}
-              strong={[shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ")}
-            />
-          </button>
-        )}
-        <Link href={shopper === null ? signIn : "/account"} className={styles.wideLink}>
-          <Stacked
-            eyebrow={shopper === null ? "Hello, sign in" : `Hello, ${shopper.firstName}`}
-            strong="Account & Lists"
-          />
-        </Link>
-        <Link href="/orders" className={styles.wideLink}>
-          <Stacked eyebrow="Returns" strong="& Orders" />
-        </Link>
-        <Link href={shopper === null ? signIn : "/account"} className={styles.phoneAccount}>
-          <span className={styles.phoneAccountName}>
-            {shopper === null ? "Sign in" : shopper.firstName}
-          </span>
-          <Icon name="chevron-right" size={14} strokeWidth={2.6} />
-        </Link>
+      <div className={styles.navigation}>
+        <AccountMenu onChangeLocation={() => setIsChoosingLocation(true)} />
         <Link
           href="/cart"
           className={styles.cartLink}
@@ -84,11 +52,11 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
           <span className={styles.cartWord}>Cart</span>
           <span className={styles.cartCount}>{cart.itemCount}</span>
         </Link>
-      </nav>
+      </div>
       {shopper === null ? (
         <Link href={signIn} className={styles.phoneDelivery}>
           <Icon name="pin" size={16} />
-          Deliver to: sign in to choose a location
+          Sign in to choose where to deliver
         </Link>
       ) : (
         <button
@@ -98,7 +66,7 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
           onClick={() => setIsChoosingLocation(true)}
         >
           <Icon name="pin" size={16} />
-          Deliver to {shopper.firstName},{" "}
+          Delivering to{" "}
           {[shopper.deliveryCity, shopper.deliveryPostalCode].filter(Boolean).join(" ")}
         </button>
       )}
@@ -106,14 +74,5 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
         <LocationDialog isOpen={isChoosingLocation} onClose={() => setIsChoosingLocation(false)} />
       )}
     </header>
-  );
-}
-
-function Stacked({ eyebrow, strong }: { eyebrow: string; strong: string }) {
-  return (
-    <span className={styles.stacked}>
-      <span className={styles.eyebrow}>{eyebrow}</span>
-      <span className={styles.strong}>{strong}</span>
-    </span>
   );
 }

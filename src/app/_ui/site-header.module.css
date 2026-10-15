@@ -20,7 +20,6 @@
 /* Every item is the same height and centred on one line, the logo included, so the bar
    reads as one row whatever is signed in. */
 .logo,
-.wideLink,
 .cartLink {
   display: flex;
   align-items: center;
@@ -37,7 +36,6 @@
 }
 
 .logo:hover,
-.wideLink:hover,
 .cartLink:hover {
   background: var(--color-hover-on-dark);
 }
@@ -52,27 +50,6 @@
   align-items: center;
   gap: 4px;
   margin-right: -12px;
-}
-
-.wideLink {
-  gap: 10px;
-  padding: 0 12px;
-}
-
-.stacked {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
-
-.eyebrow {
-  color: var(--color-on-dark-subtle);
-  font-size: 12px;
-}
-
-.strong {
-  font-size: 15px;
-  font-weight: 700;
 }
 
 .cartLink {
@@ -97,39 +74,9 @@
   line-height: 1;
 }
 
-/* On a phone the wide items give way to a short account link beside the cart and a
-   delivery line under the bar. */
-.phoneAccount,
+/* On a phone the delivery location gets its own line under the bar. */
 .phoneDelivery {
   display: none;
-}
-
-.phoneAccount {
-  align-items: center;
-  gap: 2px;
-  min-width: 0;
-  height: 44px;
-  padding: 0 6px 0 8px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  transition: background var(--duration-base) ease;
-}
-
-/* A long first name is cut short rather than pushing the cart onto a second row. */
-.phoneAccountName {
-  max-width: 84px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.phoneAccount:hover,
-.phoneDelivery:hover {
-  background: var(--color-hover-on-dark);
-}
-
-.phoneDelivery {
   flex-basis: 100%;
   align-items: center;
   gap: 6px;
@@ -145,22 +92,21 @@
   transition: background var(--duration-base) ease;
 }
 
+.phoneDelivery:hover {
+  background: var(--color-hover-on-dark);
+}
+
 @media (max-width: 760px) {
   .header {
     padding: 10px 16px;
   }
 
-  .wideLink {
-    display: none;
-  }
-
-  .phoneAccount,
   .phoneDelivery {
     display: flex;
   }
 
   /* One row at any phone width: the cart keeps its icon and count, as on Amazon's own
-     phone site, and the account link sits beside it. */
+     phone site, and the account item sits beside it. */
   .navigation {
     flex-wrap: nowrap;
     margin-left: auto;
@@ -185,13 +131,5 @@
 
   .logo {
     padding: 0 6px;
-  }
-
-  .phoneAccount svg {
-    display: none;
-  }
-
-  .phoneAccountName {
-    max-width: 64px;
   }
 }

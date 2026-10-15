@@ -1,0 +1,217 @@
+.menu {
+  position: relative;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 10px 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition: background var(--duration-base) ease;
+}
+
+.toggle:hover,
+.toggle[aria-expanded="true"] {
+  background: var(--color-hover-on-dark);
+}
+
+.pin {
+  flex: none;
+}
+
+.stacked {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.eyebrow {
+  color: var(--color-on-dark-subtle);
+  font-size: 12px;
+}
+
+.strong {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.compact {
+  display: none;
+}
+
+.caret {
+  flex: none;
+  color: var(--color-on-dark-subtle);
+  transform: rotate(90deg);
+  transition: transform var(--duration-quick) ease;
+}
+
+.toggle[aria-expanded="true"] .caret {
+  transform: rotate(-90deg);
+}
+
+.panel {
+  position: absolute;
+  z-index: 10;
+  top: 58px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 300px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-menu);
+  color-scheme: light;
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.signIn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 4px 10px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.signInButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--color-cart);
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.note {
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 12px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.locationText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.locationLabel {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.locationValue {
+  font-weight: 700;
+}
+
+.change {
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.change:hover {
+  background: var(--color-surface-alt);
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+}
+
+.link,
+.signOut {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.link:hover,
+.signOut:hover {
+  background: var(--color-teal-hover);
+}
+
+.signOut {
+  border-top: 1px solid var(--color-divider);
+  border-radius: 0 0 10px 10px;
+  color: var(--color-muted);
+}
+
+/* On a phone the item is just the name, and the location has its own line under the bar. */
+@media (max-width: 760px) {
+  .toggle {
+    height: 44px;
+    padding: 0 6px 0 8px;
+    gap: 2px;
+  }
+
+  .pin,
+  .stacked {
+    display: none;
+  }
+
+  .compact {
+    display: block;
+    max-width: 84px;
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .panel {
+    position: fixed;
+    top: 64px;
+    right: 12px;
+    width: min(300px, calc(100vw - 24px));
+  }
+}
+
+@media (max-width: 360px) {
+  .compact {
+    max-width: 64px;
+  }
+
+  .caret {
+    display: none;
+  }
+}

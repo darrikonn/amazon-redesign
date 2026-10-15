@@ -40,14 +40,14 @@ Clicking a product opens it in a modal over the results, laid out like Instagram
 
 ## Account, orders, and the cart
 
-The header, the home page shortcuts, and the menu all lead somewhere real:
+The header keeps three things beside the logo: the department menu, one account item, and the cart. The account item shows who is shopping above where orders go ("Hello, Darri" over "Minneapolis 55401"), since the delivery location decides what can be delivered, and opens everything that belongs to the account:
 
-- **Sign in** (`/sign-in`) takes only an email. There is no password; the name comes from the address (`darri.konn@example.com` is greeted as Darri). Signing out is in the menu and on the account page.
-- **Deliver to** sets the delivery ZIP code; a dozen US ZIP codes also name their city.
-- **Account & Lists** (`/account`) links to everything below, and **Your list** (`/lists`) holds products saved with the heart in a product's details.
-- **Returns & Orders** (`/orders`) lists orders with where each one is; an order's page tracks it (ordered, shipped, out for delivery, delivered) and starts a return for items still inside their return window.
+- **Sign in** (`/sign-in`) takes only an email. There is no password; the name comes from the address (`darri.konn@example.com` is greeted as Darri). Sign out is at the bottom of the account menu.
+- **Delivering to** sets the delivery ZIP code; a dozen US ZIP codes also name their city. On a phone it has its own line under the bar.
+- **Your account** (`/account`) links to everything below, and **Your lists** (`/lists`) holds products saved with the heart in a product's details.
+- **Your orders and returns** (`/orders`) lists orders with where each one is; an order's page tracks it (ordered, shipped, out for delivery, delivered) and starts a return for items still inside their return window.
 - **Cart** (`/cart`) changes quantities, deletes items, and places the order.
-- **Buy again** (`/buy-again`), **Track an order** (`/orders?show=on-the-way`), and **Today's deals** (`/deals`) are the home page shortcuts.
+- **Buy again** (`/buy-again`), **Track an order** (`/orders?show=on-the-way`), and **Today's deals** (`/deals`) are also the home page shortcuts.
 
 None of it has a backend. The session is a cookie holding the email and ZIP code; the cart, orders, returns, and list are kept in the browser's `localStorage`, so they stay on this device and survive a reload. A new shopper starts with three sample orders, marked "Sample order", so tracking, returns, and buy again have something to show. ADR 0030 records the design.
 
