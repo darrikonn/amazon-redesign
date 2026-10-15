@@ -127,6 +127,7 @@ a.lineName:hover {
 }
 
 .lineName {
+  align-self: flex-start;
   font-size: 17px;
   font-weight: 700;
 }
