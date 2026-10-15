@@ -1,7 +1,7 @@
 import type { Session, SessionStore } from "@/core";
 import { decodeSession, sessionCookieValue } from "./session-cookie";
 
-export const SESSION_ENDPOINT_PATH = "/api/session";
+const SESSION_ENDPOINT_PATH = "/api/session";
 
 export interface SessionEndpoint {
   save(session: Session): Promise<void>;

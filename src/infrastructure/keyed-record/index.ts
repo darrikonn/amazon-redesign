@@ -1,1 +1,1 @@
-export { KeyedRecords } from "./keyed-records";
+export { KeyedRecords } from "./keyed-record";

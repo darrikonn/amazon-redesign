@@ -14,7 +14,7 @@ import type { Ports } from "./container";
 
 // The shop's ports for one environment: in the browser the session goes through the
 // session endpoint; on the server it is the request's own cookie.
-export function shopPorts(requestCookies: RequestCookieJar | null): Ports {
+export function shopAdapters(requestCookies: RequestCookieJar | null): Ports {
   const storage = new BrowserKeyValueStorage();
   const clock = new SystemClock();
   return {

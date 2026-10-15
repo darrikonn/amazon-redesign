@@ -1,9 +1,9 @@
 import type { RequestCookieJar } from "@/infrastructure";
 import { assembleContainer, type Container } from "./container";
-import { shopPorts } from "./shop-port";
+import { shopAdapters } from "./shop-adapter";
 
 export function createProductionContainer(
   requestCookies: RequestCookieJar | null = null,
 ): Container {
-  return assembleContainer(shopPorts(requestCookies));
+  return assembleContainer(shopAdapters(requestCookies));
 }

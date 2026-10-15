@@ -1,14 +1,10 @@
 export {
   BrowserSessionStore,
   FetchSessionEndpoint,
-  SESSION_ENDPOINT_PATH,
   type SessionEndpoint,
 } from "./browser-session-store";
-export {
-  InMemoryCookieJar,
-  InMemorySessionEndpoint,
-  type SessionEndpointCall,
-} from "./in-memory-session-endpoint";
+export { type CookieJarCall, InMemoryCookieJar } from "./in-memory-cookie-jar";
+export { InMemorySessionEndpoint, type SessionEndpointCall } from "./in-memory-session-endpoint";
 export { InMemorySessionStore } from "./in-memory-session-store";
 export { type RequestCookieJar, RequestSessionStore } from "./request-session-store";
 export {
