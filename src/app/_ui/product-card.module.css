@@ -36,12 +36,8 @@
   filter: var(--shadow-illustration);
 }
 
-.photoFrame {
-  position: absolute;
-  inset: 16px;
-}
-
 .photo {
+  padding: 16px;
   object-fit: contain;
 }
 
@@ -229,10 +225,6 @@
   .well svg {
     width: 100px;
     height: 100px;
-  }
-
-  .photoFrame {
-    inset: 16px;
   }
 
   .body {

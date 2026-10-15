@@ -7,7 +7,7 @@ import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
 import { Price } from "./price";
 import styles from "./product-card.module.css";
-import { ProductImage } from "./product-image";
+import { ProductPhoto } from "./product-photo";
 import type { ProductPreview } from "./product-preview";
 import { StarRating } from "./star-rating";
 
@@ -38,7 +38,14 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
         {listing.deal !== null && (
           <span className={styles.dealBadge}>{listing.deal.discountPercent}% off</span>
         )}
-        <ProductImage image={listing.image} category={listing.category} />
+        {/* Decorative: the title sits right below it. */}
+        <ProductPhoto
+          image={listing.image}
+          category={listing.category}
+          alt=""
+          sizes="(max-width: 760px) 45vw, 300px"
+          className={styles.photo}
+        />
       </div>
       <div className={styles.body}>
         <h3 className={styles.title}>

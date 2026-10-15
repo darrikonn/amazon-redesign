@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { type Ref, useImperativeHandle, useRef, useState } from "react";
 import type { CategoryId } from "@/core";
 import { CategoryGlyph } from "./category-glyph";
 import { Icon } from "./icon";
 import styles from "./image-carousel.module.css";
 import { prefersReducedMotion } from "./motion";
+import { ProductPhoto } from "./product-photo";
 
 export type CarouselControl = {
   step: (direction: -1 | 1) => void;
@@ -120,26 +120,16 @@ type SlideProps = {
 
 // Every photo loads straight away: they wait off to the side of the track, where lazy
 // loading would never start them, and a swipe should land on a photo, not a blank.
-// A photo that fails to load falls back to the category glyph, as on the cards.
 function Slide({ image, name, category, isFirst }: SlideProps) {
-  const [hasFailed, setHasFailed] = useState(false);
-  if (hasFailed) {
-    return (
-      <div className={styles.glyph}>
-        <CategoryGlyph category={category} />
-      </div>
-    );
-  }
   return (
-    <Image
-      src={image}
+    <ProductPhoto
+      image={image}
+      category={category}
       alt={name}
-      fill
       sizes="(max-width: 760px) 100vw, 560px"
       className={styles.photo}
-      priority={isFirst}
       loading="eager"
-      onError={() => setHasFailed(true)}
+      priority={isFirst}
     />
   );
 }

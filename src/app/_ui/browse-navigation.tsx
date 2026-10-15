@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { type MouseEvent, useId, useState } from "react";
 import type { ProductId, SearchSort } from "@/core";
@@ -9,11 +8,11 @@ import type {
   ProductTeaserView,
 } from "@/use-case";
 import styles from "./browse-navigation.module.css";
-import { CategoryGlyph } from "./category-glyph";
 import { Collapsible } from "./collapsible";
 import { splitPrice } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
+import { ProductPhoto } from "./product-photo";
 import type { ProductPreview } from "./product-preview";
 import { searchUrl } from "./search-url";
 
@@ -210,11 +209,13 @@ function PopularProducts({
               }}
             >
               <span className={styles.teaserImage}>
-                {product.image === null ? (
-                  <CategoryGlyph category={product.category} />
-                ) : (
-                  <Image src={product.image} alt="" fill sizes="52px" className={styles.photo} />
-                )}
+                <ProductPhoto
+                  image={product.image}
+                  category={product.category}
+                  alt=""
+                  sizes="52px"
+                  className={styles.photo}
+                />
               </span>
               <span className={styles.teaserText}>
                 <span className={styles.teaserName}>{product.name}</span>

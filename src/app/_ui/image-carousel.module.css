@@ -22,8 +22,11 @@
 
 .slide {
   position: relative;
+  display: grid;
   flex: 0 0 100%;
   margin: 0;
+  place-items: center;
+  color: var(--color-ink);
   scroll-snap-align: center;
 }
 
