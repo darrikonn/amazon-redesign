@@ -85,7 +85,7 @@ describe("InMemorySavedItemRepository", () => {
     repository.reset();
 
     // Assert
-    expect(recorded).toEqual([{ method: "listByOwner", ownerId: "robin", productIds: [] }]);
+    expect(recorded).toEqual([{ method: "listByOwner", ownerId: "robin", keys: [] }]);
     expect(repository.storedItems()).toEqual([]);
   });
 });

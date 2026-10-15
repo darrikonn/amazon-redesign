@@ -1,36 +1,34 @@
 import type { Product, ProductId, ProductRepository } from "@/core";
-import { NotFoundError } from "@/core";
+import { KeyedRecords } from "../keyed-record";
 import { CATALOG } from "./catalog";
 
 export class CatalogProductRepository implements ProductRepository {
-  private readonly productsById: ReadonlyMap<ProductId, Product>;
+  private readonly products: KeyedRecords<ProductId, Product>;
 
   constructor(products: readonly Product[] = CATALOG) {
-    this.productsById = new Map(products.map((product) => [product.id, product]));
+    this.products = new KeyedRecords(
+      "product",
+      new Map(products.map((product) => [product.id, product])),
+    );
   }
 
   async get(id: ProductId): Promise<Product | null> {
-    return this.productsById.get(id) ?? null;
+    return this.products.get(id);
   }
 
   async demand(id: ProductId): Promise<Product> {
-    const product = this.productsById.get(id);
-    if (product === undefined) throw new NotFoundError("product", id);
-    return product;
+    return this.products.demand(id);
   }
 
   async getMany(ids: readonly ProductId[]): Promise<Product[]> {
-    return ids.flatMap((id) => {
-      const product = this.productsById.get(id);
-      return product === undefined ? [] : [product];
-    });
+    return this.products.getMany(ids);
   }
 
   async demandMany(ids: readonly ProductId[]): Promise<Product[]> {
-    return Promise.all(ids.map((id) => this.demand(id)));
+    return this.products.demandMany(ids);
   }
 
   async list(): Promise<Product[]> {
-    return [...this.productsById.values()];
+    return this.products.values();
   }
 }

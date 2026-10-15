@@ -7,7 +7,7 @@ export class StoredSavedItemRepository
   implements SavedItemRepository
 {
   constructor(storage: KeyValueStorage, clock: Clock) {
-    super(storage, clock, "saved", "saved item", parseSavedItem);
+    super(storage, clock, { name: "saved", label: "saved item", parseRecord: parseSavedItem });
   }
 }
 

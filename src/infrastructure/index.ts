@@ -1,6 +1,7 @@
 export * from "./cart";
 export * from "./clock";
 export * from "./data-loader";
+export * from "./keyed-record";
 export * from "./list";
 export * from "./order";
 export * from "./product";

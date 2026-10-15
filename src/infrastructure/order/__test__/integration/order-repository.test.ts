@@ -124,7 +124,7 @@ describe("InMemoryOrderRepository", () => {
     repository.reset();
 
     // Assert
-    expect(recorded).toEqual([{ method: "get", ownerId: "robin", orderIds: ["first"] }]);
+    expect(recorded).toEqual([{ method: "get", ownerId: "robin", keys: ["first"] }]);
     expect(repository.storedOrders()).toEqual([]);
   });
 });

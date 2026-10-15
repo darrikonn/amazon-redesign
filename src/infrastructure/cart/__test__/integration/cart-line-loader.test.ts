@@ -28,7 +28,7 @@ describe("createCartLineLoader", () => {
       null,
     ]);
     expect(repository.calls).toEqual([
-      { method: "getMany", ownerId: "owner-1", productIds: ["lamp", "bag"] },
+      { method: "getMany", ownerId: "owner-1", keys: ["lamp", "bag"] },
     ]);
   });
 });

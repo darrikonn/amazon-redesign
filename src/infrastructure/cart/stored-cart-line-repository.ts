@@ -7,7 +7,7 @@ export class StoredCartLineRepository
   implements CartLineRepository
 {
   constructor(storage: KeyValueStorage, clock: Clock) {
-    super(storage, clock, "cart", "cart line", parseCartLine);
+    super(storage, clock, { name: "cart", label: "cart line", parseRecord: parseCartLine });
   }
 }
 

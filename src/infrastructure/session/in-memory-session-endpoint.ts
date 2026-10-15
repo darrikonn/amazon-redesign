@@ -1,6 +1,7 @@
 import type { Session } from "@/core";
 import type { SessionEndpoint } from "./browser-session-store";
 import { type RequestCookieJar, RequestSessionStore } from "./request-session-store";
+import { encodeSession, SESSION_COOKIE_NAME } from "./session-cookie";
 
 export type SessionEndpointCall = "save" | "clear";
 
@@ -11,6 +12,11 @@ export class InMemorySessionEndpoint implements SessionEndpoint {
   readonly calls: SessionEndpointCall[] = [];
   private readonly jar = new InMemoryCookieJar();
   private readonly server = new RequestSessionStore(this.jar);
+
+  // A session the server set before the test began, as if the shopper signed in earlier.
+  seedSession(session: Session): void {
+    this.jar.set(SESSION_COOKIE_NAME, encodeSession(session));
+  }
 
   async save(session: Session): Promise<void> {
     this.calls.push("save");
@@ -49,12 +55,11 @@ export class InMemoryCookieJar implements RequestCookieJar {
     this.values.delete(name);
   }
 
-  // How the browser sees them in document.cookie: encoded, beside other cookies.
+  // How the browser sees them in document.cookie: encoded and joined.
   header(): string {
-    return [
-      "theme=dark",
-      ...[...this.values].map(([name, value]) => `${name}=${encodeURIComponent(value)}`),
-    ].join("; ");
+    return [...this.values]
+      .map(([name, value]) => `${name}=${encodeURIComponent(value)}`)
+      .join("; ");
   }
 
   reset(): void {

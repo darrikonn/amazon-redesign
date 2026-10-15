@@ -1,5 +1,5 @@
 import type { ProductDetails, ProductDetailsRepository, ProductId } from "@/core";
-import { NotFoundError } from "@/core";
+import { KeyedRecords } from "../keyed-record";
 import { parseProductDetailsFile } from "./product-details-file";
 
 type DetailsSource = () => Promise<readonly ProductDetails[]>;
@@ -7,37 +7,35 @@ type DetailsSource = () => Promise<readonly ProductDetails[]>;
 // The details file is imported on first use, so the bundler splits it into its own chunk
 // and search never downloads it (ADR 0029).
 export class CatalogProductDetailsRepository implements ProductDetailsRepository {
-  private detailsById: Promise<ReadonlyMap<ProductId, ProductDetails>> | null = null;
+  private details: Promise<KeyedRecords<ProductId, ProductDetails>> | null = null;
 
   constructor(private readonly loadDetails: DetailsSource = loadCommittedDetails) {}
 
   async get(productId: ProductId): Promise<ProductDetails | null> {
-    return (await this.byId()).get(productId) ?? null;
+    return (await this.loaded()).get(productId);
   }
 
   async demand(productId: ProductId): Promise<ProductDetails> {
-    const details = (await this.byId()).get(productId);
-    if (details === undefined) throw new NotFoundError("product details", productId);
-    return details;
+    return (await this.loaded()).demand(productId);
   }
 
   async getMany(productIds: readonly ProductId[]): Promise<ProductDetails[]> {
-    const detailsById = await this.byId();
-    return productIds.flatMap((productId) => {
-      const details = detailsById.get(productId);
-      return details === undefined ? [] : [details];
-    });
+    return (await this.loaded()).getMany(productIds);
   }
 
   async demandMany(productIds: readonly ProductId[]): Promise<ProductDetails[]> {
-    return Promise.all(productIds.map((productId) => this.demand(productId)));
+    return (await this.loaded()).demandMany(productIds);
   }
 
-  private byId(): Promise<ReadonlyMap<ProductId, ProductDetails>> {
-    this.detailsById ??= this.loadDetails().then(
-      (all) => new Map(all.map((details) => [details.productId, details])),
+  private loaded(): Promise<KeyedRecords<ProductId, ProductDetails>> {
+    this.details ??= this.loadDetails().then(
+      (all) =>
+        new KeyedRecords(
+          "product details",
+          new Map(all.map((details) => [details.productId, details])),
+        ),
     );
-    return this.detailsById;
+    return this.details;
   }
 }
 

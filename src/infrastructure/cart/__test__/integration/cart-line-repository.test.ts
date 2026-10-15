@@ -143,7 +143,7 @@ describe("InMemoryCartLineRepository", () => {
     repository.reset();
 
     // Assert
-    expect(recorded).toEqual([{ method: "listByOwner", ownerId: "owner-1", productIds: [] }]);
+    expect(recorded).toEqual([{ method: "listByOwner", ownerId: "owner-1", keys: [] }]);
     expect(repository.calls).toEqual([]);
     expect(repository.storedLines()).toEqual([]);
   });

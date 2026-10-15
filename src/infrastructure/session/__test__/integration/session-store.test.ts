@@ -53,7 +53,8 @@ describe("BrowserSessionStore", () => {
   it("signs in and out through the endpoint and reads the cookie the server set", async () => {
     // Arrange
     const endpoint = new InMemorySessionEndpoint();
-    const store = new BrowserSessionStore(endpoint, () => endpoint.cookieHeader());
+    // The browser holds other cookies beside the session.
+    const store = new BrowserSessionStore(endpoint, () => `theme=dark; ${endpoint.cookieHeader()}`);
 
     // Act
     await store.save(aSession({ email: "darri.konn@gmail.com" }));
@@ -68,6 +69,17 @@ describe("BrowserSessionStore", () => {
 });
 
 describe("InMemorySessionEndpoint", () => {
+  it("can start with a session the server set earlier, without counting it as a call", () => {
+    const endpoint = new InMemorySessionEndpoint();
+
+    endpoint.seedSession(aSession({ email: "darri.konn@gmail.com" }));
+
+    expect(decodeSession(sessionCookieValue(endpoint.cookieHeader()))).toEqual(
+      aSession({ email: "darri.konn@gmail.com" }),
+    );
+    expect(endpoint.calls).toEqual([]);
+  });
+
   it("forgets its calls and the cookie on reset", async () => {
     const endpoint = new InMemorySessionEndpoint();
     await endpoint.save(aSession());
@@ -75,7 +87,7 @@ describe("InMemorySessionEndpoint", () => {
     endpoint.reset();
 
     expect(endpoint.calls).toEqual([]);
-    expect(endpoint.cookieHeader()).toBe("theme=dark");
+    expect(endpoint.cookieHeader()).toBe("");
   });
 });
 
