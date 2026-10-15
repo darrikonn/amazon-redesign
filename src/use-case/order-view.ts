@@ -1,11 +1,11 @@
 import {
   deliveryCityFor,
-  isReturnable,
-  isReturned,
-  orderItemCount,
-  orderTotalInCents,
+  itemCount,
+  type ReturnState,
   returnableUntil,
+  returnStateOf,
   type TrackingStage,
+  totalInCents,
   trackOrder,
 } from "@/component";
 import type {
@@ -37,8 +37,7 @@ export type OrderLineView = {
   image: string | null;
   priceInCents: number;
   quantity: number;
-  isReturnable: boolean;
-  isReturned: boolean;
+  returnState: ReturnState;
   returnableUntil: string | null;
 };
 
@@ -129,8 +128,8 @@ export function toOrderSummaryView(order: Order, now: Date, photos: OrderPhotos)
     placedAt: order.placedAt,
     stage: tracking.stage,
     deliveredAt: tracking.deliveredAt.toISOString(),
-    totalInCents: orderTotalInCents(order.lines),
-    itemCount: orderItemCount(order.lines),
+    totalInCents: totalInCents(order.lines),
+    itemCount: itemCount(order.lines),
     hasReturns: order.returns.length > 0,
     lines: order.lines.map((line) => ({
       productId: line.productId,
@@ -139,8 +138,7 @@ export function toOrderSummaryView(order: Order, now: Date, photos: OrderPhotos)
       image: photos.get(line.productId) ?? null,
       priceInCents: line.priceInCents,
       quantity: line.quantity,
-      isReturnable: isReturnable(order, line.productId, now),
-      isReturned: isReturned(order, line.productId),
+      returnState: returnStateOf(order, line, now),
       returnableUntil: returnableUntil(order, line, now)?.toISOString() ?? null,
     })),
   };

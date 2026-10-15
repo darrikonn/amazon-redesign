@@ -40,6 +40,11 @@
   font-weight: 700;
 }
 
+.lineLink:hover {
+  color: var(--color-title-hover);
+  text-decoration: underline;
+}
+
 .lineDelivery {
   color: var(--color-muted);
   font-size: 14px;
@@ -136,5 +141,47 @@
 
   .checkout {
     position: static;
+  }
+}
+
+/* The price moves under the name, so the name gets the full width beside the photo and the
+   quantity and Delete stay on one row. */
+@media (max-width: 760px) {
+  .line {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 4px 14px;
+  }
+
+  .line > :first-child {
+    grid-row: 1 / span 4;
+  }
+
+  .lineText {
+    display: contents;
+  }
+
+  .lineName {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 16px;
+  }
+
+  .linePrice {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 17px;
+  }
+
+  .lineDelivery {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .lineActions {
+    grid-column: 2;
+    grid-row: 4;
+    flex-wrap: nowrap;
   }
 }

@@ -3,6 +3,7 @@
 import { type ReactNode, useState } from "react";
 import { createContainer } from "@/composition";
 import type { ShopperView } from "@/use-case";
+import { AnnouncerProvider } from "./announcer-context";
 import { BrowsingProvider } from "./browsing-context";
 import { CartProvider } from "./cart-context";
 import { ContainerContext } from "./container-context";
@@ -21,13 +22,15 @@ export function ShopProvider({ initialShopper, children }: ShopProviderProps) {
   const [container] = useState(createContainer);
   return (
     <ContainerContext value={container}>
-      <CartProvider>
-        <SavedListProvider>
-          <SessionProvider initialShopper={initialShopper}>
-            <BrowsingProvider>{children}</BrowsingProvider>
-          </SessionProvider>
-        </SavedListProvider>
-      </CartProvider>
+      <AnnouncerProvider>
+        <CartProvider>
+          <SavedListProvider>
+            <SessionProvider initialShopper={initialShopper}>
+              <BrowsingProvider>{children}</BrowsingProvider>
+            </SessionProvider>
+          </SavedListProvider>
+        </CartProvider>
+      </AnnouncerProvider>
     </ContainerContext>
   );
 }

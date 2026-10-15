@@ -3,5 +3,5 @@ export {
   clampQuantity,
   mergeIntoCart,
   newCartLine,
-  newSavedItem,
 } from "./cart-quantity";
+export { itemCount, lineTotalInCents, totalInCents } from "./line-total";

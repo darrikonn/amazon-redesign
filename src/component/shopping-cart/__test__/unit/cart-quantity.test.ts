@@ -1,21 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { CART_RULES, clampQuantity, mergeIntoCart, newCartLine, newSavedItem } from "@/component";
+import { CART_RULES, clampQuantity, mergeIntoCart, newCartLine } from "@/component";
 import { aCartLine } from "@/test-support";
 
 const now = new Date("2026-10-14T15:00:00.000Z");
 
-describe("new records", () => {
-  it("are created now and unchanged so far", () => {
+describe("newCartLine", () => {
+  it("is created now and unchanged so far", () => {
     expect(newCartLine("robin", "lamp", 2, now)).toEqual({
       ownerId: "robin",
       productId: "lamp",
       quantity: 2,
-      created: "2026-10-14T15:00:00.000Z",
-      modified: null,
-    });
-    expect(newSavedItem("robin", "lamp", now)).toEqual({
-      ownerId: "robin",
-      productId: "lamp",
       created: "2026-10-14T15:00:00.000Z",
       modified: null,
     });

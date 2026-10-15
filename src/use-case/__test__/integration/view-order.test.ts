@@ -46,10 +46,10 @@ describe("ViewOrder", () => {
       ["Delivered", true],
     ]);
     expect(
-      order?.lines.map((line) => [line.productId, line.isReturnable, line.returnableUntil]),
+      order?.lines.map((line) => [line.productId, line.returnState, line.returnableUntil]),
     ).toEqual([
-      ["lamp", true, "2026-11-11T12:00:00.000Z"],
-      ["mascara", false, null],
+      ["lamp", "returnable", "2026-11-11T12:00:00.000Z"],
+      ["mascara", "never-returnable", null],
     ]);
   });
 

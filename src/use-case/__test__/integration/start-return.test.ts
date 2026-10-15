@@ -52,7 +52,7 @@ describe("StartReturn", () => {
         requestedAt: "2026-10-14T12:00:00.000Z",
       },
     ]);
-    expect(result.order.lines[0]).toMatchObject({ isReturned: true, isReturnable: false });
+    expect(result.order.lines[0]).toMatchObject({ returnState: "returned" });
   });
 
   it("refuses the whole return when any line cannot be returned, or the reason is unknown", async () => {

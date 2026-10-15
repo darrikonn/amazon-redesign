@@ -1,10 +1,19 @@
-import type { OrderLineView, OrderView } from "@/use-case";
+import type { OrderLineView } from "@/use-case";
 import { formatOrderDate } from "./format";
 
-export function returnStatus(line: OrderLineView, stage: OrderView["stage"]): string {
-  if (line.isReturned) return "Return started";
-  if (line.returnableUntil === null) return "Not returnable";
-  if (stage !== "delivered") return "Returnable once delivered";
-  if (line.isReturnable) return `Return or replace by ${formatOrderDate(line.returnableUntil)}`;
-  return "Return window closed";
+export function returnStatus(line: OrderLineView): string {
+  switch (line.returnState) {
+    case "returned":
+      return "Return started";
+    case "never-returnable":
+      return "Not returnable";
+    case "returnable-once-delivered":
+      return "Returnable once delivered";
+    case "returnable":
+      return line.returnableUntil === null
+        ? "Returnable"
+        : `Return by ${formatOrderDate(line.returnableUntil)}`;
+    case "window-closed":
+      return "Return window closed";
+  }
 }

@@ -2,16 +2,20 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useId, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { ProductId } from "@/core";
 import type { CartLineView, CartView } from "@/use-case";
+import { useAnnounce } from "./announcer-context";
+import { useBrowsing } from "./browsing-context";
 import { useCart } from "./cart-context";
 import styles from "./cart-page-view.module.css";
 import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
 import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
 import { Icon } from "./icon";
+import { isPlainClick } from "./plain-click";
 import { ProductThumbnail } from "./product-thumbnail";
+import { withProduct } from "./search-url";
 import { useSession } from "./session-context";
 import page from "./shop-page.module.css";
 import { SHOP_PLACES } from "./shop-place";
@@ -20,20 +24,35 @@ import { useLoaded } from "./use-loaded";
 
 export function CartPageView() {
   const container = useContainer();
-  const { replaceCart: showCart } = useCart();
+  const { replaceCart } = useCart();
+  const announce = useAnnounce();
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const load = useCallback(() => container.viewCart.execute(), [container]);
   const cart = useLoaded(load);
   const view = cart.value;
 
-  async function changeQuantity(productId: ProductId, quantity: number) {
-    const next = await container.changeCartQuantity.execute({ productId, quantity });
+  async function changeQuantity(line: CartLineView, quantity: number) {
+    const lines = view?.lines ?? [];
+    const next = await container.changeCartQuantity.execute({
+      productId: line.productId,
+      quantity,
+    });
     cart.replace(next);
-    showCart(next);
+    replaceCart(next);
+    const subtotal = splitPrice(next.subtotalInCents).spoken;
+    if (quantity > 0) {
+      announce(`Quantity of ${line.name} is now ${quantity}. Subtotal ${subtotal}.`);
+      return;
+    }
+    announce(`${line.name} removed from your cart. Subtotal ${subtotal}.`);
+    focusAfterRemoving(lines, line.productId, titleRef.current);
   }
 
   return (
     <main className={page.main}>
-      <h1 className={page.title}>Your cart</h1>
+      <h1 ref={titleRef} className={page.title} tabIndex={-1}>
+        Your cart
+      </h1>
       {cart.isLoading && <p className={page.loading}>Loading your cart</p>}
       {view !== null && view.lines.length === 0 && (
         <EmptyState
@@ -59,17 +78,37 @@ export function CartPageView() {
                   line={line}
                   maximumQuantity={view.maximumQuantity}
                   onChangeQuantity={(quantity) => {
-                    changeQuantity(line.productId, quantity).catch(reportError);
+                    changeQuantity(line, quantity).catch(reportError);
                   }}
                 />
               ))}
             </ul>
           </section>
-          <Checkout cart={view} onPlaced={(next) => showCart(next)} />
+          <Checkout cart={view} onPlaced={replaceCart} />
         </div>
       )}
     </main>
   );
+}
+
+// The deleted line's controls are gone, so focus moves to the next line's quantity, or the
+// one before it, or the heading when the cart is now empty.
+function focusAfterRemoving(
+  lines: readonly CartLineView[],
+  removedId: ProductId,
+  heading: HTMLElement | null,
+) {
+  const index = lines.findIndex((line) => line.productId === removedId);
+  const neighbour = lines[index + 1] ?? lines[index - 1];
+  requestAnimationFrame(() => {
+    const target =
+      neighbour === undefined ? null : document.getElementById(quantityIdFor(neighbour.productId));
+    (target ?? heading)?.focus();
+  });
+}
+
+function quantityIdFor(productId: ProductId): string {
+  return `quantity-${productId}`;
 }
 
 type CartLineProps = {
@@ -79,13 +118,27 @@ type CartLineProps = {
 };
 
 function CartLine({ line, maximumQuantity, onChangeQuantity }: CartLineProps) {
+  const { openProduct } = useBrowsing();
   const quantities = Array.from({ length: maximumQuantity }, (_, index) => index + 1);
-  const quantityId = useId();
+  const quantityId = quantityIdFor(line.productId);
   return (
     <li className={styles.line}>
       <ProductThumbnail image={line.image} category={line.category} size="large" />
       <div className={styles.lineText}>
-        <span className={styles.lineName}>{line.name}</span>
+        <h2 className={styles.lineName}>
+          <Link
+            href={withProduct("/cart", line.productId)}
+            prefetch={false}
+            className={styles.lineLink}
+            onClick={(event) => {
+              if (!isPlainClick(event)) return;
+              event.preventDefault();
+              openProduct({ ...line, id: line.productId });
+            }}
+          >
+            {line.name}
+          </Link>
+        </h2>
         <span className={styles.lineDelivery}>
           FREE delivery {deliveryLabel(line.deliveryDays)}
         </span>

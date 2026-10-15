@@ -1,3 +1,4 @@
+import { itemCount } from "@/component";
 import type { CartLine, ProductId } from "@/core";
 
 export type CartSummary = {
@@ -8,6 +9,6 @@ export type CartSummary = {
 export function summarizeCart(lines: readonly CartLine[]): CartSummary {
   return {
     productIds: lines.map((line) => line.productId),
-    itemCount: lines.reduce((count, line) => count + line.quantity, 0),
+    itemCount: itemCount(lines),
   };
 }

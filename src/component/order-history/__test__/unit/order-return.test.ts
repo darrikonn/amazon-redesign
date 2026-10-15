@@ -4,6 +4,7 @@ import {
   isReturned,
   RETURN_RULES,
   returnableUntil,
+  returnStateOf,
   returnWindowDaysFrom,
 } from "@/component";
 import { anOrder, anOrderLine } from "@/test-support";
@@ -59,5 +60,31 @@ describe("returnableUntil", () => {
       "2026-10-10T12:00:00.000Z",
     );
     expect(mascara && returnableUntil(order, mascara, now)).toBeNull();
+  });
+});
+
+describe("returnStateOf", () => {
+  const lamp = anOrderLine({ productId: "lamp", returnWindowDays: 7 });
+  const mascara = anOrderLine({ productId: "mascara", returnWindowDays: 0 });
+
+  it("says where each line stands, from before delivery to after its window", () => {
+    // Arrange
+    const returned = anOrder({
+      ...order,
+      returns: [
+        { productIds: ["lamp"], reason: "damaged", requestedAt: "2026-10-04T12:00:00.000Z" },
+      ],
+    });
+
+    // Act and assert
+    expect(returnStateOf(order, lamp, new Date("2026-10-02T12:00:00.000Z"))).toBe(
+      "returnable-once-delivered",
+    );
+    expect(returnStateOf(order, lamp, new Date("2026-10-05T12:00:00.000Z"))).toBe("returnable");
+    expect(returnStateOf(order, lamp, new Date("2026-10-30T12:00:00.000Z"))).toBe("window-closed");
+    expect(returnStateOf(order, mascara, new Date("2026-10-05T12:00:00.000Z"))).toBe(
+      "never-returnable",
+    );
+    expect(returnStateOf(returned, lamp, new Date("2026-10-05T12:00:00.000Z"))).toBe("returned");
   });
 });

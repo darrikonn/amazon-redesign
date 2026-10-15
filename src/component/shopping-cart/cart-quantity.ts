@@ -1,4 +1,4 @@
-import type { CartLine, ProductId, SavedItem, ShopperId } from "@/core";
+import type { CartLine, ProductId, ShopperId } from "@/core";
 
 export const CART_RULES = {
   maximumQuantity: 10,
@@ -13,10 +13,6 @@ export function newCartLine(
   now: Date,
 ): CartLine {
   return { ownerId, productId, quantity, created: now.toISOString(), modified: null };
-}
-
-export function newSavedItem(ownerId: ShopperId, productId: ProductId, now: Date): SavedItem {
-  return { ownerId, productId, created: now.toISOString(), modified: null };
 }
 
 // Zero and below remove the line; above the limit is held at the limit.

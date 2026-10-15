@@ -4,15 +4,15 @@ export {
   newOrder,
   type OrderItem,
   orderIdFor,
-  orderItemCount,
   orderLineFor,
-  orderTotalInCents,
 } from "./order-line";
 export {
   isReturnable,
   isReturned,
   RETURN_RULES,
+  type ReturnState,
   returnableUntil,
+  returnStateOf,
   returnWindowDaysFrom,
 } from "./order-return";
 export {

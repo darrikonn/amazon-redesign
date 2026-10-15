@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { type FormEvent, useCallback, useId, useState } from "react";
+import { type FormEvent, useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ProductId } from "@/core";
 import type { OrderView } from "@/use-case";
+import { useAnnounce } from "./announcer-context";
 import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
 import { deliveryLocationLabel, formatDayAndDate, formatOrderDate, splitPrice } from "./format";
+import { Icon } from "./icon";
 import styles from "./order-detail-view.module.css";
+import { OrderLineCartButton } from "./order-line-cart-button";
 import { orderStatus } from "./order-status";
 import { ProductThumbnail } from "./product-thumbnail";
 import { returnStatus } from "./return-status";
@@ -57,18 +60,32 @@ type OrderDetailProps = {
 };
 
 function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
-  const returnable = order.lines.filter((line) => line.isReturnable);
+  const announce = useAnnounce();
+  const returnsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const returnable = order.lines.filter((line) => line.returnState === "returnable");
+  useReturnFormInView();
+
+  // The form that was used may be gone, so focus moves to the returns it just added to.
+  function returned(next: OrderView) {
+    onChange(next);
+    announce("Return started. Drop the items at any carrier point.");
+    requestAnimationFrame(() => returnsHeadingRef.current?.focus());
+  }
+
   return (
     <main className={page.main}>
       <div className={page.heading}>
         <div>
-          <Link href="/orders" className={styles.back}>
-            Your orders
+          <Link href={SHOP_PLACES.orders.href} className={styles.back}>
+            <Icon name="chevron-right" size={16} strokeWidth={2.6} className={styles.backIcon} />
+            {SHOP_PLACES.orders.title}
           </Link>
           <h1 className={page.title}>Order details</h1>
           <p className={page.lede}>
             Ordered {formatOrderDate(order.placedAt)}
-            {order.isSample && <span className={styles.sample}>Sample order</span>}
+            {order.isSample && (
+              <span className={`${page.samplePill} ${styles.sample}`}>Sample order</span>
+            )}
           </p>
         </div>
       </div>
@@ -106,8 +123,9 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
                 <span className={page.muted}>
                   {line.quantity} at {splitPrice(line.priceInCents).spoken}
                 </span>
-                <span className={styles.returnStatus}>{returnStatus(line, order.stage)}</span>
+                <span className={styles.returnStatus}>{returnStatus(line)}</span>
               </div>
+              <OrderLineCartButton productId={line.productId} name={line.name} />
             </li>
           ))}
         </ul>
@@ -115,7 +133,12 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
       </section>
       {order.returns.length > 0 && (
         <section className={page.panel} aria-labelledby="returns-heading">
-          <h2 id="returns-heading" className={styles.sectionTitle}>
+          <h2
+            ref={returnsHeadingRef}
+            id="returns-heading"
+            className={styles.sectionTitle}
+            tabIndex={-1}
+          >
             Returns
           </h2>
           {order.returns.map((orderReturn) => (
@@ -131,9 +154,20 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
           ))}
         </section>
       )}
-      {returnable.length > 0 && <ReturnForm order={order} onReturned={onChange} />}
+      {returnable.length > 0 && <ReturnForm order={order} onReturned={returned} />}
     </main>
   );
+}
+
+// The order loads after the page, so the browser has already given up on #return by the time
+// the form exists; this finishes the jump once it does.
+function useReturnFormInView() {
+  useEffect(() => {
+    if (window.location.hash !== "#return") return;
+    const heading = document.getElementById("return-heading");
+    heading?.scrollIntoView({ block: "start" });
+    heading?.focus({ preventScroll: true });
+  }, []);
 }
 
 type ReturnFormProps = {
@@ -174,14 +208,14 @@ function ReturnForm({ order, onReturned }: ReturnFormProps) {
 
   return (
     <section id="return" className={page.panel} aria-labelledby="return-heading">
-      <h2 id="return-heading" className={styles.sectionTitle}>
-        Return or replace items
+      <h2 id="return-heading" className={styles.sectionTitle} tabIndex={-1}>
+        Return items
       </h2>
       <form className={styles.returnForm} onSubmit={submit}>
         <fieldset className={styles.fieldset}>
           <legend className={styles.legend}>Which items?</legend>
           {order.lines
-            .filter((line) => line.isReturnable)
+            .filter((line) => line.returnState === "returnable")
             .map((line) => (
               <label key={line.productId} className={styles.choice}>
                 <input

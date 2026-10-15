@@ -48,14 +48,6 @@ export function orderLineFor(
   };
 }
 
-export function orderTotalInCents(lines: readonly OrderLine[]): number {
-  return lines.reduce((total, line) => total + line.priceInCents * line.quantity, 0);
-}
-
-export function orderItemCount(lines: readonly OrderLine[]): number {
-  return lines.reduce((count, line) => count + line.quantity, 0);
-}
-
 // Unique per shopper: the moment it was placed, and how many orders came before.
 export function orderIdFor(placedAt: Date, earlierOrderCount: number): OrderId {
   return `order-${placedAt.getTime().toString(36)}-${earlierOrderCount + 1}`;

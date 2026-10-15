@@ -50,7 +50,8 @@
 }
 
 .primaryButton,
-.secondaryButton {
+.secondaryButton,
+.secondaryButtonDone {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -70,13 +71,21 @@
 }
 
 .secondaryButton {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-field-border);
   background: var(--color-surface);
   color: var(--color-ink);
 }
 
+/* A secondary action that has been taken, such as an item already back in the cart. */
+.secondaryButtonDone {
+  border: 1px solid var(--color-success);
+  background: var(--color-surface);
+  color: var(--color-success);
+}
+
 .primaryButton:hover,
-.secondaryButton:hover {
+.secondaryButton:hover,
+.secondaryButtonDone:hover {
   filter: brightness(0.96);
 }
 
@@ -136,6 +145,19 @@
 .cardAction:hover {
   color: var(--color-on-dark);
   text-decoration: underline;
+}
+
+/* Marks a demo order the shop made up, the same on white cards and on the dark page. */
+.samplePill {
+  justify-self: start;
+  padding: 4px 10px;
+  border: 1px solid var(--color-accent-deep);
+  border-radius: 999px;
+  background: var(--color-accent-wash);
+  color: var(--color-accent-deep);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .loading {

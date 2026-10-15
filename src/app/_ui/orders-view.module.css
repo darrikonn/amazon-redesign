@@ -8,9 +8,10 @@
   box-shadow: var(--shadow-card);
 }
 
+/* The facts sit in fixed columns, so they line up from one order to the next. */
 .orderHeader {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, max-content)) auto 1fr;
   align-items: center;
   gap: 12px 32px;
   padding: 16px 24px;
@@ -37,17 +38,9 @@
   font-weight: 600;
 }
 
-.sample {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--color-teal-tint);
-  color: var(--color-teal);
-  font-size: 13px;
-  font-weight: 700;
-}
-
 .detailsLink {
-  margin-left: auto;
+  grid-column: -2;
+  justify-self: end;
   color: var(--color-teal);
   font-weight: 700;
 }
@@ -110,12 +103,14 @@
 
 @media (max-width: 760px) {
   .orderHeader {
+    grid-template-columns: repeat(3, max-content);
     gap: 10px 20px;
     padding: 14px 16px;
   }
 
   .detailsLink {
-    margin-left: 0;
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   .orderBody {

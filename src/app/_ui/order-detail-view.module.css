@@ -1,7 +1,15 @@
 .back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: -4px;
   color: var(--color-on-dark-muted);
   font-size: 14px;
   font-weight: 700;
+}
+
+.backIcon {
+  transform: rotate(180deg);
 }
 
 .back:hover {
@@ -11,12 +19,6 @@
 
 .sample {
   margin-left: 10px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: var(--color-teal-tint);
-  color: var(--color-teal);
-  font-size: 13px;
-  font-weight: 700;
 }
 
 .placed {
@@ -112,6 +114,7 @@
 
 .lineText {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
@@ -187,5 +190,18 @@
 
   .stepDate {
     font-size: 12px;
+  }
+
+  /* The button goes under the text, beside the photo. */
+  .line {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 8px 14px;
+  }
+
+  .line > button {
+    grid-column: 2;
+    justify-self: start;
   }
 }

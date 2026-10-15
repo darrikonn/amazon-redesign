@@ -7,6 +7,7 @@ export * from "./order-history";
 export * from "./product-search";
 export * from "./query-assistance";
 export * from "./query-interpretation";
+export * from "./saved-list";
 export * from "./shopper-account";
 export * from "./shopping-cart";
 export * from "./stable-hash";

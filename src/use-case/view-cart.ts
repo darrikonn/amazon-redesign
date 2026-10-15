@@ -1,4 +1,4 @@
-import { CART_RULES } from "@/component";
+import { CART_RULES, lineTotalInCents, totalInCents } from "@/component";
 import type {
   CartLine,
   CartLineRepository,
@@ -18,6 +18,7 @@ export type CartLineView = {
   priceInCents: number;
   deliveryDays: number;
   quantity: number;
+  rating: number;
   lineTotalInCents: number;
 };
 
@@ -62,7 +63,11 @@ export async function toCartView(
         priceInCents: product.priceInCents,
         deliveryDays: product.deliveryDays,
         quantity: line.quantity,
-        lineTotalInCents: product.priceInCents * line.quantity,
+        rating: product.rating,
+        lineTotalInCents: lineTotalInCents({
+          priceInCents: product.priceInCents,
+          quantity: line.quantity,
+        }),
       },
     ];
   });
@@ -70,7 +75,7 @@ export async function toCartView(
   return {
     ...summarizeCart(shown),
     lines: views,
-    subtotalInCents: views.reduce((total, view) => total + view.lineTotalInCents, 0),
+    subtotalInCents: totalInCents(views),
     isSignedIn,
     maximumQuantity: CART_RULES.maximumQuantity,
   };

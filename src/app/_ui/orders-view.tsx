@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useCallback } from "react";
 import type { OrderFilter, OrderSummaryView } from "@/use-case";
-import { useCart } from "./cart-context";
 import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
 import { formatOrderDate, pluralize, splitPrice } from "./format";
+import { OrderLineCartButton } from "./order-line-cart-button";
 import { orderStatus } from "./order-status";
 import styles from "./orders-view.module.css";
 import { ProductThumbnail } from "./product-thumbnail";
@@ -65,15 +65,15 @@ export function OrdersView({ show }: OrdersViewProps) {
 }
 
 export function OrderCard({ order }: { order: OrderSummaryView }) {
-  const { toggleCart, cart } = useCart();
-  const hasReturnable = order.lines.some((line) => line.isReturnable);
+  const hasReturnable = order.lines.some((line) => line.returnState === "returnable");
+  const isOnTheWay = order.stage !== "delivered";
   return (
     <article className={styles.order} aria-labelledby={`order-${order.id}`}>
       <header className={styles.orderHeader}>
         <Fact label="Order placed" value={formatOrderDate(order.placedAt)} />
         <Fact label="Total" value={splitPrice(order.totalInCents).spoken} />
         <Fact label="Items" value={pluralize(order.itemCount, "item", "items")} />
-        {order.isSample && <span className={styles.sample}>Sample order</span>}
+        {order.isSample && <span className={page.samplePill}>Sample order</span>}
         <Link href={`/orders/${order.id}`} className={styles.detailsLink}>
           Order details
         </Link>
@@ -91,32 +91,27 @@ export function OrderCard({ order }: { order: OrderSummaryView }) {
                 <span className={styles.lineName}>{line.name}</span>
                 <span className={styles.lineMeta}>
                   Quantity {line.quantity}
-                  {line.isReturned && ", return started"}
+                  {line.returnState === "returned" && ", return started"}
                 </span>
               </div>
-              <button
-                type="button"
-                className={page.secondaryButton}
-                disabled={cart.productIds.includes(line.productId)}
-                onClick={() => {
-                  toggleCart(line.productId).catch(reportError);
-                }}
-              >
-                {cart.productIds.includes(line.productId) ? "In your cart" : "Buy it again"}
-              </button>
+              <OrderLineCartButton productId={line.productId} name={line.name} />
             </li>
           ))}
         </ul>
-        <div className={styles.orderActions}>
-          <Link href={`/orders/${order.id}`} className={page.primaryButton}>
-            Track package
-          </Link>
-          {hasReturnable && (
-            <Link href={`/orders/${order.id}#return`} className={page.secondaryButton}>
-              Return items
-            </Link>
-          )}
-        </div>
+        {(isOnTheWay || hasReturnable) && (
+          <div className={styles.orderActions}>
+            {isOnTheWay && (
+              <Link href={`/orders/${order.id}`} className={page.primaryButton}>
+                Track package
+              </Link>
+            )}
+            {hasReturnable && (
+              <Link href={`/orders/${order.id}#return`} className={page.secondaryButton}>
+                Return items
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );

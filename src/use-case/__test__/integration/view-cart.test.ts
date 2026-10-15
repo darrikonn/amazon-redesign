@@ -40,6 +40,7 @@ describe("ViewCart", () => {
           priceInCents: 2_500,
           deliveryDays: 3,
           quantity: 2,
+          rating: 4.2,
           lineTotalInCents: 5_000,
         },
       ],

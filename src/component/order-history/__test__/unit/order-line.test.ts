@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { newOrder, orderIdFor, orderItemCount, orderLineFor, orderTotalInCents } from "@/component";
-import { anOrderLine, aProduct, aProductDetails } from "@/test-support";
+import { newOrder, orderIdFor, orderLineFor } from "@/component";
+import { aProduct, aProductDetails } from "@/test-support";
 
 describe("newOrder", () => {
   it("arrives with its slowest item, starts with no returns, and is unchanged so far", () => {
@@ -50,18 +50,6 @@ describe("orderLineFor", () => {
       returnWindowDays: 7,
     });
     expect(orderLineFor(product, null, 1).returnWindowDays).toBe(30);
-  });
-});
-
-describe("order totals", () => {
-  it("adds up prices times quantities, and items", () => {
-    const lines = [
-      anOrderLine({ priceInCents: 1_000, quantity: 2 }),
-      anOrderLine({ priceInCents: 250, quantity: 1 }),
-    ];
-
-    expect(orderTotalInCents(lines)).toBe(2_250);
-    expect(orderItemCount(lines)).toBe(3);
   });
 });
 

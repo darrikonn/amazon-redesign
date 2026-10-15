@@ -9,19 +9,18 @@ const line: OrderLineView = {
   image: null,
   priceInCents: 1_000,
   quantity: 1,
-  isReturnable: false,
-  isReturned: false,
+  returnState: "returnable",
   returnableUntil: "2026-11-11T12:00:00.000Z",
 };
 
 describe("returnStatus", () => {
   it("says what can still be done with a line", () => {
-    expect(returnStatus({ ...line, isReturned: true }, "delivered")).toBe("Return started");
-    expect(returnStatus({ ...line, returnableUntil: null }, "delivered")).toBe("Not returnable");
-    expect(returnStatus(line, "shipped")).toBe("Returnable once delivered");
-    expect(returnStatus({ ...line, isReturnable: true }, "delivered")).toBe(
-      "Return or replace by 11 Nov 2026",
+    expect(returnStatus({ ...line, returnState: "returned" })).toBe("Return started");
+    expect(returnStatus({ ...line, returnState: "never-returnable" })).toBe("Not returnable");
+    expect(returnStatus({ ...line, returnState: "returnable-once-delivered" })).toBe(
+      "Returnable once delivered",
     );
-    expect(returnStatus(line, "delivered")).toBe("Return window closed");
+    expect(returnStatus(line)).toBe("Return by 11 Nov 2026");
+    expect(returnStatus({ ...line, returnState: "window-closed" })).toBe("Return window closed");
   });
 });

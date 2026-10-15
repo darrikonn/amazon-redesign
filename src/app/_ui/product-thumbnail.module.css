@@ -27,3 +27,10 @@
   padding: 6px;
   object-fit: contain;
 }
+
+@media (max-width: 760px) {
+  .large {
+    width: 88px;
+    height: 88px;
+  }
+}

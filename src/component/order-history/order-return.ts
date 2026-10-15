@@ -33,3 +33,18 @@ export function isReturnable(order: Order, productId: ProductId, now: Date): boo
   const until = returnableUntil(order, line, now);
   return until !== null && now.getTime() <= until.getTime();
 }
+
+export type ReturnState =
+  | "returned"
+  | "never-returnable"
+  | "returnable-once-delivered"
+  | "returnable"
+  | "window-closed";
+
+// Where one line of an order stands on returns, read in the order a shopper would ask.
+export function returnStateOf(order: Order, line: OrderLine, now: Date): ReturnState {
+  if (isReturned(order, line.productId)) return "returned";
+  if (line.returnWindowDays <= 0) return "never-returnable";
+  if (!isDelivered(order, now)) return "returnable-once-delivered";
+  return isReturnable(order, line.productId, now) ? "returnable" : "window-closed";
+}
