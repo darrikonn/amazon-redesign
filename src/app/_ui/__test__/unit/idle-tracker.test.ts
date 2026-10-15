@@ -13,12 +13,15 @@ function setUp() {
 
 describe("IdleTracker", () => {
   it("becomes idle after the delay without activity", () => {
+    // Arrange
     const { timer, changes } = setUp();
 
+    // Act
     timer.advance(DELAY - 1);
     expect(changes).toEqual([]);
     timer.advance(1);
 
+    // Assert
     expect(changes).toEqual([true]);
   });
 
@@ -51,11 +54,14 @@ describe("IdleTracker", () => {
   });
 
   it("stops counting when disposed", () => {
+    // Arrange
     const { timer, changes, tracker } = setUp();
 
+    // Act
     tracker.dispose();
     timer.advance(DELAY);
 
+    // Assert
     expect(changes).toEqual([]);
   });
 });

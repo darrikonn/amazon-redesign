@@ -81,10 +81,13 @@ describe.each(implementations)("%s", (_, create) => {
   });
 
   it("keeps one line per owner and product", async () => {
+    // Arrange
     const repository = await seeded(create);
 
+    // Act
     await repository.save(aCartLine({ ownerId: "owner-1", productId: "lamp", quantity: 1 }));
 
+    // Assert
     expect(await repository.listByOwner("owner-1")).toHaveLength(2);
   });
 });

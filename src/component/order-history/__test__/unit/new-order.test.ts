@@ -4,9 +4,11 @@ import { aProduct, aProductDetails } from "@/test-support";
 
 describe("newOrder", () => {
   it("arrives with its slowest item, starts with no returns, and is unchanged so far", () => {
+    // Arrange
     const fast = aProduct({ id: "fast", deliveryDays: 1 });
     const slow = aProduct({ id: "slow", deliveryDays: 5 });
 
+    // Act
     const order = newOrder({
       id: "order-1",
       ownerId: "robin",
@@ -20,6 +22,7 @@ describe("newOrder", () => {
       ],
     });
 
+    // Assert
     expect(order).toMatchObject({
       placedAt: "2026-10-14T12:00:00.000Z",
       created: "2026-10-14T12:00:01.000Z",

@@ -4,6 +4,7 @@ import { aProduct } from "@/test-support";
 
 describe("parseCatalogFile", () => {
   it("reads products written by the catalogue build", () => {
+    // Arrange
     const product = aProduct({
       color: "black",
       tags: ["leather"],
@@ -11,8 +12,10 @@ describe("parseCatalogFile", () => {
       brand: "Heshe",
     });
 
+    // Act
     const unknownStock = aProduct({ id: "fakestore-0003", stock: null });
 
+    // Assert
     expect(parseCatalogFile(JSON.parse(JSON.stringify([product, unknownStock])))).toEqual([
       product,
       unknownStock,

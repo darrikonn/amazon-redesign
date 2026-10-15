@@ -70,10 +70,13 @@ describe("BrowserSessionStore", () => {
 
 describe("InMemorySessionEndpoint", () => {
   it("can start with a session the server set earlier, without counting it as a call", () => {
+    // Arrange
     const endpoint = new InMemorySessionEndpoint();
 
+    // Act
     endpoint.seedSession(aSession({ email: "darri.konn@gmail.com" }));
 
+    // Assert
     expect(decodeSession(sessionCookieValue(endpoint.cookieHeader()))).toEqual(
       aSession({ email: "darri.konn@gmail.com" }),
     );
@@ -81,11 +84,14 @@ describe("InMemorySessionEndpoint", () => {
   });
 
   it("forgets its calls and the cookie on reset", async () => {
+    // Arrange
     const endpoint = new InMemorySessionEndpoint();
     await endpoint.save(aSession());
 
+    // Act
     endpoint.reset();
 
+    // Assert
     expect(endpoint.calls).toEqual([]);
     expect(endpoint.cookieHeader()).toBe("");
   });

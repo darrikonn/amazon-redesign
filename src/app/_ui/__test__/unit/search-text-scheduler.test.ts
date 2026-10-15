@@ -30,18 +30,23 @@ describe("SearchTextScheduler", () => {
   });
 
   it("searches at once when a chip or suggestion is applied, dropping the pending search", () => {
+    // Arrange
     const { timer, searched, scheduler } = setUp();
 
+    // Act
     scheduler.type("watc");
     scheduler.apply("watches");
     timer.advance(SEARCH_PAUSE_IN_MILLISECONDS);
 
+    // Assert
     expect(searched).toEqual(["watches"]);
   });
 
   it("keeps the last search while the shopper deletes a query and starts a new one", () => {
+    // Arrange
     const { timer, searched, scheduler } = setUp();
 
+    // Act
     scheduler.type("watc");
     timer.advance(100);
     scheduler.type("");
@@ -49,26 +54,33 @@ describe("SearchTextScheduler", () => {
     scheduler.type("b");
     timer.advance(SEARCH_PAUSE_IN_MILLISECONDS);
 
+    // Assert
     expect(searched).toEqual(["b"]);
   });
 
   it("returns home once the shopper pauses with the bar empty", () => {
+    // Arrange
     const { timer, searched, scheduler } = setUp();
 
+    // Act
     scheduler.type("w");
     scheduler.type("");
     timer.advance(SEARCH_PAUSE_IN_MILLISECONDS);
 
+    // Assert
     expect(searched).toEqual([""]);
   });
 
   it("forgets a pending search when disposed", () => {
+    // Arrange
     const { timer, searched, scheduler } = setUp();
 
+    // Act
     scheduler.type("watch");
     scheduler.dispose();
     timer.advance(SEARCH_PAUSE_IN_MILLISECONDS);
 
+    // Assert
     expect(searched).toEqual([]);
   });
 });

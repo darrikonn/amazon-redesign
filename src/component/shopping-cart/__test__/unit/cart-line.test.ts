@@ -34,8 +34,10 @@ describe("clampQuantity", () => {
 
 describe("mergeIntoCart", () => {
   it("moves the guest's lines to the shopper and adds up a product in both", () => {
+    // Arrange
     const shopperLamp = aCartLine({ ownerId: "robin", productId: "lamp", quantity: 2 });
 
+    // Act
     const merged = mergeIntoCart(
       [shopperLamp],
       [
@@ -46,6 +48,7 @@ describe("mergeIntoCart", () => {
       now,
     );
 
+    // Assert
     expect(merged).toEqual([
       { ...shopperLamp, quantity: 3 },
       {

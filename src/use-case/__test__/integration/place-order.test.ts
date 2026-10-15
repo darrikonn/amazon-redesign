@@ -50,25 +50,31 @@ describe("PlaceOrder", () => {
   });
 
   it("needs a signed-in shopper and something in the cart", async () => {
+    // Arrange
     fakes.cartLines.seedLine(aCartLine({ ownerId: "guest", productId: "lamp", quantity: 1 }));
     const signedOut = await container.placeOrder.execute();
     fakes.sessions.seedSession(aSession());
 
+    // Act
     const empty = await container.placeOrder.execute();
 
+    // Assert
     expect(signedOut).toEqual({ status: "signed-out" });
     expect(empty).toEqual({ status: "empty-cart" });
     expect(fakes.orders.storedOrders()).toEqual([]);
   });
 
   it("gives each order its own id", async () => {
+    // Arrange
     fakes.sessions.seedSession(aSession());
     fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
     const first = await container.placeOrder.execute();
     fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
 
+    // Act
     const second = await container.placeOrder.execute();
 
+    // Assert
     expect(first).not.toEqual(second);
     expect(fakes.orders.storedOrders()).toHaveLength(2);
   });

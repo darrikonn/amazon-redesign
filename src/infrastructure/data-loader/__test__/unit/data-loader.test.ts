@@ -12,29 +12,38 @@ function recordingLoader() {
 
 describe("DataLoader", () => {
   it("batches loads made in the same tick", async () => {
+    // Arrange
     const { loader, batches } = recordingLoader();
 
+    // Act
     const values = await Promise.all([loader.load(1), loader.load(2)]);
 
+    // Assert
     expect(values).toEqual(["value-1", "value-2"]);
     expect(batches).toEqual([[1, 2]]);
   });
 
   it("serves a repeated key from its cache", async () => {
+    // Arrange
     const { loader, batches } = recordingLoader();
 
+    // Act
     await loader.load(1);
     await loader.load(1);
 
+    // Assert
     expect(batches).toEqual([[1]]);
   });
 
   it("starts a new batch on a later tick", async () => {
+    // Arrange
     const { loader, batches } = recordingLoader();
 
+    // Act
     await loader.load(1);
     await loader.load(2);
 
+    // Assert
     expect(batches).toEqual([[1], [2]]);
   });
 

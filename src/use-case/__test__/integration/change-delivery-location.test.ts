@@ -11,10 +11,13 @@ beforeEach(() => {
 
 describe("ChangeDeliveryLocation", () => {
   it("changes the ZIP code and the city it names", async () => {
+    // Arrange
     fakes.sessions.seedSession(aSession());
 
+    // Act
     const result = await container.changeDeliveryLocation.execute({ postalCode: " 98101 " });
 
+    // Assert
     expect(result).toMatchObject({
       status: "changed",
       shopper: { deliveryCity: "Seattle", deliveryPostalCode: "98101" },
@@ -23,11 +26,14 @@ describe("ChangeDeliveryLocation", () => {
   });
 
   it("refuses a ZIP code that is not five digits, and a signed-out visitor", async () => {
+    // Arrange
     const signedOut = await container.changeDeliveryLocation.execute({ postalCode: "98101" });
     fakes.sessions.seedSession(aSession());
 
+    // Act
     const invalid = await container.changeDeliveryLocation.execute({ postalCode: "981" });
 
+    // Assert
     expect(signedOut).toEqual({ status: "signed-out" });
     expect(invalid).toEqual({ status: "invalid-postal-code" });
     expect(fakes.sessions.storedSession()?.deliveryPostalCode).toBe("55401");

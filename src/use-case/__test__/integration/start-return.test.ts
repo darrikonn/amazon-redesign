@@ -97,14 +97,17 @@ describe("StartReturn", () => {
   });
 
   it("needs a signed-in shopper", async () => {
+    // Arrange
     fakes.sessions.reset();
 
+    // Act
     const result = await container.startReturn.execute({
       orderId: "delivered",
       productIds: ["lamp"],
       reason: "damaged",
     });
 
+    // Assert
     expect(result).toEqual({ status: "signed-out" });
   });
 });

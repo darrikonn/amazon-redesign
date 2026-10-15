@@ -154,6 +154,7 @@ describe("buildCatalog from DummyJSON", () => {
 
 describe("buildCatalog from FakeStore", () => {
   it("reads the nested rating, gives a fixed delivery estimate, and has no facts", () => {
+    // Arrange
     const jacket = {
       id: 3,
       title: "Mens Cotton Jacket",
@@ -164,8 +165,10 @@ describe("buildCatalog from FakeStore", () => {
       image: "https://fakestoreapi.com/img/jacket.jpg",
     };
 
+    // Act
     const catalog = buildCatalog("fakestore", [jacket], noOverrides);
 
+    // Assert
     expect(catalog.products[0]).toMatchObject({
       id: "fakestore-0003",
       category: "clothing",

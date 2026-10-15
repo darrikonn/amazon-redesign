@@ -39,11 +39,14 @@ describe("ChangeCartQuantity", () => {
   });
 
   it("removes the product at zero and holds a large quantity at the limit", async () => {
+    // Arrange
     await container.changeCartQuantity.execute({ productId: "lamp", quantity: 99 });
     const held = fakes.cartLines.storedLines()[0]?.quantity;
 
+    // Act
     const emptied = await container.changeCartQuantity.execute({ productId: "lamp", quantity: 0 });
 
+    // Assert
     expect(held).toBe(CART_RULES.maximumQuantity);
     expect(emptied).toMatchObject({ itemCount: 0, lines: [] });
   });
