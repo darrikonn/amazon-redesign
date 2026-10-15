@@ -1,26 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useRef, useState } from "react";
 import styles from "./account-menu.module.css";
 import { deliveryLocationLabel } from "./format";
 import { Icon } from "./icon";
 import { useSession } from "./session-context";
+import { SHOP_PLACES } from "./shop-place";
 import { signInHref } from "./sign-in-href";
 import { useCurrentAddress } from "./use-current-address";
-import { useDismissal } from "./use-dismissal";
+import { useDisclosure } from "./use-disclosure";
 
 type AccountMenuProps = {
   onChangeLocation: () => void;
 };
 
-const ACCOUNT_LINKS = [
-  { href: "/account", label: "Your account" },
-  { href: "/orders", label: "Your orders and returns" },
-  { href: "/buy-again", label: "Buy again" },
-  { href: "/lists", label: "Your lists" },
-  { href: "/deals", label: "Today's deals" },
-] as const;
+const ACCOUNT_PLACES = [
+  SHOP_PLACES.account,
+  SHOP_PLACES.orders,
+  SHOP_PLACES.buyAgain,
+  SHOP_PLACES.list,
+  SHOP_PLACES.deals,
+];
 
 // One header item for who is shopping and where it goes: the greeting above the delivery
 // location, since the location decides what can be delivered. It opens the account's
@@ -28,19 +28,8 @@ const ACCOUNT_LINKS = [
 export function AccountMenu({ onChangeLocation }: AccountMenuProps) {
   const { shopper, signOut } = useSession();
   const signIn = signInHref(useCurrentAddress());
-  const [isOpen, setIsOpen] = useState(false);
-  const panelId = useId();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const toggleRef = useRef<HTMLButtonElement>(null);
-  useDismissal(isOpen, containerRef, () => {
-    setIsOpen(false);
-    toggleRef.current?.focus();
-  });
+  const { isOpen, toggle, close, panelId, containerRef, toggleRef } = useDisclosure();
   const location = shopper === null ? null : deliveryLocationLabel(shopper);
-
-  function close() {
-    setIsOpen(false);
-  }
 
   return (
     <div ref={containerRef} className={styles.menu}>
@@ -55,7 +44,7 @@ export function AccountMenu({ onChangeLocation }: AccountMenuProps) {
             ? "Account and lists, signed out"
             : `Account and lists for ${shopper.firstName}, delivering to ${location}`
         }
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={toggle}
       >
         {shopper !== null && <Icon name="pin" size={20} className={styles.pin} />}
         <span className={styles.stacked}>
@@ -94,12 +83,12 @@ export function AccountMenu({ onChangeLocation }: AccountMenuProps) {
             </button>
           </div>
         )}
-        <nav aria-label="Your account">
+        <nav aria-label="Account menu">
           <ul className={styles.links}>
-            {ACCOUNT_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className={styles.link} onClick={close}>
-                  {link.label}
+            {ACCOUNT_PLACES.map((place) => (
+              <li key={place.href}>
+                <Link href={place.href} className={styles.link} onClick={close}>
+                  {place.title}
                 </Link>
               </li>
             ))}

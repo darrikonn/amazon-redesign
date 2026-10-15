@@ -1,12 +1,15 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import Link from "next/link";
+import { type ReactNode, useId, useState } from "react";
 import type { Department } from "@/use-case";
 import { useBrowsing } from "./browsing-context";
 import { Collapsible } from "./collapsible";
 import styles from "./department-menu.module.css";
 import { Icon } from "./icon";
-import { useDismissal } from "./use-dismissal";
+import { isPlainClick } from "./plain-click";
+import { DEFAULT_SORT, searchUrl } from "./search-url";
+import { useDisclosure } from "./use-disclosure";
 
 type DepartmentMenuProps = {
   departments: readonly Department[];
@@ -14,17 +17,10 @@ type DepartmentMenuProps = {
 
 export function DepartmentMenu({ departments }: DepartmentMenuProps) {
   const { search } = useBrowsing();
-  const [isOpen, setIsOpen] = useState(false);
-  const panelId = useId();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const toggleRef = useRef<HTMLButtonElement>(null);
-  useDismissal(isOpen, containerRef, () => {
-    setIsOpen(false);
-    toggleRef.current?.focus();
-  });
+  const { isOpen, toggle, close, panelId, containerRef, toggleRef } = useDisclosure();
 
   function pick(query: string) {
-    setIsOpen(false);
+    close();
     search(query);
   }
 
@@ -37,7 +33,7 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
         aria-label="All departments"
         aria-expanded={isOpen}
         aria-controls={panelId}
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={toggle}
       >
         <Icon name="menu" size={22} strokeWidth={2.2} />
       </button>
@@ -67,9 +63,9 @@ function DepartmentEntry({ department, onPick }: DepartmentEntryProps) {
   return (
     <li>
       <div className={styles.row}>
-        <button type="button" className={styles.item} onClick={() => onPick(department.query)}>
+        <SearchLink query={department.query} className={styles.item} onPick={onPick}>
           {department.label}
-        </button>
+        </SearchLink>
         {hasGroups && (
           <button
             type="button"
@@ -87,26 +83,47 @@ function DepartmentEntry({ department, onPick }: DepartmentEntryProps) {
         <Collapsible isOpen={isExpanded}>
           <ul id={groupsId} className={styles.groups}>
             <li>
-              <button
-                type="button"
-                className={styles.group}
-                onClick={() => onPick(department.query)}
-              >
+              <SearchLink query={department.query} className={styles.group} onPick={onPick}>
                 All {department.label.toLowerCase()}
                 <span className={styles.count}>{department.productCount}</span>
-              </button>
+              </SearchLink>
             </li>
             {department.groups.map((group) => (
               <li key={group.query}>
-                <button type="button" className={styles.group} onClick={() => onPick(group.query)}>
+                <SearchLink query={group.query} className={styles.group} onPick={onPick}>
                   {group.label}
                   <span className={styles.count}>{group.productCount}</span>
-                </button>
+                </SearchLink>
               </li>
             ))}
           </ul>
         </Collapsible>
       )}
     </li>
+  );
+}
+
+type SearchLinkProps = {
+  query: string;
+  className: string | undefined;
+  onPick: (query: string) => void;
+  children: ReactNode;
+};
+
+// A real link, so it opens in a new tab; a plain click searches in place instead.
+function SearchLink({ query, className, onPick, children }: SearchLinkProps) {
+  return (
+    <Link
+      href={searchUrl({ text: query, sort: DEFAULT_SORT })}
+      prefetch={false}
+      className={className}
+      onClick={(event) => {
+        if (!isPlainClick(event)) return;
+        event.preventDefault();
+        onPick(query);
+      }}
+    >
+      {children}
+    </Link>
   );
 }
