@@ -7,7 +7,7 @@ import {
   shopperFromSession,
 } from "@/component";
 import type { CartLineRepository, Clock, SessionStore, Shopper } from "@/core";
-import type { SampleOrders } from "./sample-orders";
+import type { SampleOrderSeeder } from "./sample-order-seeder";
 import { type ShopperView, toShopperView } from "./view-session";
 
 export type SignInRequest = {
@@ -24,7 +24,7 @@ export class SignIn {
   constructor(
     private readonly sessions: SessionStore,
     private readonly cartLines: CartLineRepository,
-    private readonly sampleOrders: SampleOrders,
+    private readonly sampleOrderSeeder: SampleOrderSeeder,
     private readonly clock: Clock,
   ) {}
 
@@ -41,7 +41,7 @@ export class SignIn {
     await this.sessions.save(session);
     const shopper = shopperFromSession(session);
     await this.moveGuestCart(shopper);
-    await this.sampleOrders.addIfNew(shopper);
+    await this.sampleOrderSeeder.seedIfNew(shopper);
     return { status: "signed-in", shopper: toShopperView(shopper) };
   }
 

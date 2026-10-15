@@ -14,6 +14,7 @@ export {
 } from "./json/json-reader";
 export type { SavedItem } from "./list/saved-item";
 export type { SavedItemRepository } from "./list/saved-item-repository";
+export { isOneOf } from "./literal/is-one-of";
 export type { Order, OrderId, OrderLine, OrderReturn, ReturnReason } from "./order/order";
 export { isReturnReason, RETURN_REASONS } from "./order/order";
 export type { OrderRepository } from "./order/order-repository";

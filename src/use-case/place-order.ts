@@ -1,12 +1,15 @@
 import { newOrder, orderIdFor, orderItemsFor } from "@/component";
 import type {
+  CartLine,
   CartLineRepository,
   Clock,
+  Order,
   OrderId,
   OrderRepository,
   ProductDetailsRepository,
   ProductRepository,
   SessionStore,
+  Shopper,
 } from "@/core";
 import { currentShopper } from "./session-shopper";
 
@@ -30,25 +33,35 @@ export class PlaceOrder {
     const shopper = await currentShopper(this.sessions);
     if (shopper === null) return { status: "signed-out" };
     const cartLines = await this.cartLines.listByOwner(shopper.id);
+    const order = await this.orderFromCart(shopper, cartLines);
+    if (order === null) return { status: "empty-cart" };
+    await this.orders.save(order);
+    await this.emptyCart(shopper, cartLines);
+    return { status: "placed", orderId: order.id };
+  }
+
+  // Null when nothing in the cart is still in the catalogue.
+  private async orderFromCart(
+    shopper: Shopper,
+    cartLines: readonly CartLine[],
+  ): Promise<Order | null> {
     const productIds = cartLines.map((line) => line.productId);
     const products = await this.products.getMany(productIds);
-    if (products.length === 0) return { status: "empty-cart" };
-    const details = await this.productDetails.getMany(productIds);
+    if (products.length === 0) return null;
     const placedAt = this.clock.now();
     const earlierOrders = await this.orders.listByOwner(shopper.id);
-    const orderId = orderIdFor(placedAt, earlierOrders.length);
-    await this.orders.save(
-      newOrder({
-        id: orderId,
-        ownerId: shopper.id,
-        isSample: false,
-        placedAt,
-        created: placedAt,
-        deliveryPostalCode: shopper.deliveryPostalCode,
-        items: orderItemsFor(cartLines, products, details),
-      }),
-    );
+    return newOrder({
+      id: orderIdFor(placedAt, earlierOrders.length),
+      ownerId: shopper.id,
+      isSample: false,
+      placedAt,
+      created: placedAt,
+      deliveryPostalCode: shopper.deliveryPostalCode,
+      items: orderItemsFor(cartLines, products, await this.productDetails.getMany(productIds)),
+    });
+  }
+
+  private async emptyCart(shopper: Shopper, cartLines: readonly CartLine[]): Promise<void> {
     for (const cartLine of cartLines) await this.cartLines.remove(shopper.id, cartLine.productId);
-    return { status: "placed", orderId };
   }
 }

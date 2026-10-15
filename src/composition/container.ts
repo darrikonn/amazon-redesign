@@ -13,7 +13,7 @@ import {
   ListOrders,
   PlaceOrder,
   RememberSession,
-  SampleOrders,
+  SampleOrderSeeder,
   SearchCatalog,
   SignIn,
   SignOut,
@@ -72,7 +72,7 @@ export function assembleContainer(ports: Ports): Container {
     signIn: new SignIn(
       sessions,
       cartLines,
-      new SampleOrders(orders, products, productDetails, clock),
+      new SampleOrderSeeder(orders, products, productDetails, clock),
       clock,
     ),
     rememberSession: new RememberSession(sessions),

@@ -11,7 +11,7 @@ import type {
 
 // A new shopper starts with three demo orders, picked from the catalogue by their email
 // (ADR 0030), so tracking, returns, and buy again have something to show.
-export class SampleOrders {
+export class SampleOrderSeeder {
   constructor(
     private readonly orders: OrderRepository,
     private readonly products: ProductRepository,
@@ -19,7 +19,7 @@ export class SampleOrders {
     private readonly clock: Clock,
   ) {}
 
-  async addIfNew(shopper: Shopper): Promise<void> {
+  async seedIfNew(shopper: Shopper): Promise<void> {
     if ((await this.orders.listByOwner(shopper.id)).length > 0) return;
     const purchases = pickSamplePurchases(shopper.email, await this.products.list());
     const now = this.clock.now();

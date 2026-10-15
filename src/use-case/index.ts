@@ -9,10 +9,8 @@ export {
   type ChangeDeliveryLocationResult,
 } from "./change-delivery-location";
 export {
-  isOrderFilter,
   ListOrders,
   type ListOrdersRequest,
-  ORDER_FILTERS,
   type OrderFilter,
   type OrderListView,
 } from "./list-orders";
@@ -31,7 +29,7 @@ export {
   type RememberSessionRequest,
   type RememberSessionResult,
 } from "./remember-session";
-export { SampleOrders } from "./sample-orders";
+export { SampleOrderSeeder } from "./sample-order-seeder";
 export type { SavedListSummary } from "./saved-list-summary";
 export {
   type NavigationDepartmentView,

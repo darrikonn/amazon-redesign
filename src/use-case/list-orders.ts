@@ -1,5 +1,6 @@
 import { isOnTheWay } from "@/component";
 import type { Clock, OrderRepository, ProductRepository, SessionStore } from "@/core";
+import { isOneOf } from "@/core";
 import { newestFirst, type OrderSummaryView, photosFor, toOrderSummaryView } from "./order-view";
 import { currentShopper } from "./session-shopper";
 
@@ -39,5 +40,5 @@ export class ListOrders {
 }
 
 export function isOrderFilter(value: string): value is OrderFilter {
-  return ORDER_FILTERS.some((filter) => filter === value);
+  return isOneOf(ORDER_FILTERS, value);
 }

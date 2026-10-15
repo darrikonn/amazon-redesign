@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shopperFromSession } from "@/component";
+import { shopperFromSession, validSession } from "@/component";
 
 describe("shopperFromSession", () => {
   it("derives the whole shopper from the email and the ZIP code", () => {
@@ -13,5 +13,16 @@ describe("shopperFromSession", () => {
       deliveryCity: "San Francisco",
       deliveryPostalCode: "94103",
     });
+  });
+});
+
+describe("validSession", () => {
+  it("tidies a session SignIn could have made and refuses anything else", () => {
+    expect(validSession({ email: " Darri@Example.com ", deliveryPostalCode: "10001" })).toEqual({
+      email: "darri@example.com",
+      deliveryPostalCode: "10001",
+    });
+    expect(validSession({ email: "darri", deliveryPostalCode: "10001" })).toBeNull();
+    expect(validSession({ email: "darri@example.com", deliveryPostalCode: "abc" })).toBeNull();
   });
 });
