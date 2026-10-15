@@ -3,7 +3,6 @@ import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { chromium, type Page } from "playwright-core";
-import { DEFAULT_SORT, searchUrl } from "@/app/_ui/search-url";
 import { STARTER_QUERIES } from "@/component";
 
 // Renders every storefront state at desktop and phone width against a production build.
@@ -51,12 +50,13 @@ const STATES: readonly ScreenState[] = [
   ...otherExamples.map((query, index) => searchState(`example-${index + 2}`, query)),
 ];
 
+// The address a shopper would share: the search, and the product open over it.
 function searchState(name: string, text: string, productId: string | null = null): ScreenState {
-  return {
-    name,
-    address: searchUrl({ text, sort: DEFAULT_SORT, productId }),
-    hasOpenProduct: false,
-  };
+  const parameters = new URLSearchParams();
+  if (text !== "") parameters.set("q", text);
+  if (productId !== null) parameters.set("product", productId);
+  const query = parameters.toString();
+  return { name, address: query === "" ? "/" : `/?${query}`, hasOpenProduct: false };
 }
 
 function pageState(name: string, address: string): ScreenState {

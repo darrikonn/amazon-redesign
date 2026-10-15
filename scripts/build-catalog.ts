@@ -36,8 +36,9 @@ async function readCommittedRaw(): Promise<{ source: ProductSource; rawText: str
   for (const { source } of SOURCES) {
     try {
       return { source, rawText: await readFile(rawPath(source), "utf8") };
-    } catch {
-      // Try the next source's committed file.
+    } catch (error) {
+      // Only a missing file moves on to the next source; anything else is a real failure.
+      if (!isMissingFile(error)) throw error;
     }
   }
   throw new Error(
@@ -78,3 +79,7 @@ main().catch((error: unknown) => {
   console.error(error instanceof Error ? error.message : error);
   process.exitCode = 1;
 });
+
+function isMissingFile(error: unknown): boolean {
+  return error instanceof Error && "code" in error && error.code === "ENOENT";
+}

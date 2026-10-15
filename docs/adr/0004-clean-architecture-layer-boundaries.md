@@ -48,6 +48,8 @@ export async function POST(request: Request) {
 }
 ```
 
+The rule is checked by `yarn lint`: `eslint.config.ts` forbids each layer the imports this table forbids, and lets the delivery layer import only types from `@/use-case` and `@/core`. Tests are wired through the test container and are exempt, as composition roots are.
+
 ## Consequences
 
 Every external system is replaceable behind a port. Tests above infrastructure run without the real world (ADR 0013). A new dependency on an outer layer is a review finding under the Standards axis (ADR 0015).
