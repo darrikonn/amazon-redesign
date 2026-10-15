@@ -215,11 +215,13 @@
   }
 
   .card {
-    padding: 6px 6px 12px;
+    --card-padding: 6px;
+    --well-height: 132px;
+    padding: var(--card-padding) var(--card-padding) 12px;
   }
 
   .well {
-    height: 132px;
+    height: var(--well-height);
   }
 
   .well svg {
@@ -231,11 +233,13 @@
     padding: 10px 6px 0;
   }
 
+  /* Two lines kept for every title, so the facts below line up across a row without a gap
+     under a short name. */
   .title {
-    min-height: 60px;
+    min-height: 40px;
     font-size: 15px;
     line-height: 20px;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
   }
 
   .thirdDetail {
@@ -246,9 +250,15 @@
     font-size: 13px;
   }
 
+  /* The cart button sits in the photo's corner, so the price and delivery get the card's
+     full width instead of wrapping around it. */
   .cartButton,
   .cartButtonAdded {
+    position: absolute;
+    top: calc(var(--card-padding) + var(--well-height) - 44px - 8px);
+    right: calc(var(--card-padding) + 8px);
     width: 44px;
     height: 44px;
+    box-shadow: 0 4px 12px rgba(15, 17, 17, 0.24);
   }
 }
