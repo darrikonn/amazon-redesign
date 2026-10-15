@@ -8,9 +8,11 @@ import { useAnnounce } from "./announcer-context";
 import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
 import { focusAfterRemoval } from "./focus-after-removal";
+import { PageHeading } from "./page-heading";
 import { ProductShelf } from "./product-shelf";
 import { useSavedList } from "./saved-list-context";
 import page from "./shop-page.module.css";
+import { SHOP_PLACES } from "./shop-place";
 import { useLoaded } from "./use-loaded";
 
 export function SavedListView() {
@@ -35,12 +37,11 @@ export function SavedListView() {
 
   return (
     <main className={page.main}>
-      <div>
-        <h1 ref={titleRef} className={page.title} tabIndex={-1}>
-          Your list
-        </h1>
-        <p className={page.lede}>Products you saved for later.</p>
-      </div>
+      <PageHeading
+        place={SHOP_PLACES.list}
+        lede="Products you saved for later."
+        titleRef={titleRef}
+      />
       {list.isLoading && <p className={page.loading}>Loading your list</p>}
       {list.value !== null && listings.length === 0 && (
         <EmptyState
@@ -48,7 +49,7 @@ export function SavedListView() {
           title="Your list is empty"
           message="Open any product and tap its heart to save it here."
         >
-          <Link href="/" className={page.primaryButton}>
+          <Link href={SHOP_PLACES.home.href} className={page.primaryButton}>
             Find something
           </Link>
         </EmptyState>

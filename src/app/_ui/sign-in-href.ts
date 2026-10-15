@@ -1,8 +1,11 @@
+import { SHOP_PLACES } from "./shop-place";
+
 // On the sign-in page itself the link keeps the page as it is, return path included.
 export function signInHref(returnPath: string): string {
-  if (returnPath.startsWith("/sign-in")) return returnPath;
-  if (returnPath === "/") return "/sign-in";
-  return `/sign-in?next=${encodeURIComponent(returnPath)}`;
+  const signIn = SHOP_PLACES.signIn.href;
+  if (returnPath.startsWith(signIn)) return returnPath;
+  if (returnPath === SHOP_PLACES.home.href) return signIn;
+  return `${signIn}?next=${encodeURIComponent(returnPath)}`;
 }
 
 // Only a path on this site is followed after sign-in. The value is resolved the way a

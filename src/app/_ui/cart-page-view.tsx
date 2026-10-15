@@ -15,6 +15,7 @@ import { FieldError } from "./field-error";
 import { focusAfterRemoval } from "./focus-after-removal";
 import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
 import { Icon } from "./icon";
+import { PageHeading } from "./page-heading";
 import { isPlainClick } from "./plain-click";
 import { ProductThumbnail } from "./product-thumbnail";
 import { withProduct } from "./search-url";
@@ -57,9 +58,7 @@ export function CartPageView() {
 
   return (
     <main className={page.main}>
-      <h1 ref={titleRef} className={page.title} tabIndex={-1}>
-        Your cart
-      </h1>
+      <PageHeading place={SHOP_PLACES.cart} titleRef={titleRef} />
       {cart.isLoading && <p className={page.loading}>Loading your cart</p>}
       {view !== null && view.lines.length === 0 && (
         <EmptyState
@@ -67,7 +66,7 @@ export function CartPageView() {
           title="Your cart is empty"
           message="Describe what you need on the home page, or browse the deals."
         >
-          <Link href="/" className={page.primaryButton}>
+          <Link href={SHOP_PLACES.home.href} className={page.primaryButton}>
             Start shopping
           </Link>
           <Link href={SHOP_PLACES.deals.href} className={page.secondaryButton}>

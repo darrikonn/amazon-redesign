@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
+import { PageHeading } from "./page-heading";
 import { ProductShelf } from "./product-shelf";
 import page from "./shop-page.module.css";
 import { SHOP_PLACES } from "./shop-place";
@@ -15,10 +16,10 @@ export function BuyAgainView() {
   const shelf = useLoaded(load);
   return (
     <main className={page.main}>
-      <div>
-        <h1 className={page.title}>Buy again</h1>
-        <p className={page.lede}>What you have bought before and kept, most bought first.</p>
-      </div>
+      <PageHeading
+        place={SHOP_PLACES.buyAgain}
+        lede="What you have bought before and kept, most bought first."
+      />
       {shelf.isLoading && <p className={page.loading}>Loading your regular items</p>}
       {shelf.value !== null && shelf.value.listings.length === 0 && (
         <EmptyState

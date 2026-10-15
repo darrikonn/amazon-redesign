@@ -37,7 +37,7 @@ export function AccountView() {
           onClick={() => {
             // This page needs a signed-in shopper, so signing out here goes home rather
             // than to a sign-in page for the account just left.
-            router.push("/");
+            router.push(SHOP_PLACES.home.href);
             signOut().catch(reportError);
           }}
         >

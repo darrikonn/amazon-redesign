@@ -12,8 +12,8 @@ export function NotFoundView() {
         title="The link may be old or mistyped"
         message="Say what you need on the home page instead, or try one of these."
       >
-        <Link href="/" className={page.primaryButton}>
-          Start shopping
+        <Link href={SHOP_PLACES.home.href} className={page.primaryButton}>
+          {SHOP_PLACES.home.title}
         </Link>
         <Link href={SHOP_PLACES.deals.href} className={page.secondaryButton}>
           {SHOP_PLACES.deals.title}

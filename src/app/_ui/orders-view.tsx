@@ -10,6 +10,7 @@ import { OrderLineCartButton } from "./order-line-cart-button";
 import { OrderLineName } from "./order-line-name";
 import { orderStatus } from "./order-status";
 import styles from "./orders-view.module.css";
+import { PageHeading } from "./page-heading";
 import { ProductThumbnail } from "./product-thumbnail";
 import page from "./shop-page.module.css";
 import { orderHref, orderListHref, orderReturnHref, SHOP_PLACES } from "./shop-place";
@@ -32,8 +33,7 @@ export function OrdersView({ show }: OrdersViewProps) {
 
   return (
     <main className={page.main}>
-      <div className={page.heading}>
-        <h1 className={page.title}>Your orders</h1>
+      <PageHeading place={SHOP_PLACES.orders}>
         <nav aria-label="Which orders" className={page.tabs}>
           {TABS.map((tab) => (
             <Link
@@ -46,7 +46,7 @@ export function OrdersView({ show }: OrdersViewProps) {
             </Link>
           ))}
         </nav>
-      </div>
+      </PageHeading>
       {list.isLoading && <p className={page.loading}>Loading your orders</p>}
       {list.value !== null && list.value.orders.length === 0 && (
         <EmptyState

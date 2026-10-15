@@ -9,6 +9,18 @@ export type ShopPlace = {
 
 // Every page of the shop is named the same wherever it is linked from.
 export const SHOP_PLACES = {
+  home: {
+    href: "/",
+    icon: "search",
+    title: "Start shopping",
+    description: "Say what you need",
+  },
+  signIn: {
+    href: "/sign-in",
+    icon: "pin",
+    title: "Sign in",
+    description: "With any email, no password",
+  },
   account: {
     href: "/account",
     icon: "pin",
