@@ -14,7 +14,7 @@ Dependencies point inward. Infrastructure implements core interfaces and is inje
 
 | Layer | Directory | May import | Must not import |
 | --- | --- | --- | --- |
-| Core | `src/core` | Standard library only. Defines entities, value types, and ports (interfaces). | Anything from other layers or from `node_modules`. |
+| Core | `src/core` | Standard library only. Defines entities, value types, and ports (interfaces), and the small JSON readers (`requireString`, `requireRecord`) that every layer uses to check untrusted data before it becomes a value type; they live here because components may import only core. | Anything from other layers or from `node_modules`. |
 | Business component | `src/component` | `src/core` | Use cases, delivery, infrastructure, composition. |
 | Use case | `src/use-case` | `src/core`, `src/component` | Delivery, infrastructure, composition. |
 | Infrastructure | `src/infrastructure` | `src/core`, external packages | Components, use cases, delivery, composition. |

@@ -38,4 +38,6 @@ The hand-written sample catalogue had 26 products in four categories. A believab
 
 ## Consequences
 
+The generated catalogue is read-only reference data, not records the app stores, so a fact the source does not state stays absent rather than invented: a product's brand, colour, and photo, and a product's stock, shipping, warranty, and return policy, may be null. ADR 0007's rule that stored fields are never empty applies to what the app writes (the cart, orders, the saved list, ADR 0030), and the catalogue loaders check every field on load.
+
 Rebuilding the catalogue is a reviewable diff of generated files. Adding a category or a tag is a dictionary edit plus a rebuild. Product images still load from the source's CDN at runtime; offline, every card shows its glyph instead.
