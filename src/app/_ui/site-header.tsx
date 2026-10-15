@@ -14,6 +14,7 @@ import { Icon } from "./icon";
 import { LocationDialog } from "./location-dialog";
 import { isPlainClick } from "./plain-click";
 import { useSession } from "./session-context";
+import { SHOP_PLACES } from "./shop-place";
 import { signInHref } from "./sign-in-href";
 import styles from "./site-header.module.css";
 import { useCurrentAddress } from "./use-current-address";
@@ -48,7 +49,7 @@ export function SiteHeader({ departments }: SiteHeaderProps) {
       <div className={styles.navigation}>
         <AccountMenu onChangeLocation={() => setIsChoosingLocation(true)} />
         <Link
-          href="/cart"
+          href={SHOP_PLACES.cart.href}
           className={styles.cartLink}
           aria-label={`Cart, ${pluralize(cart.itemCount, "item", "items")}`}
         >

@@ -43,3 +43,32 @@ export const SHOP_PLACES = {
     description: "Delivery, returns, and accessibility",
   },
 } as const satisfies Record<string, ShopPlace>;
+
+// An order's page; `placed` marks the visit right after checkout, which thanks the shopper.
+export function orderHref(orderId: string, options: { isJustPlaced?: boolean } = {}): string {
+  const path = `${SHOP_PLACES.orders.href}/${encodeURIComponent(orderId)}`;
+  return options.isJustPlaced === true ? `${path}?${JUST_PLACED_PARAMETER}=1` : path;
+}
+
+export function orderReturnHref(orderId: string): string {
+  return `${orderHref(orderId)}#${RETURN_FORM_ID}`;
+}
+
+export function isJustPlaced(value: string | string[] | undefined): boolean {
+  return value === "1";
+}
+
+export const JUST_PLACED_PARAMETER = "placed";
+export const RETURN_FORM_ID = "return";
+
+export function orderListHref(show: string): string {
+  return show === "all"
+    ? SHOP_PLACES.orders.href
+    : `${SHOP_PLACES.orders.href}?show=${encodeURIComponent(show)}`;
+}
+
+export type HelpTopicId = "delivery" | "returns" | "account" | "accessibility";
+
+export function helpHref(topic: HelpTopicId): string {
+  return `${SHOP_PLACES.help.href}#${topic}`;
+}

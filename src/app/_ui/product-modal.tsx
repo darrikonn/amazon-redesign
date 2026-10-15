@@ -1,22 +1,18 @@
 "use client";
 
-import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
+import { type KeyboardEvent, useCallback, useId, useMemo, useRef, useState } from "react";
 import type { ProductId } from "@/core";
 import type { ProductView, ViewProduct } from "@/use-case";
 import { useBrowsing } from "./browsing-context";
 import { useContainer } from "./container-context";
-import { deliveryLabel, pluralize } from "./format";
-import { Icon } from "./icon";
 import { type CarouselControl, ImageCarousel } from "./image-carousel";
-import { prefersReducedMotion } from "./motion";
 import { shopTitle } from "./page-title";
-import { Price } from "./price";
 import { ProductInformation } from "./product-information";
 import styles from "./product-modal.module.css";
-import { CartButton, cartAvailability, SaveButton } from "./product-modal-actions";
+import { ProductModalFooter, ProductModalHeader } from "./product-modal-frame";
 import type { ProductPreview } from "./product-preview";
-import { StarRating } from "./star-rating";
 import { useDocumentTitle } from "./use-document-title";
+import { useLatestLoad } from "./use-latest-load";
 import { useModalDialog } from "./use-modal-dialog";
 
 // A native modal dialog: the page behind is inert, focus stays inside, Escape closes it,
@@ -66,38 +62,13 @@ export function ProductModal() {
       {productId !== null && (
         <div className={styles.frame}>
           <div className={styles.details}>
-            <header className={styles.header}>
-              <div className={styles.titleBlock}>
-                {view !== null && view.brand !== null && (
-                  <p className={styles.brand}>{view.brand}</p>
-                )}
-                <h2 id={titleId} className={styles.title}>
-                  {summary === null ? "Loading product" : summary.name}
-                </h2>
-                {summary !== null && (
-                  <div className={styles.ratingLine}>
-                    <StarRating rating={summary.rating} />
-                    {view !== null && view.reviews.length > 0 && (
-                      <button
-                        type="button"
-                        className={styles.reviewsLink}
-                        onClick={() => showReviews(reviewsId)}
-                      >
-                        {pluralize(view.reviews.length, "review", "reviews")}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-              <button
-                type="button"
-                className={styles.closeButton}
-                aria-label="Close"
-                onClick={onClose}
-              >
-                <Icon name="close" size={20} strokeWidth={2.6} />
-              </button>
-            </header>
+            <ProductModalHeader
+              titleId={titleId}
+              reviewsId={reviewsId}
+              summary={summary}
+              view={view}
+              onClose={onClose}
+            />
             <div className={styles.body}>
               {view === null ? (
                 <LoadingDetails />
@@ -105,26 +76,7 @@ export function ProductModal() {
                 <ProductInformation view={view} reviewsId={reviewsId} />
               )}
             </div>
-            {summary !== null && (
-              <footer className={styles.footer}>
-                <div>
-                  <Price priceInCents={summary.priceInCents} />
-                  {view !== null && view.availability?.canBuy !== false && (
-                    <p className={styles.delivery}>
-                      FREE delivery <strong>{deliveryLabel(view.deliveryDays)}</strong>
-                    </p>
-                  )}
-                </div>
-                <div className={styles.actions}>
-                  <SaveButton productId={summary.id} name={summary.name} />
-                  <CartButton
-                    productId={summary.id}
-                    name={summary.name}
-                    availability={cartAvailability(view)}
-                  />
-                </div>
-              </footer>
-            )}
+            {summary !== null && <ProductModalFooter summary={summary} view={view} />}
           </div>
           <div className={styles.media}>
             {summary !== null && (
@@ -159,29 +111,20 @@ function useProductView(
   onMissing: () => void,
 ): ProductView | null {
   const [loaded, setLoaded] = useState<ProductView | null>(null);
-
-  useEffect(() => {
-    if (productId === null) return;
-    let isCurrent = true;
-    viewProduct.execute({ productId }).then((view) => {
-      if (!isCurrent) return;
+  const load = useMemo(
+    () => (productId === null ? null : () => viewProduct.execute({ productId })),
+    [viewProduct, productId],
+  );
+  const show = useCallback(
+    (view: ProductView | null) => {
       if (view === null) onMissing();
       else setLoaded(view);
-    }, reportError);
-    return () => {
-      isCurrent = false;
-    };
-  }, [viewProduct, productId, onMissing]);
+    },
+    [onMissing],
+  );
+  useLatestLoad(load, show);
 
   return loaded !== null && loaded.id === productId ? loaded : null;
-}
-
-// A button, not a #fragment link: a fragment would add a history entry, and Back is what
-// closes the modal.
-function showReviews(reviewsId: string) {
-  const heading = document.getElementById(reviewsId)?.querySelector("h3");
-  heading?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
-  heading?.focus({ preventScroll: true });
 }
 
 function previewImages(preview: ProductPreview | null): readonly string[] {

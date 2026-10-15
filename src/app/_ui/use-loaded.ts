@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { useLatestLoad } from "./use-latest-load";
 
 export type Loaded<Value> = {
   isLoading: boolean;
@@ -11,15 +12,8 @@ export type Loaded<Value> = {
 export function useLoaded<Value>(load: () => Promise<Value>): Loaded<Value> {
   const [state, setState] = useState<{ load: () => Promise<Value>; value: Value } | null>(null);
 
-  useEffect(() => {
-    let isCurrent = true;
-    load().then((value) => {
-      if (isCurrent) setState({ load, value });
-    }, reportError);
-    return () => {
-      isCurrent = false;
-    };
-  }, [load]);
+  const keep = useCallback((value: Value) => setState({ load, value }), [load]);
+  useLatestLoad(load, keep);
 
   const isFresh = state !== null && state.load === load;
   return {

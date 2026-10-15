@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AmazonLogo } from "./amazon-logo";
-import { SHOP_PLACES, type ShopPlace } from "./shop-place";
+import { helpHref, SHOP_PLACES, type ShopPlace } from "./shop-place";
 import styles from "./site-footer.module.css";
 
 type FooterColumn = {
@@ -30,9 +30,9 @@ const COLUMNS: readonly FooterColumn[] = [
     heading: "Help",
     links: [
       { label: "All help topics", href: SHOP_PLACES.help.href },
-      { label: "Delivery", href: "/help#delivery" },
-      { label: "Returns", href: "/help#returns" },
-      { label: "Accessibility", href: "/help#accessibility" },
+      { label: "Delivery", href: helpHref("delivery") },
+      { label: "Returns", href: helpHref("returns") },
+      { label: "Accessibility", href: helpHref("accessibility") },
     ],
   },
 ];

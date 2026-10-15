@@ -18,7 +18,7 @@ import { ProductThumbnail } from "./product-thumbnail";
 import { withProduct } from "./search-url";
 import { useSession } from "./session-context";
 import page from "./shop-page.module.css";
-import { SHOP_PLACES } from "./shop-place";
+import { orderHref, SHOP_PLACES } from "./shop-place";
 import { signInHref } from "./sign-in-href";
 import { useLoaded } from "./use-loaded";
 
@@ -127,7 +127,7 @@ function CartLine({ line, maximumQuantity, onChangeQuantity }: CartLineProps) {
       <div className={styles.lineText}>
         <h2 className={styles.lineName}>
           <Link
-            href={withProduct("/cart", line.productId)}
+            href={withProduct(SHOP_PLACES.cart.href, line.productId)}
             prefetch={false}
             className={styles.lineLink}
             onClick={(event) => {
@@ -201,7 +201,7 @@ function Checkout({ cart, onPlaced }: CheckoutProps) {
     const result = await container.placeOrder.execute();
     if (result.status === "placed") {
       onPlaced(await container.viewCart.execute());
-      router.push(`/orders/${result.orderId}?placed=1`);
+      router.push(orderHref(result.orderId, { isJustPlaced: true }));
       return;
     }
     setIsPlacing(false);
@@ -212,7 +212,7 @@ function Checkout({ cart, onPlaced }: CheckoutProps) {
       <p className={styles.subtotal}>{subtotal}</p>
       <p className={page.muted}>FREE delivery on this order.</p>
       {shopper === null ? (
-        <Link href={signInHref("/cart")} className={page.primaryButton}>
+        <Link href={signInHref(SHOP_PLACES.cart.href)} className={page.primaryButton}>
           Sign in to check out
         </Link>
       ) : (

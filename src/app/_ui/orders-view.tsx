@@ -11,7 +11,7 @@ import { orderStatus } from "./order-status";
 import styles from "./orders-view.module.css";
 import { ProductThumbnail } from "./product-thumbnail";
 import page from "./shop-page.module.css";
-import { SHOP_PLACES } from "./shop-place";
+import { orderHref, orderListHref, orderReturnHref, SHOP_PLACES } from "./shop-place";
 import { useLoaded } from "./use-loaded";
 
 type OrdersViewProps = {
@@ -19,8 +19,8 @@ type OrdersViewProps = {
 };
 
 const TABS: readonly { show: OrderFilter; label: string; href: string }[] = [
-  { show: "all", label: "All orders", href: "/orders" },
-  { show: "on-the-way", label: "On the way", href: "/orders?show=on-the-way" },
+  { show: "all", label: "All orders", href: orderListHref("all") },
+  { show: "on-the-way", label: "On the way", href: orderListHref("on-the-way") },
 ];
 
 export function OrdersView({ show }: OrdersViewProps) {
@@ -66,7 +66,6 @@ export function OrdersView({ show }: OrdersViewProps) {
 
 export function OrderCard({ order }: { order: OrderSummaryView }) {
   const hasReturnable = order.lines.some((line) => line.returnState === "returnable");
-  const isOnTheWay = order.stage !== "delivered";
   return (
     <article className={styles.order} aria-labelledby={`order-${order.id}`}>
       <header className={styles.orderHeader}>
@@ -74,7 +73,7 @@ export function OrderCard({ order }: { order: OrderSummaryView }) {
         <Fact label="Total" value={splitPrice(order.totalInCents).spoken} />
         <Fact label="Items" value={pluralize(order.itemCount, "item", "items")} />
         {order.isSample && <span className={page.samplePill}>Sample order</span>}
-        <Link href={`/orders/${order.id}`} className={styles.detailsLink}>
+        <Link href={orderHref(order.id)} className={styles.detailsLink}>
           Order details
         </Link>
       </header>
@@ -98,15 +97,15 @@ export function OrderCard({ order }: { order: OrderSummaryView }) {
             </li>
           ))}
         </ul>
-        {(isOnTheWay || hasReturnable) && (
+        {(order.isOnTheWay || hasReturnable) && (
           <div className={styles.orderActions}>
-            {isOnTheWay && (
-              <Link href={`/orders/${order.id}`} className={page.primaryButton}>
+            {order.isOnTheWay && (
+              <Link href={orderHref(order.id)} className={page.primaryButton}>
                 Track package
               </Link>
             )}
             {hasReturnable && (
-              <Link href={`/orders/${order.id}#return`} className={page.secondaryButton}>
+              <Link href={orderReturnHref(order.id)} className={page.secondaryButton}>
                 Return items
               </Link>
             )}

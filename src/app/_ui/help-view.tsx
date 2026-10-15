@@ -1,10 +1,10 @@
 import Link from "next/link";
 import styles from "./help-view.module.css";
 import page from "./shop-page.module.css";
-import { SHOP_PLACES } from "./shop-place";
+import { type HelpTopicId, SHOP_PLACES } from "./shop-place";
 
 type HelpTopic = {
-  id: string;
+  id: HelpTopicId;
   title: string;
   answers: readonly string[];
   link: { href: string; label: string };

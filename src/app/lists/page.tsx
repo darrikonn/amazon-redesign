@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { requireShopper } from "../_ui/require-shopper";
 import { SavedListView } from "../_ui/saved-list-view";
+import { SHOP_PLACES } from "../_ui/shop-place";
 
 export const metadata: Metadata = { title: "Your list" };
 
 export default async function ListsPage() {
-  await requireShopper("/lists");
+  await requireShopper(SHOP_PLACES.list.href);
   return <SavedListView />;
 }

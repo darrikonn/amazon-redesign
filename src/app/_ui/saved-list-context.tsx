@@ -1,18 +1,11 @@
 "use client";
 
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import type { Container } from "@/composition";
 import type { ProductId } from "@/core";
 import type { ToggleSavedItemResult } from "@/use-case";
 import { useContainer } from "./container-context";
+import { useLatestLoad } from "./use-latest-load";
 
 export type SavedList = {
   savedProductIds: readonly ProductId[];
@@ -27,19 +20,12 @@ export function SavedListProvider({ children }: { children: ReactNode }) {
   const container = useContainer();
   const [savedProductIds, setSavedProductIds] = useState<readonly ProductId[]>([]);
 
-  const reloadSavedList = useCallback(async () => {
-    setSavedProductIds(await loadSavedProductIds(container));
-  }, [container]);
+  const loadSaved = useCallback(() => loadSavedProductIds(container), [container]);
+  useLatestLoad(loadSaved, setSavedProductIds);
 
-  useEffect(() => {
-    let isCurrent = true;
-    loadSavedProductIds(container).then((loaded) => {
-      if (isCurrent) setSavedProductIds(loaded);
-    }, reportError);
-    return () => {
-      isCurrent = false;
-    };
-  }, [container]);
+  const reloadSavedList = useCallback(async () => {
+    setSavedProductIds(await loadSaved());
+  }, [loadSaved]);
 
   const toggleSaved = useCallback(
     async (productId: ProductId) => {

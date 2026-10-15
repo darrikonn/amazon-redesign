@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import type { ProductId } from "@/core";
 import type { CartSummary } from "@/use-case";
 import { useContainer } from "./container-context";
+import { useLatestLoad } from "./use-latest-load";
 
 export type Cart = {
   cart: CartSummary;
@@ -27,19 +20,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const container = useContainer();
   const [cart, setCart] = useState<CartSummary>(EMPTY_CART);
 
-  const reloadCart = useCallback(async () => {
-    setCart(await container.viewCart.execute());
-  }, [container]);
+  const loadCart = useCallback(() => container.viewCart.execute(), [container]);
+  useLatestLoad(loadCart, setCart);
 
-  useEffect(() => {
-    let isCurrent = true;
-    container.viewCart.execute().then((loaded) => {
-      if (isCurrent) setCart(loaded);
-    }, reportError);
-    return () => {
-      isCurrent = false;
-    };
-  }, [container]);
+  const reloadCart = useCallback(async () => {
+    setCart(await loadCart());
+  }, [loadCart]);
 
   const toggleCart = useCallback(
     async (productId: ProductId) => {

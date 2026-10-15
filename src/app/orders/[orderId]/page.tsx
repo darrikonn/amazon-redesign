@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { OrderDetailView } from "../../_ui/order-detail-view";
 import { requireShopper } from "../../_ui/require-shopper";
 import type { RawSearchParameters } from "../../_ui/search-url";
+import { isJustPlaced, JUST_PLACED_PARAMETER, orderHref } from "../../_ui/shop-place";
 
 export const metadata: Metadata = { title: "Order details" };
 
@@ -12,7 +13,12 @@ type OrderPageProps = {
 
 export default async function OrderPage({ params, searchParams }: OrderPageProps) {
   const { orderId } = await params;
-  const { placed } = await searchParams;
-  await requireShopper(`/orders/${encodeURIComponent(orderId)}`);
-  return <OrderDetailView orderId={orderId} isJustPlaced={placed === "1"} />;
+  const parameters = await searchParams;
+  await requireShopper(orderHref(orderId));
+  return (
+    <OrderDetailView
+      orderId={orderId}
+      isJustPlaced={isJustPlaced(parameters[JUST_PLACED_PARAMETER])}
+    />
+  );
 }
