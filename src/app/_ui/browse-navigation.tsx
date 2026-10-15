@@ -9,6 +9,14 @@ import type {
 } from "@/use-case";
 import styles from "./browse-navigation.module.css";
 import { Collapsible } from "./collapsible";
+import {
+  followNavigation,
+  isDepartmentOpen,
+  popularFor,
+  shownDepartments,
+  startPanel,
+  toggleDepartment,
+} from "./department-panel";
 import { splitPrice } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
@@ -24,9 +32,6 @@ type BrowseNavigationProps = {
   onOpenProduct: (preview: ProductPreview) => void;
 };
 
-// Departments open, and nothing closes or shrinks by itself: the department the results
-// move into opens, and the one they left stays open with its popular products, so an
-// entry never slides away from the pointer. Only the shopper's own toggle closes one.
 export function BrowseNavigation({
   navigation,
   sort,
@@ -34,66 +39,45 @@ export function BrowseNavigation({
   onBrowse,
   onOpenProduct,
 }: BrowseNavigationProps) {
-  const marked = navigation.departments.find((department) => department.containsResults) ?? null;
-  const markedText = marked?.link.text ?? null;
-  const [openState, setOpenState] = useState<ReadonlyMap<string, boolean>>(new Map());
-  const [lastMarkedText, setLastMarkedText] = useState(markedText);
-  if (markedText !== lastMarkedText) {
-    setLastMarkedText(markedText);
-    setOpenState((current) => withOpen(current, [lastMarkedText, markedText]));
-  }
-  const [shownPopular, setShownPopular] = useState<
-    ReadonlyMap<string, readonly ProductTeaserView[]>
-  >(new Map());
-  if (marked !== null && marked.popular.length > 0) {
-    if (shownPopular.get(marked.link.text) !== marked.popular) {
-      setShownPopular((current) => new Map(current).set(marked.link.text, marked.popular));
-    }
-  }
-
-  function popularFor(department: NavigationDepartmentView): readonly ProductTeaserView[] {
-    if (department.popular.length > 0) return department.popular;
-    return shownPopular.get(department.link.text) ?? [];
-  }
-
-  function isOpen(department: NavigationDepartmentView): boolean {
-    return openState.get(department.link.text) ?? department.containsResults;
-  }
-
-  function toggle(department: NavigationDepartmentView) {
-    const next = !isOpen(department);
-    setOpenState((current) => new Map(current).set(department.link.text, next));
-  }
+  const [panel, setPanel] = useState(() => startPanel(navigation));
+  const [isShowingAll, setIsShowingAll] = useState(false);
+  const followed = followNavigation(panel, navigation);
+  if (followed !== panel) setPanel(followed);
+  const shown = shownDepartments(followed, navigation, isShowingAll);
+  const canShowMore = isShowingAll || shown.length < navigation.departments.length;
 
   return (
     <nav aria-label="Shop by department" className={styles.navigation}>
       <h2 className={styles.sectionHeading}>Departments</h2>
       <ul className={styles.departments}>
-        {navigation.departments.map((department) => (
+        {shown.map((department) => (
           <DepartmentItem
             key={department.link.text}
             department={department}
-            popular={popularFor(department)}
+            popular={popularFor(followed, department)}
             sort={sort}
-            isOpen={isOpen(department)}
+            isOpen={isDepartmentOpen(followed, department)}
             productHref={productHref}
-            onToggle={() => toggle(department)}
+            onToggle={() => setPanel((current) => toggleDepartment(current, department))}
             onBrowse={onBrowse}
             onOpenProduct={onOpenProduct}
           />
         ))}
       </ul>
+      {canShowMore && (
+        <button
+          type="button"
+          className={styles.showAll}
+          aria-expanded={isShowingAll}
+          onClick={() => setIsShowingAll((showing) => !showing)}
+        >
+          {isShowingAll
+            ? "Show fewer departments"
+            : `See all ${navigation.departments.length} departments`}
+        </button>
+      )}
     </nav>
   );
-}
-
-function withOpen(
-  openState: ReadonlyMap<string, boolean>,
-  departmentTexts: readonly (string | null)[],
-): ReadonlyMap<string, boolean> {
-  const next = new Map(openState);
-  for (const text of departmentTexts) if (text !== null) next.set(text, true);
-  return next;
 }
 
 type DepartmentItemProps = {

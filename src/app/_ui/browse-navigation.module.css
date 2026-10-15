@@ -17,6 +17,23 @@
   flex-direction: column;
 }
 
+.showAll {
+  align-self: flex-start;
+  min-height: 40px;
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent-soft);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.showAll:hover {
+  text-decoration: underline;
+}
+
 .departmentRow {
   display: flex;
   align-items: center;
