@@ -202,3 +202,34 @@
     gap: 12px;
   }
 }
+
+/* Empty states (empty-state.tsx). They live here rather than in a module of their own: the
+   Page not found page uses one, and a separate module made the framework group the cart's
+   styles with it and preload them on every page. */
+.emptyState {
+  align-items: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.emptyIconTile {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--color-accent-wash);
+  color: var(--color-accent-deep);
+}
+
+.emptyTitle {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
