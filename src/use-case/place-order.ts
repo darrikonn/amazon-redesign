@@ -1,4 +1,4 @@
-import { newOrder, orderIdFor } from "@/component";
+import { newOrder, orderIdFor, orderItemsFor } from "@/component";
 import type {
   CartLineRepository,
   Clock,
@@ -45,12 +45,7 @@ export class PlaceOrder {
         placedAt,
         created: placedAt,
         deliveryPostalCode: shopper.deliveryPostalCode,
-        items: cartLines.flatMap((cartLine) => {
-          const product = products.find((candidate) => candidate.id === cartLine.productId);
-          if (product === undefined) return [];
-          const productDetails = details.find((entry) => entry.productId === product.id) ?? null;
-          return [{ product, details: productDetails, quantity: cartLine.quantity }];
-        }),
+        items: orderItemsFor(cartLines, products, details),
       }),
     );
     for (const cartLine of cartLines) await this.cartLines.remove(shopper.id, cartLine.productId);

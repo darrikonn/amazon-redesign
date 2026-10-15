@@ -30,6 +30,7 @@ export {
   type RememberSessionRequest,
   type RememberSessionResult,
 } from "./remember-session";
+export { SampleOrders } from "./sample-orders";
 export {
   type DealPriceView,
   type NavigationDepartmentView,

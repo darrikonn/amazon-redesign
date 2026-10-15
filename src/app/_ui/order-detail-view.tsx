@@ -159,6 +159,14 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
   );
 }
 
+const RETURN_REFUSALS = {
+  "nothing-chosen": "Choose at least one item to return.",
+  "unknown-reason": "Choose why you are returning them.",
+  "not-returnable": "One of those items can no longer be returned. Choose the others.",
+  "not-found": "This order is no longer in your account.",
+  "signed-out": "Sign in again to start a return.",
+} as const;
+
 // The order loads after the page, so the browser has already given up on #return by the time
 // the form exists; this finishes the jump once it does.
 function useReturnFormInView() {
@@ -201,9 +209,9 @@ function ReturnForm({ order, onReturned }: ReturnFormProps) {
       setChosen([]);
       setMessage(null);
       onReturned(result.order);
-    } else {
-      setMessage("Choose at least one item that can still be returned.");
+      return;
     }
+    setMessage(RETURN_REFUSALS[result.status]);
   }
 
   return (

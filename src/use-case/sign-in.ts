@@ -1,26 +1,13 @@
 import {
-  addDays,
   DEFAULT_POSTAL_CODE,
   GUEST_SHOPPER_ID,
   mergeIntoCart,
-  newOrder,
   normaliseEmail,
   normalisePostalCode,
-  orderIdFor,
-  pickSamplePurchases,
-  type SamplePurchase,
   shopperFromSession,
 } from "@/component";
-import type {
-  CartLineRepository,
-  Clock,
-  Order,
-  OrderRepository,
-  ProductDetailsRepository,
-  ProductRepository,
-  SessionStore,
-  Shopper,
-} from "@/core";
+import type { CartLineRepository, Clock, SessionStore, Shopper } from "@/core";
+import type { SampleOrders } from "./sample-orders";
 import { type ShopperView, toShopperView } from "./view-session";
 
 export type SignInRequest = {
@@ -37,9 +24,7 @@ export class SignIn {
   constructor(
     private readonly sessions: SessionStore,
     private readonly cartLines: CartLineRepository,
-    private readonly orders: OrderRepository,
-    private readonly products: ProductRepository,
-    private readonly productDetails: ProductDetailsRepository,
+    private readonly sampleOrders: SampleOrders,
     private readonly clock: Clock,
   ) {}
 
@@ -56,7 +41,7 @@ export class SignIn {
     await this.sessions.save(session);
     const shopper = shopperFromSession(session);
     await this.moveGuestCart(shopper);
-    await this.addSampleOrdersIfNew(shopper);
+    await this.sampleOrders.addIfNew(shopper);
     return { status: "signed-in", shopper: toShopperView(shopper) };
   }
 
@@ -68,40 +53,5 @@ export class SignIn {
       await this.cartLines.save(line);
     }
     for (const line of guestLines) await this.cartLines.remove(GUEST_SHOPPER_ID, line.productId);
-  }
-
-  private async addSampleOrdersIfNew(shopper: Shopper): Promise<void> {
-    if ((await this.orders.listByOwner(shopper.id)).length > 0) return;
-    const purchases = pickSamplePurchases(shopper.email, await this.products.list());
-    const now = this.clock.now();
-    for (const [index, purchase] of purchases.entries()) {
-      await this.orders.save(await this.sampleOrder(shopper, purchase, index, now));
-    }
-  }
-
-  private async sampleOrder(
-    shopper: Shopper,
-    purchase: SamplePurchase,
-    index: number,
-    now: Date,
-  ): Promise<Order> {
-    const placedAt = addDays(now, -purchase.daysAgo);
-    const productIds = purchase.items.map((item) => item.productId);
-    const products = await this.products.demandMany(productIds);
-    const details = await this.productDetails.getMany(productIds);
-    return newOrder({
-      id: orderIdFor(placedAt, index),
-      ownerId: shopper.id,
-      isSample: true,
-      placedAt,
-      created: now,
-      deliveryPostalCode: shopper.deliveryPostalCode,
-      items: purchase.items.flatMap((item) => {
-        const product = products.find((candidate) => candidate.id === item.productId);
-        if (product === undefined) return [];
-        const productDetails = details.find((entry) => entry.productId === item.productId) ?? null;
-        return [{ product, details: productDetails, quantity: item.quantity }];
-      }),
-    });
   }
 }

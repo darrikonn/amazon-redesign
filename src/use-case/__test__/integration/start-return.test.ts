@@ -55,7 +55,7 @@ describe("StartReturn", () => {
     expect(result.order.lines[0]).toMatchObject({ returnState: "returned" });
   });
 
-  it("refuses the whole return when any line cannot be returned, or the reason is unknown", async () => {
+  it("refuses the whole return, and says why, when it cannot start as asked", async () => {
     const mixed = await container.startReturn.execute({
       orderId: "delivered",
       productIds: ["lamp", "mascara"],
@@ -77,9 +77,12 @@ describe("StartReturn", () => {
       reason: "damaged",
     });
 
-    expect([mixed, notDelivered, badReason, nothing]).toEqual(
-      Array.from({ length: 4 }, () => ({ status: "not-returnable" })),
-    );
+    expect([mixed, notDelivered, badReason, nothing]).toEqual([
+      { status: "not-returnable" },
+      { status: "not-returnable" },
+      { status: "unknown-reason" },
+      { status: "nothing-chosen" },
+    ]);
     expect(fakes.orders.storedOrders().every((order) => order.returns.length === 0)).toBe(true);
   });
 
@@ -91,5 +94,17 @@ describe("StartReturn", () => {
     });
 
     expect(result).toEqual({ status: "not-found" });
+  });
+
+  it("needs a signed-in shopper", async () => {
+    fakes.sessions.reset();
+
+    const result = await container.startReturn.execute({
+      orderId: "delivered",
+      productIds: ["lamp"],
+      reason: "damaged",
+    });
+
+    expect(result).toEqual({ status: "signed-out" });
   });
 });

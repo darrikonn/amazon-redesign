@@ -4,6 +4,7 @@ export {
   newOrder,
   type OrderItem,
   orderIdFor,
+  orderItemsFor,
   orderLineFor,
 } from "./order-line";
 export {

@@ -12,8 +12,11 @@ export type StartReturnRequest = {
 
 export type StartReturnResult =
   | { status: "started"; order: OrderView }
+  | { status: "nothing-chosen" }
+  | { status: "unknown-reason" }
   | { status: "not-returnable" }
-  | { status: "not-found" };
+  | { status: "not-found" }
+  | { status: "signed-out" };
 
 // Every chosen line must still be returnable; one that is not stops the whole return so
 // the shopper is never told a return started for part of what they picked.
@@ -27,14 +30,15 @@ export class StartReturn {
 
   async execute(request: StartReturnRequest): Promise<StartReturnResult> {
     const shopper = await currentShopper(this.sessions);
-    if (shopper === null) return { status: "not-found" };
+    if (shopper === null) return { status: "signed-out" };
     const order = await this.orders.get(shopper.id, request.orderId);
     if (order === null) return { status: "not-found" };
     const now = this.clock.now();
     const productIds = [...new Set(request.productIds)];
     const { reason } = request;
-    const allReturnable = productIds.every((productId) => isReturnable(order, productId, now));
-    if (!isReturnReason(reason) || productIds.length === 0 || !allReturnable) {
+    if (productIds.length === 0) return { status: "nothing-chosen" };
+    if (!isReturnReason(reason)) return { status: "unknown-reason" };
+    if (!productIds.every((productId) => isReturnable(order, productId, now))) {
       return { status: "not-returnable" };
     }
     const updated = {

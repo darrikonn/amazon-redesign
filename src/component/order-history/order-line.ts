@@ -1,4 +1,12 @@
-import type { Order, OrderId, OrderLine, Product, ProductDetails, ShopperId } from "@/core";
+import type {
+  Order,
+  OrderId,
+  OrderLine,
+  Product,
+  ProductDetails,
+  ProductId,
+  ShopperId,
+} from "@/core";
 import { returnWindowDaysFrom } from "./order-return";
 
 export type OrderItem = {
@@ -6,6 +14,26 @@ export type OrderItem = {
   details: ProductDetails | null;
   quantity: number;
 };
+
+type WantedItem = {
+  productId: ProductId;
+  quantity: number;
+};
+
+// Matches what is wanted (cart lines, sample purchases) to the catalogue; a product that has
+// left the catalogue is left out rather than ordered without a name or price.
+export function orderItemsFor(
+  wanted: readonly WantedItem[],
+  products: readonly Product[],
+  details: readonly ProductDetails[],
+): OrderItem[] {
+  return wanted.flatMap((item) => {
+    const product = products.find((candidate) => candidate.id === item.productId);
+    if (product === undefined) return [];
+    const productDetails = details.find((entry) => entry.productId === item.productId) ?? null;
+    return [{ product, details: productDetails, quantity: item.quantity }];
+  });
+}
 
 export type NewOrder = {
   id: OrderId;

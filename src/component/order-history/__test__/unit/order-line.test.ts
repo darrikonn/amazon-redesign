@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { newOrder, orderIdFor, orderLineFor } from "@/component";
+import { newOrder, orderIdFor, orderItemsFor, orderLineFor } from "@/component";
 import { aProduct, aProductDetails } from "@/test-support";
 
 describe("newOrder", () => {
@@ -59,5 +59,26 @@ describe("orderIdFor", () => {
 
     expect(orderIdFor(placedAt, 0)).not.toBe(orderIdFor(placedAt, 1));
     expect(orderIdFor(placedAt, 0)).toMatch(/^order-[0-9a-z]+-1$/);
+  });
+});
+
+describe("orderItemsFor", () => {
+  it("matches each wanted product to the catalogue and its details, leaving out missing ones", () => {
+    // Arrange
+    const lamp = aProduct({ id: "lamp" });
+    const lampDetails = aProductDetails({ productId: "lamp" });
+
+    // Act
+    const items = orderItemsFor(
+      [
+        { productId: "lamp", quantity: 2 },
+        { productId: "gone", quantity: 1 },
+      ],
+      [lamp],
+      [lampDetails],
+    );
+
+    // Assert
+    expect(items).toEqual([{ product: lamp, details: lampDetails, quantity: 2 }]);
   });
 });
