@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { CATALOG_PATHS } from "@scripts/catalog-path";
 import { describe, expect, it } from "vitest";
 import {
   buildCatalog,
@@ -13,14 +14,9 @@ import {
 import { isCategoryId, requireArray, requireRecord, requireString } from "@/core";
 import { CATALOG, parseProductDetailsFile } from "@/infrastructure";
 
-const ROOT = path.resolve(import.meta.dirname, "../../..");
-const rawResponse: unknown = readJson("src/infrastructure/product/data/raw/dummyjson.json");
-const committedVocabulary = parseCatalogVocabulary(
-  readJson("src/component/catalog-vocabulary/vocabulary.json"),
-);
-const committedDetails = parseProductDetailsFile(
-  readJson("src/infrastructure/product/data/product-details.json"),
-);
+const rawResponse: unknown = readJson(path.join(CATALOG_PATHS.rawDirectory, "dummyjson.json"));
+const committedVocabulary = parseCatalogVocabulary(readJson(CATALOG_PATHS.vocabulary));
+const committedDetails = parseProductDetailsFile(readJson(CATALOG_PATHS.details));
 
 describe("the committed catalogue", () => {
   it("gives every product a category group, a price, a rating, and a delivery estimate", () => {
@@ -98,6 +94,6 @@ describe.each(STARTER_QUERIES)("the example sentence %j", (sentence) => {
   });
 });
 
-function readJson(relativePath: string): unknown {
-  return JSON.parse(readFileSync(path.join(ROOT, relativePath), "utf8"));
+function readJson(filePath: string): unknown {
+  return JSON.parse(readFileSync(filePath, "utf8"));
 }

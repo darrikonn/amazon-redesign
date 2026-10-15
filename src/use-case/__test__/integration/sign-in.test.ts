@@ -45,20 +45,26 @@ describe("SignIn", () => {
   });
 
   it("keeps the delivery ZIP code of the session it replaces", async () => {
+    // Arrange
     fakes.sessions.seedSession(aSession({ email: "old@example.com", deliveryPostalCode: "10001" }));
 
+    // Act
     const result = await container.signIn.execute({ email: "darri.konn@gmail.com" });
 
+    // Assert
     expect(result).toMatchObject({
       shopper: { deliveryCity: "New York", deliveryPostalCode: "10001" },
     });
   });
 
   it("starts from the default ZIP code when the old session's is not a real one", async () => {
+    // Arrange
     fakes.sessions.seedSession(aSession({ deliveryPostalCode: "abc" }));
 
+    // Act
     const result = await container.signIn.execute({ email: "darri.konn@gmail.com" });
 
+    // Assert
     expect(result).toMatchObject({ shopper: { deliveryPostalCode: "55401" } });
   });
 
@@ -108,10 +114,13 @@ describe("SignIn", () => {
   });
 
   it("leaves a returning shopper's orders alone", async () => {
+    // Arrange
     fakes.orders.seedOrder(anOrder({ id: "mine", ownerId: SHOPPER_ID }));
 
+    // Act
     await container.signIn.execute({ email: "darri.konn@gmail.com" });
 
+    // Assert
     expect(fakes.orders.storedOrders().map((order) => order.id)).toEqual(["mine"]);
   });
 });

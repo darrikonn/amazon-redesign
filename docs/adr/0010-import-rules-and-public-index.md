@@ -11,7 +11,7 @@ Deep relative paths (`../../../core/...`) break on every move. Importing another
 ## Decision
 
 - Inside one package (one directory subtree with an `index.ts`): relative imports, at most two levels up (`./x`, `../x`, `../../x`). Deeper than that means the file is in the wrong place.
-- Across packages: absolute imports through the `@/` alias (`@/core`, `@/use-case`).
+- Across packages: absolute imports through the `@/` alias (`@/core`, `@/use-case`). The scripts outside `src` are reached through `@scripts/` (a script's test imports `@scripts/catalog-path`).
 - Cross-module imports go through the module's `index.ts`. The index is the public API; anything not exported from it is private.
 - Test files always use absolute imports, including for the file under test.
 

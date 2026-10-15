@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { buildCatalog, CATALOG_OVERRIDES } from "@/component";
 import type { ProductSource } from "@/core";
+import { CATALOG_PATHS } from "./catalog-path";
 
 // Composition root for the catalogue: the only place that touches the network.
 // `yarn catalog:build` fetches and rebuilds; `yarn catalog:build --from-raw` rebuilds
@@ -11,9 +12,9 @@ async function main(): Promise<void> {
   const { source, rawText } = fromRaw ? await readCommittedRaw() : await fetchFirstReachable();
   if (!fromRaw) await writeText(rawPath(source), rawText);
   const catalog = buildCatalog(source, JSON.parse(rawText), CATALOG_OVERRIDES);
-  await writeText(CATALOG_PATH, toJson(catalog.products));
-  await writeText(DETAILS_PATH, toJson(catalog.details));
-  await writeText(VOCABULARY_PATH, toJson(catalog.vocabulary));
+  await writeText(CATALOG_PATHS.catalog, toJson(catalog.products));
+  await writeText(CATALOG_PATHS.details, toJson(catalog.details));
+  await writeText(CATALOG_PATHS.vocabulary, toJson(catalog.vocabulary));
   console.info(
     `Built ${catalog.products.length} products from ${source}${fromRaw ? " (committed raw data)" : ""}.`,
   );
@@ -29,11 +30,6 @@ const SOURCES: readonly SourceEndpoint[] = [
   { source: "fakestore", url: "https://fakestoreapi.com/products" },
 ];
 
-const ROOT = path.resolve(import.meta.dirname, "..");
-const RAW_DIRECTORY = path.join(ROOT, "src/infrastructure/product/data/raw");
-const CATALOG_PATH = path.join(ROOT, "src/infrastructure/product/data/catalog.json");
-const DETAILS_PATH = path.join(ROOT, "src/infrastructure/product/data/product-details.json");
-const VOCABULARY_PATH = path.join(ROOT, "src/component/catalog-vocabulary/vocabulary.json");
 const FETCH_TIMEOUT_IN_MILLISECONDS = 20_000;
 
 async function readCommittedRaw(): Promise<{ source: ProductSource; rawText: string }> {
@@ -44,7 +40,9 @@ async function readCommittedRaw(): Promise<{ source: ProductSource; rawText: str
       // Try the next source's committed file.
     }
   }
-  throw new Error(`No committed raw response in ${RAW_DIRECTORY}; run without --from-raw first`);
+  throw new Error(
+    `No committed raw response in ${CATALOG_PATHS.rawDirectory}; run without --from-raw first`,
+  );
 }
 
 async function fetchFirstReachable(): Promise<{ source: ProductSource; rawText: string }> {
@@ -64,7 +62,7 @@ async function fetchFirstReachable(): Promise<{ source: ProductSource; rawText: 
 }
 
 function rawPath(source: ProductSource): string {
-  return path.join(RAW_DIRECTORY, `${source}.json`);
+  return path.join(CATALOG_PATHS.rawDirectory, `${source}.json`);
 }
 
 async function writeText(filePath: string, text: string): Promise<void> {

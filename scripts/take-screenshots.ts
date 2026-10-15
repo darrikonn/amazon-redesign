@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { chromium, type Page } from "playwright-core";
+import { DEFAULT_SORT, searchUrl } from "@/app/_ui/search-url";
 import { STARTER_QUERIES } from "@/component";
 
 // Renders every storefront state at desktop and phone width against a production build.
@@ -21,9 +22,8 @@ async function main(): Promise<void> {
 
 type ScreenState = {
   name: string;
-  query: string | null;
-  productId?: string;
-  path?: string;
+  address: string;
+  hasOpenProduct: boolean;
 };
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -33,22 +33,35 @@ const BASE_URL = `http://localhost:${PORT}`;
 const WIDTHS = [1440, 390] as const;
 const VIEWPORT_HEIGHT = 900;
 const READY_TIMEOUT_IN_MILLISECONDS = 30_000;
+const READY_POLL_IN_MILLISECONDS = 250;
 
 const [firstExample = "", ...otherExamples] = STARTER_QUERIES;
 const PRODUCT_WITH_PHOTOS = "dummyjson-0094";
 
 const STATES: readonly ScreenState[] = [
-  { name: "home", query: null },
-  { name: "results", query: firstExample },
-  { name: "headphones", query: "headphones" },
-  { name: "laptops", query: "laptops" },
-  { name: "none", query: "red laptop under $1500" },
-  { name: "product", query: "watches", productId: PRODUCT_WITH_PHOTOS },
-  { name: "deals", query: null, path: "/deals" },
-  { name: "sign-in", query: null, path: "/sign-in" },
-  { name: "cart", query: null, path: "/cart" },
-  ...otherExamples.map((query, index) => ({ name: `example-${index + 2}`, query })),
+  searchState("home", ""),
+  searchState("results", firstExample),
+  searchState("headphones", "headphones"),
+  searchState("laptops", "laptops"),
+  searchState("none", "red laptop under $1500"),
+  { ...searchState("product", "watches", PRODUCT_WITH_PHOTOS), hasOpenProduct: true },
+  pageState("deals", "/deals"),
+  pageState("sign-in", "/sign-in"),
+  pageState("cart", "/cart"),
+  ...otherExamples.map((query, index) => searchState(`example-${index + 2}`, query)),
 ];
+
+function searchState(name: string, text: string, productId: string | null = null): ScreenState {
+  return {
+    name,
+    address: searchUrl({ text, sort: DEFAULT_SORT, productId }),
+    hasOpenProduct: false,
+  };
+}
+
+function pageState(name: string, address: string): ScreenState {
+  return { name, address, hasOpenProduct: false };
+}
 
 function startServer(): ChildProcess {
   return spawn(path.join(ROOT, "node_modules/.bin/next"), ["start", "-p", String(PORT)], {
@@ -65,7 +78,7 @@ async function waitUntilReady(url: string): Promise<void> {
     } catch {
       // The server is still starting.
     }
-    await new Promise((resolve) => setTimeout(resolve, 250));
+    await new Promise((resolve) => setTimeout(resolve, READY_POLL_IN_MILLISECONDS));
   }
   throw new Error(`The production server did not answer at ${url}`);
 }
@@ -91,12 +104,12 @@ async function captureAll(): Promise<void> {
 // An open product modal covers the window, so it is captured at window size; every other
 // state is captured as the whole page.
 async function capture(page: Page, state: ScreenState, width: number): Promise<void> {
-  await page.goto(urlFor(state), { waitUntil: "networkidle" });
-  if (state.productId === undefined) await scrollThrough(page);
-  else await page.waitForSelector("dialog[open] dt");
+  await page.goto(`${BASE_URL}${state.address}`, { waitUntil: "networkidle" });
+  if (state.hasOpenProduct) await page.waitForSelector("dialog[open] dt");
+  else await scrollThrough(page);
   // Behind an open modal the page cannot scroll, so its lazy images below the window never
   // load; only the images that will be in the picture are waited for.
-  const scope = state.productId === undefined ? "body" : "dialog";
+  const scope = state.hasOpenProduct ? "dialog" : "body";
   await page.waitForFunction(
     (selector) =>
       [...document.querySelectorAll(`${selector} img`)].every(
@@ -105,7 +118,7 @@ async function capture(page: Page, state: ScreenState, width: number): Promise<v
     scope,
   );
   const file = path.join(OUTPUT_DIRECTORY, `${state.name}-${width}.png`);
-  await page.screenshot({ path: file, fullPage: state.productId === undefined });
+  await page.screenshot({ path: file, fullPage: !state.hasOpenProduct });
   console.info(`Saved ${path.relative(ROOT, file)}`);
 }
 
@@ -122,15 +135,6 @@ async function scrollThrough(page: Page): Promise<void> {
 }
 
 const SCROLL_PAUSE_IN_MILLISECONDS = 60;
-
-function urlFor(state: ScreenState): string {
-  if (state.path !== undefined) return `${BASE_URL}${state.path}`;
-  const parameters = new URLSearchParams();
-  if (state.query !== null) parameters.set("q", state.query);
-  if (state.productId !== undefined) parameters.set("product", state.productId);
-  const query = parameters.toString();
-  return query === "" ? BASE_URL : `${BASE_URL}/?${query}`;
-}
 
 main().catch((error: unknown) => {
   console.error(error instanceof Error ? error.message : error);
