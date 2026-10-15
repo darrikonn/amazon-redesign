@@ -104,7 +104,7 @@ export function ReturnForm({ order, onReturned }: ReturnFormProps) {
             {message}
           </p>
         )}
-        <button type="submit" className={page.primaryButton} disabled={chosen.length === 0}>
+        <button type="submit" className={page.primaryButton}>
           Start return
         </button>
       </form>

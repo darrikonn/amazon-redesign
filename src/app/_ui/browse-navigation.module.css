@@ -215,6 +215,13 @@
 }
 
 @media (max-width: 760px) {
+  /* Finger-sized rows on phones, where the panel follows the results. */
+  .group,
+  .currentGroup,
+  .teaser {
+    min-height: 44px;
+  }
+
   .navigation {
     padding: 20px;
     border: 1px solid var(--color-glass-border);

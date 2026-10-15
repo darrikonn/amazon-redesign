@@ -32,7 +32,7 @@ export function BuyAgainView() {
         </EmptyState>
       )}
       {shelf.value !== null && shelf.value.listings.length > 0 && (
-        <ProductShelf label="Buy again" listings={shelf.value.listings} />
+        <ProductShelf label="Bought before" listings={shelf.value.listings} />
       )}
     </main>
   );

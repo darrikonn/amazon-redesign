@@ -98,6 +98,7 @@
 }
 
 .reviewsLink {
+  min-height: 24px;
   padding: 0;
   border: 0;
   background: none;

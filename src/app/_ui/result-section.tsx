@@ -69,9 +69,9 @@ export function ResultSection({
     >
       <div ref={mainRef} className={styles.main}>
         <div className={styles.heading}>
-          <h2 id={RESULTS_HEADLINE_ID} className={styles.headline} aria-live="polite" tabIndex={-1}>
+          <h1 id={RESULTS_HEADLINE_ID} className={styles.headline} aria-live="polite" tabIndex={-1}>
             {outcome.headline}
-          </h2>
+          </h1>
           {outcome.resultCount > 0 && (
             <SortControl options={outcome.sortOptions} onPick={onPickSort} />
           )}

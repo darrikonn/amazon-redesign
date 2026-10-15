@@ -26,14 +26,19 @@ export function SignInForm({ returnPath }: SignInFormProps) {
     event.preventDefault();
     const email = new FormData(event.currentTarget).get("email");
     setIsSigningIn(true);
-    const result = await signIn(typeof email === "string" ? email : "");
+    const typed = typeof email === "string" ? email : "";
+    const result = await signIn(typed);
     if (result.status === "signed-in") {
       router.replace(returnPath);
       router.refresh();
       return;
     }
     setIsSigningIn(false);
-    setError("That doesn’t look like an email address. Check it reads like darri@example.com.");
+    setError(
+      typed.trim() === ""
+        ? "Enter your email address to sign in."
+        : "That doesn’t look like an email address. Check it reads like darri@example.com.",
+    );
     inputRef.current?.focus();
   }
 

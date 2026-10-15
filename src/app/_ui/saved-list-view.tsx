@@ -55,7 +55,7 @@ export function SavedListView() {
       )}
       {listings.length > 0 && (
         <ProductShelf
-          label="Your list"
+          label="Saved products"
           listings={listings}
           renderAction={(listing: ProductListing) => (
             <button
