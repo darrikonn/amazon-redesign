@@ -1,7 +1,7 @@
 import { todaysDeals } from "@/component";
 import type { Clock, ProductRepository } from "@/core";
-import type { ProductListing } from "./search-catalog";
-import { toShelfListing } from "./shelf-listing";
+import type { ProductListing } from "./product-listing";
+import { toProductListing } from "./product-listing";
 
 export type DealsView = {
   day: string;
@@ -20,7 +20,7 @@ export class ViewDeals {
     return {
       day: today.toISOString().slice(0, 10),
       listings: deals.map((deal) =>
-        toShelfListing(deal.product, {
+        toProductListing(deal.product, {
           deal: {
             listPriceInCents: deal.listPriceInCents,
             discountPercent: deal.product.discountPercent,

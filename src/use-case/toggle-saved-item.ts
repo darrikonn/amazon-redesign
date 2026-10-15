@@ -6,14 +6,11 @@ import type {
   SavedItemRepository,
   SessionStore,
 } from "@/core";
+import { type SavedListSummary, summarizeSavedList } from "./saved-list-summary";
 import { currentShopper } from "./session-shopper";
 
 export type ToggleSavedItemRequest = {
   productId: ProductId;
-};
-
-export type SavedListSummary = {
-  productIds: readonly ProductId[];
 };
 
 export type ToggleSavedItemResult =
@@ -41,7 +38,7 @@ export class ToggleSavedItem {
     const items = await this.savedItems.listByOwner(shopper.id);
     return {
       status: existing === null ? "saved" : "removed",
-      list: { productIds: items.map((item) => item.productId) },
+      list: summarizeSavedList(items),
     };
   }
 }

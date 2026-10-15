@@ -1,7 +1,8 @@
 import type { BrowseNavigation, Highlight, Listing, SearchResult } from "@/component";
-import { categoryLabel, removePhrase, searchProducts, suggestRewrite } from "@/component";
-import type { CategoryId, Color, Product, ProductId, ProductRepository, SearchSort } from "@/core";
+import { removePhrase, searchProducts, suggestRewrite } from "@/component";
+import type { CategoryId, Product, ProductId, ProductRepository, SearchSort } from "@/core";
 import { isSearchSort, SEARCH_SORTS } from "@/core";
+import { type ProductListing, toProductListing } from "./product-listing";
 
 export type SearchCatalogRequest = {
   text: string;
@@ -70,27 +71,6 @@ export type SuggestionView = {
   resultCount: number;
 };
 
-export type ProductListing = {
-  id: ProductId;
-  name: string;
-  category: CategoryId;
-  categoryLabel: string;
-  color: Color | null;
-  details: readonly string[];
-  rating: number;
-  priceInCents: number;
-  deliveryDays: number;
-  image: string | null;
-  isBestMatch: boolean;
-  highlightLabel: string | null;
-  deal: DealPriceView | null;
-};
-
-export type DealPriceView = {
-  listPriceInCents: number;
-  discountPercent: number;
-};
-
 export class SearchCatalog {
   constructor(private readonly products: ProductRepository) {}
 
@@ -153,7 +133,7 @@ function toOutcome(
       result.closestMatchesDroppedLabel === null
         ? null
         : `Closest matches, ignoring ${quoted(result.closestMatchesDroppedLabel)}`,
-    listings: result.listings.map(toProductListing),
+    listings: result.listings.map(toSearchListing),
     navigation: toNavigationView(result.navigation),
   };
 }
@@ -181,23 +161,12 @@ function emptyMessageFor(result: SearchResult): string | null {
   return "Nothing matches that yet. Try describing the product a different way.";
 }
 
-function toProductListing(listing: Listing): ProductListing {
-  const { product } = listing;
-  return {
-    id: product.id,
-    name: product.name,
-    category: product.category,
-    categoryLabel: categoryLabel(product.category),
-    color: product.color,
+function toSearchListing(listing: Listing): ProductListing {
+  return toProductListing(listing.product, {
     details: listing.details,
-    rating: product.rating,
-    priceInCents: product.priceInCents,
-    deliveryDays: product.deliveryDays,
-    image: product.image,
     isBestMatch: listing.isBestMatch,
     highlightLabel: listing.highlight === null ? null : HIGHLIGHT_LABELS[listing.highlight],
-    deal: null,
-  };
+  });
 }
 
 function toNavigationView(navigation: BrowseNavigation): NavigationView {

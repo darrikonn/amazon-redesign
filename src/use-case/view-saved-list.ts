@@ -1,8 +1,8 @@
 import type { ProductRepository, SavedItemRepository, SessionStore } from "@/core";
-import type { ProductListing } from "./search-catalog";
+import type { ProductListing } from "./product-listing";
+import { toProductListing } from "./product-listing";
+import { type SavedListSummary, summarizeSavedList } from "./saved-list-summary";
 import { currentShopper } from "./session-shopper";
-import { toShelfListing } from "./shelf-listing";
-import type { SavedListSummary } from "./toggle-saved-item";
 
 export type SavedListView = SavedListSummary & {
   listings: readonly ProductListing[];
@@ -24,8 +24,8 @@ export class ViewSavedList {
     );
     const products = await this.products.getMany(items.map((item) => item.productId));
     return {
-      productIds: products.map((product) => product.id),
-      listings: products.map((product) => toShelfListing(product)),
+      ...summarizeSavedList(products.map((product) => ({ productId: product.id }))),
+      listings: products.map((product) => toProductListing(product)),
     };
   }
 }

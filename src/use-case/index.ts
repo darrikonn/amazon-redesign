@@ -25,18 +25,18 @@ export type {
   TrackingStepView,
 } from "./order-view";
 export { PlaceOrder, type PlaceOrderResult } from "./place-order";
+export type { DealPriceView, ProductListing } from "./product-listing";
 export {
   RememberSession,
   type RememberSessionRequest,
   type RememberSessionResult,
 } from "./remember-session";
 export { SampleOrders } from "./sample-orders";
+export type { SavedListSummary } from "./saved-list-summary";
 export {
-  type DealPriceView,
   type NavigationDepartmentView,
   type NavigationLinkView,
   type NavigationView,
-  type ProductListing,
   type ProductTeaserView,
   SearchCatalog,
   type SearchCatalogRequest,
@@ -50,7 +50,6 @@ export { SignOut } from "./sign-out";
 export { StartReturn, type StartReturnRequest, type StartReturnResult } from "./start-return";
 export { ToggleCartItem, type ToggleCartItemRequest } from "./toggle-cart-item";
 export {
-  type SavedListSummary,
   ToggleSavedItem,
   type ToggleSavedItemRequest,
   type ToggleSavedItemResult,

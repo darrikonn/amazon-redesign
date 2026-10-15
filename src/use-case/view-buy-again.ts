@@ -1,8 +1,8 @@
 import { buyAgainPurchases } from "@/component";
 import type { Clock, OrderRepository, ProductRepository, SessionStore } from "@/core";
-import type { ProductListing } from "./search-catalog";
+import type { ProductListing } from "./product-listing";
+import { toProductListing } from "./product-listing";
 import { currentShopper } from "./session-shopper";
-import { toShelfListing } from "./shelf-listing";
 
 export type BuyAgainView = {
   listings: readonly ProductListing[];
@@ -29,7 +29,7 @@ export class ViewBuyAgain {
       listings: products.map((product) => {
         const timesBought =
           purchases.find((purchase) => purchase.productId === product.id)?.timesBought ?? 0;
-        return toShelfListing(product, { details: [`You bought ${timesBought}`] });
+        return toProductListing(product, { details: [`You bought ${timesBought}`] });
       }),
     };
   }

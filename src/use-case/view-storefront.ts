@@ -1,4 +1,4 @@
-import { buildBrowseNavigation, interpretQuery, STARTER_QUERIES } from "@/component";
+import { buildStoreDirectory, STARTER_QUERIES } from "@/component";
 import type { ProductRepository } from "@/core";
 import type { NavigationLinkView } from "./search-catalog";
 
@@ -26,7 +26,7 @@ export class ViewStorefront {
   constructor(private readonly products: ProductRepository) {}
 
   async execute(): Promise<Storefront> {
-    const directory = buildBrowseNavigation(await this.products.list(), interpretQuery(""), []);
+    const directory = buildStoreDirectory(await this.products.list());
     return {
       starterQueries: STARTER_QUERIES,
       departments: directory.departments.map((department) => ({

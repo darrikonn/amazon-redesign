@@ -1,6 +1,7 @@
 export {
   type BrowseNavigation,
   buildBrowseNavigation,
+  buildStoreDirectory,
   NAVIGATION_RULES,
   type NavigationDepartment,
   type NavigationLink,

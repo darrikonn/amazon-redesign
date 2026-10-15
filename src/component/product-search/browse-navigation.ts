@@ -2,6 +2,7 @@ import type { CategoryId, Interpretation, Product, Tag } from "@/core";
 import { CATEGORY_IDS } from "@/core";
 import { categoryPlural, tagLabel, tagPhrase } from "../catalog-vocabulary";
 import { mostCommonFirst } from "../collection";
+import { interpretQuery } from "../query-interpretation";
 import { capitalize, compareText } from "../text";
 
 export const NAVIGATION_RULES = {
@@ -37,25 +38,37 @@ export function buildBrowseNavigation(
   interpretation: Interpretation,
   matches: readonly Product[],
 ): BrowseNavigation {
-  const resultCategory = interpretation.intent.category ?? sharedCategory(matches);
-  const departments = CATEGORY_IDS.map((category) =>
-    departmentEntry(catalog, interpretation, matches, category, resultCategory),
-  ).filter((department) => department.link.productCount > 0);
+  const context: NavigationContext = {
+    catalog,
+    interpretation,
+    matches,
+    resultCategory: interpretation.intent.category ?? sharedCategory(matches),
+  };
+  const departments = CATEGORY_IDS.map((category) => departmentEntry(context, category)).filter(
+    (department) => department.link.productCount > 0,
+  );
   return { departments };
 }
+
+// The same directory for no search in particular, as the header's department menu shows it.
+export function buildStoreDirectory(catalog: readonly Product[]): BrowseNavigation {
+  return buildBrowseNavigation(catalog, interpretQuery(""), []);
+}
+
+type NavigationContext = {
+  catalog: readonly Product[];
+  interpretation: Interpretation;
+  matches: readonly Product[];
+  resultCategory: CategoryId | null;
+};
 
 function sharedCategory(matches: readonly Product[]): CategoryId | null {
   const first = matches[0]?.category ?? null;
   return matches.every((product) => product.category === first) ? first : null;
 }
 
-function departmentEntry(
-  catalog: readonly Product[],
-  interpretation: Interpretation,
-  matches: readonly Product[],
-  category: CategoryId,
-  resultCategory: CategoryId | null,
-): NavigationDepartment {
+function departmentEntry(context: NavigationContext, category: CategoryId): NavigationDepartment {
+  const { catalog, interpretation, matches, resultCategory } = context;
   const inCategory = catalog.filter((product) => product.category === category);
   return {
     link: {

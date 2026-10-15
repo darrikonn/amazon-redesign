@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   type BrowseNavigation,
   buildBrowseNavigation,
+  buildStoreDirectory,
   filterProducts,
   interpretQuery,
   NAVIGATION_RULES,
@@ -148,5 +149,14 @@ describe("buildBrowseNavigation", () => {
     const watches = departmentFor(navigationFor("watches", many), "Watches");
 
     expect(watches?.groups).toHaveLength(NAVIGATION_RULES.maximumGroupLinks);
+  });
+});
+
+describe("buildStoreDirectory", () => {
+  it("lists every department with products, for no search in particular", () => {
+    const directory = buildStoreDirectory(catalog);
+
+    expect(directory).toEqual(navigationFor(""));
+    expect(directory.departments.some((department) => department.containsResults)).toBe(false);
   });
 });
