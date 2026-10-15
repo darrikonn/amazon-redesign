@@ -1,3 +1,4 @@
+import type { ProductSource } from "@/core";
 import {
   optionalString,
   requireArray,
@@ -46,6 +47,18 @@ export type RawFakeStoreProduct = {
   reviewCount: number;
   image: string | null;
 };
+
+// The source's response read once, so the products and their details come from the same
+// parse.
+export type ParsedSource =
+  | { source: "dummyjson"; products: readonly RawDummyJsonProduct[] }
+  | { source: "fakestore"; products: readonly RawFakeStoreProduct[] };
+
+export function parseSource(source: ProductSource, json: unknown): ParsedSource {
+  return source === "dummyjson"
+    ? { source, products: parseDummyJsonResponse(json) }
+    : { source, products: parseFakeStoreResponse(json) };
+}
 
 export function parseDummyJsonResponse(json: unknown): RawDummyJsonProduct[] {
   const root = requireRecord(json, "DummyJSON response");

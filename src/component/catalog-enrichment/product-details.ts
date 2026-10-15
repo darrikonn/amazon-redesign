@@ -1,24 +1,23 @@
-import type { Availability, ProductDetails, ProductReview, ProductSource } from "@/core";
-import { isAvailability } from "@/core";
+import type { ProductDetails, ProductReview } from "@/core";
+import { availabilityFrom } from "../product-fact";
 import { compareText } from "../text";
-import {
-  parseDummyJsonResponse,
-  parseFakeStoreResponse,
-  type RawDummyJsonProduct,
-  type RawFakeStoreProduct,
-  type RawReview,
+import type {
+  ParsedSource,
+  RawDummyJsonProduct,
+  RawFakeStoreProduct,
+  RawReview,
 } from "./raw-source";
 import { blankToNull, productIdFor } from "./source-text";
 
-export function buildProductDetails(source: ProductSource, rawResponse: unknown): ProductDetails[] {
+export function buildProductDetails(parsed: ParsedSource): ProductDetails[] {
   const details =
-    source === "dummyjson"
-      ? parseDummyJsonResponse(rawResponse).map(dummyJsonDetails)
-      : parseFakeStoreResponse(rawResponse).map(fakeStoreDetails);
+    parsed.source === "dummyjson"
+      ? parsed.products.map(dummyJsonDetails)
+      : parsed.products.map(fakeStoreDetails);
   return details.sort((first, second) => compareText(first.productId, second.productId));
 }
 
-export function dummyJsonDetails(raw: RawDummyJsonProduct): ProductDetails {
+function dummyJsonDetails(raw: RawDummyJsonProduct): ProductDetails {
   return {
     productId: productIdFor("dummyjson", raw.id),
     description: raw.description.trim(),
@@ -32,7 +31,7 @@ export function dummyJsonDetails(raw: RawDummyJsonProduct): ProductDetails {
   };
 }
 
-export function fakeStoreDetails(raw: RawFakeStoreProduct): ProductDetails {
+function fakeStoreDetails(raw: RawFakeStoreProduct): ProductDetails {
   return {
     productId: productIdFor("fakestore", raw.id),
     description: raw.description.trim(),
@@ -54,12 +53,6 @@ function photosOrThumbnail(images: readonly string[], fallback: string | null): 
   const thumbnail = blankToNull(fallback);
   if (photos.length > 0 || thumbnail === null) return photos;
   return [thumbnail];
-}
-
-// The source writes "In Stock", "Low Stock", and "Out of Stock".
-export function availabilityFrom(status: string | null): Availability | null {
-  const slug = (status ?? "").trim().toLowerCase().replaceAll(/\s+/g, "-");
-  return isAvailability(slug) ? slug : null;
 }
 
 const CALENDAR_DATE = /^\d{4}-\d{2}-\d{2}/;

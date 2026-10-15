@@ -4,6 +4,7 @@ export * from "./catalog-vocabulary";
 export * from "./collection";
 export * from "./money";
 export * from "./order-history";
+export * from "./product-fact";
 export * from "./product-search";
 export * from "./query-assistance";
 export * from "./query-interpretation";

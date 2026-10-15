@@ -1,31 +1,5 @@
 export { CATALOG_OVERRIDES } from "./catalog-override";
-export {
-  applyOverrides,
-  averageRating,
-  buildCatalog,
-  buildVocabulary,
-  type Catalog,
-  deliveryDaysFrom,
-  deriveTags,
-  dropRareTags,
-  ENRICHMENT_RULES,
-  extractColor,
-  mapCategory,
-  normaliseDummyJsonProduct,
-  normaliseFakeStoreProduct,
-  normaliseResponse,
-  trimName,
-} from "./enrich";
+export { buildCatalog, type Catalog } from "./enrich";
+export { NORMALISATION_RULES } from "./normalise";
 export { type CatalogOverrides, type ProductOverride, parseOverrides } from "./override";
-export {
-  availabilityFrom,
-  buildProductDetails,
-  dummyJsonDetails,
-  fakeStoreDetails,
-} from "./product-details";
-export {
-  parseDummyJsonResponse,
-  parseFakeStoreResponse,
-  type RawDummyJsonProduct,
-  type RawFakeStoreProduct,
-} from "./raw-source";
+export { RARE_TAG_RULES } from "./rare-tag";

@@ -23,7 +23,7 @@ The hand-written sample catalogue had 26 products in four categories. A believab
 | Category groups, labels, synonyms, source mapping | `src/component/catalog-vocabulary/category-map.ts` |
 | Keyword to tag rules | `src/component/catalog-vocabulary/tag-rules.ts` |
 | Colour words | `src/component/catalog-vocabulary/color-word.ts` |
-| Pure enrichment rules | `src/component/catalog-enrichment/enrich.ts` |
+| Pure enrichment rules | `src/component/product-fact/` (category, colour, tags, delivery, name, rating, availability), assembled by `buildCatalog` in `src/component/catalog-enrichment/enrich.ts` |
 | Hand corrections, each with a `reason` | `src/component/catalog-enrichment/override.json` |
 
 - The closed lists of category ids, tags, and colours live in `src/core`, so they stay literal unions (ADR 0003). The dictionaries in the component layer are `Record`s keyed by those ids, so the compiler insists that every id is defined.
