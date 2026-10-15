@@ -32,7 +32,9 @@
   font-weight: 800;
 }
 
-/* A line of four stops, filled in as the order moves along. */
+/* Four stops, each dot centred over its label. A line joins each dot to the one before
+   it, so the track starts and ends on a dot, and a stretch turns green once the stop it
+   leads to is reached. */
 .steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -46,34 +48,40 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
-  padding-top: 26px;
+  padding: 26px 4px 0;
+  text-align: center;
 }
 
-.step::before,
-.stepReached::before {
+.step + .step::before,
+.step + .stepReached::before,
+.stepReached + .step::before,
+.stepReached + .stepReached::before {
   position: absolute;
   top: 7px;
-  right: 0;
-  left: 0;
+  right: 50%;
+  left: -50%;
   height: 4px;
   background: var(--color-divider);
   content: "";
 }
 
-.stepReached::before {
+.stepReached + .stepReached::before {
   background: var(--color-success);
 }
 
 .stepDot {
   position: absolute;
+  z-index: 1;
   top: 0;
-  left: 0;
+  left: 50%;
   width: 18px;
   height: 18px;
   border: 3px solid var(--color-divider);
   border-radius: 999px;
   background: var(--color-surface);
+  transform: translateX(-50%);
 }
 
 .stepReached .stepDot {
