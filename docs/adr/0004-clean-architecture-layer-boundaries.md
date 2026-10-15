@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 }
 ```
 
-The rule is checked by `yarn lint`: `eslint.config.ts` forbids each layer the imports this table forbids, and lets the delivery layer import only types from `@/use-case` and `@/core`. Tests are wired through the test container and are exempt, as composition roots are.
+The rule is checked by `yarn lint`. `eslint.config.ts` forbids each layer the layers this table forbids, by alias and by relative path alike, plus `@/test-support` everywhere outside tests, the frameworks and `node:` modules in core, components, and use cases, and any import into another layer's files rather than its index. Delivery may import only types from `@/use-case` and `@/core`, and only `createContainer` from `@/composition`. Tests are exempt: unit tests import only what they test, and the rest are wired through the test container, a composition root.
 
 ## Consequences
 
