@@ -260,9 +260,8 @@
     font-size: 18px;
   }
 
-  /* Two lines are always reserved, so the bar keeps its height when the first
-     character replaces the wrapped placeholder. */
-  .input,
+  /* The example placeholder types itself out and wraps on a phone, so an empty bar keeps
+     two lines and does not grow mid-example. Once the shopper writes, the bar fits the text. */
   .inputEmpty {
     min-height: 84px;
   }

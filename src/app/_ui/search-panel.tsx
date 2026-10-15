@@ -47,7 +47,7 @@ export function SearchPanel({
   }
 
   return (
-    <div className={styles.bar}>
+    <search className={styles.bar}>
       <div className={styles.inputRow}>
         <Icon name="search" size={22} strokeWidth={2.4} className={styles.searchIcon} />
         <label htmlFor={inputId} className="visually-hidden">
@@ -64,7 +64,7 @@ export function SearchPanel({
           spellCheck={false}
           enterKeyHint="search"
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) => onType(event.target.value)}
-          onKeyDown={(event) => handleKey(event, { clear, submit: () => onApply(text) })}
+          onKeyDown={(event) => handleKey(event, () => onApply(text))}
         />
         {hasQuery ? (
           <button
@@ -95,7 +95,7 @@ export function SearchPanel({
           </div>
         )}
       </Collapsible>
-    </div>
+    </search>
   );
 }
 
@@ -115,18 +115,14 @@ function useAutoGrow(inputRef: RefObject<HTMLTextAreaElement | null>, text: stri
   }, [inputRef, text]);
 }
 
-type KeyActions = {
-  clear: () => void;
-  submit: () => void;
-};
-
 // Enter would add a newline to the textarea; instead it searches at once, without waiting
-// for the typing pause, and closes the on-screen keyboard on touch devices.
-function handleKey(event: KeyboardEvent<HTMLTextAreaElement>, actions: KeyActions) {
-  if (event.key === "Escape") actions.clear();
+// for the typing pause, and closes the on-screen keyboard on touch devices. Escape is left
+// alone: it is a reflex key (dismissing a menu or an input method), so it must not wipe
+// what was written.
+function handleKey(event: KeyboardEvent<HTMLTextAreaElement>, submit: () => void) {
   if (event.key !== "Enter") return;
   event.preventDefault();
-  actions.submit();
+  submit();
   if (window.matchMedia("(pointer: coarse)").matches) event.currentTarget.blur();
 }
 

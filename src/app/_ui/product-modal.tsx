@@ -14,6 +14,7 @@ import styles from "./product-modal.module.css";
 import { CartButton, cartAvailability, SaveButton } from "./product-modal-actions";
 import type { ProductPreview } from "./product-preview";
 import { StarRating } from "./star-rating";
+import { useDocumentTitle } from "./use-document-title";
 import { useModalDialog } from "./use-modal-dialog";
 
 // A native modal dialog: the page behind is inert, focus stays inside, Escape closes it,
@@ -32,6 +33,7 @@ export function ProductModal() {
   const shownPreview = preview !== null && preview.id === productId ? preview : null;
   const summary = view ?? shownPreview;
   const images = view?.images ?? previewImages(shownPreview);
+  useDocumentTitle(summary?.name ?? null);
 
   // Closing by Escape is the browser's; closing because the product went away is ours,
   // and must not close a second time.

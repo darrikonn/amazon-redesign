@@ -16,6 +16,7 @@ import { searchUrl } from "./search-url";
 import { ShortcutList } from "./shortcut-list";
 import { StarterQueryList } from "./starter-query-list";
 import styles from "./storefront.module.css";
+import { useDocumentTitle } from "./use-document-title";
 import { useIdle } from "./use-idle";
 import { useSearchText } from "./use-search-text";
 import { useTypingDemo } from "./use-typing-demo";
@@ -36,6 +37,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   const demo = useTypingDemo(storefront.starterQueries, text === "" && isIdle);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   useAddressInStepWithScreen(searchText, sort, productModal.productId);
+  useDocumentTitle(outcome.hasQuery ? outcome.headline : null);
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
   const isShowingResults = outcome.hasQuery;
