@@ -1,15 +1,13 @@
 import type { CategoryId, Product, ProductId, ProductRepository } from "@/core";
-import { DataLoader } from "../data-loader";
+import { createKeyedLoader, DataLoader } from "../data-loader";
 
 export function createProductLoader(
   repository: ProductRepository,
 ): DataLoader<ProductId, Product | null> {
-  return new DataLoader(async (ids) => {
-    const productsById = new Map(
-      (await repository.getMany(ids)).map((product) => [product.id, product]),
-    );
-    return ids.map((id) => productsById.get(id) ?? null);
-  });
+  return createKeyedLoader(
+    (ids) => repository.getMany(ids),
+    (product) => product.id,
+  );
 }
 
 export function createProductListLoader(
