@@ -47,7 +47,7 @@ export function SearchPanel({
   }
 
   return (
-    <search className={styles.bar}>
+    <search className={isShowingResults ? styles.barOverResults : styles.bar}>
       <div className={styles.inputRow}>
         <Icon name="search" size={22} strokeWidth={2.4} className={styles.searchIcon} />
         <label htmlFor={inputId} className="visually-hidden">

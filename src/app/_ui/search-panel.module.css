@@ -1,4 +1,5 @@
-.bar {
+.bar,
+.barOverResults {
   width: 100%;
   max-width: var(--search-width);
   overflow: hidden;
@@ -6,10 +7,22 @@
   background: var(--color-surface);
   color: var(--color-ink);
   box-shadow: var(--shadow-search);
-  transition: box-shadow var(--duration-slow) ease;
+  transition:
+    box-shadow var(--duration-slow) ease,
+    transform var(--duration-layout) ease,
+    max-width var(--duration-layout) ease;
 }
 
-.bar:focus-within {
+/* Over results the bar glides onto the results column, beside the department panel, so it
+   lines up with what it controls. */
+.barOverResults {
+  --panel-offset: calc(var(--results-panel-width) + var(--results-panel-gap));
+  max-width: min(var(--search-width), calc(100% - var(--panel-offset)));
+  transform: translateX(calc(var(--panel-offset) / 2));
+}
+
+.bar:focus-within,
+.barOverResults:focus-within {
   box-shadow: var(--shadow-search-focus);
 }
 
@@ -243,6 +256,13 @@
 .refinementCount {
   color: var(--color-muted);
   font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .barOverResults {
+    max-width: var(--search-width);
+    transform: none;
+  }
 }
 
 @media (max-width: 760px) {

@@ -1,7 +1,7 @@
 .results {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: 20px 40px;
+  grid-template-columns: var(--results-panel-width) minmax(0, 1fr);
+  gap: 20px var(--results-panel-gap);
   width: 100%;
   max-width: var(--content-width);
   margin-top: 40px;
@@ -151,13 +151,6 @@
 
 .gridItem {
   display: flex;
-}
-
-@media (max-width: 1100px) {
-  .results {
-    grid-template-columns: 200px minmax(0, 1fr);
-    gap: 20px 28px;
-  }
 }
 
 @media (max-width: 760px) {

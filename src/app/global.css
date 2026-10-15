@@ -54,6 +54,10 @@
   --page-width: 1328px;
   --content-width: 1280px;
   --search-width: 860px;
+  /* The results' department panel and the gap beside it; the search bar lines up with the
+     column the panel leaves for the results. */
+  --results-panel-width: 240px;
+  --results-panel-gap: 40px;
   color-scheme: dark;
 }
 
@@ -128,6 +132,13 @@ ul {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --results-panel-width: 200px;
+    --results-panel-gap: 28px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
