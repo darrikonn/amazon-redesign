@@ -9,6 +9,7 @@ import { deliveryLabel, pluralize } from "./format";
 import { Icon } from "./icon";
 import { type CarouselControl, ImageCarousel } from "./image-carousel";
 import { prefersReducedMotion } from "./motion";
+import { shopTitle } from "./page-title";
 import { Price } from "./price";
 import { ProductInformation } from "./product-information";
 import styles from "./product-modal.module.css";
@@ -35,7 +36,7 @@ export function ProductModal() {
   const shownPreview = preview !== null && preview.id === productId ? preview : null;
   const summary = view ?? shownPreview;
   const images = view?.images ?? previewImages(shownPreview);
-  useDocumentTitle(summary?.name ?? null);
+  useDocumentTitle(summary === null ? null : shopTitle(summary.name));
 
   // Closing by Escape is the browser's; closing because the product went away is ours,
   // and must not close a second time.

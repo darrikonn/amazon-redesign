@@ -62,7 +62,9 @@ export function ImageCarousel({ ref, images, name, category }: ImageCarouselProp
       aria-roledescription={hasSeveral ? "carousel" : undefined}
       aria-label={hasSeveral ? `Photos of ${name}` : `Photo of ${name}`}
     >
-      <div ref={trackRef} className={styles.track} onScroll={followScroll}>
+      {/* The track scrolls, so browsers would make it a nameless tab stop; the arrows, dots,
+          and arrow keys already turn the photos. */}
+      <div ref={trackRef} className={styles.track} tabIndex={-1} onScroll={followScroll}>
         {images.map((image, index) => (
           <figure
             key={image}

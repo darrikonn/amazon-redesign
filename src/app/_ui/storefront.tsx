@@ -11,6 +11,7 @@ import { Collapsible } from "./collapsible";
 import { useContainer } from "./container-context";
 import { recoverFocus } from "./focus-recovery";
 import { scrollToTop } from "./motion";
+import { HOME_TITLE, shopTitle } from "./page-title";
 import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
@@ -38,7 +39,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   const demo = useTypingDemo(storefront.starterQueries, text === "" && isIdle);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   useAddressInStepWithScreen(searchText, sort, productModal.productId);
-  useDocumentTitle(outcome.hasQuery ? outcome.headline : null);
+  useDocumentTitle(outcome.hasQuery ? shopTitle(outcome.headline) : HOME_TITLE);
   // The layout follows the search that ran, not each keystroke, so it changes once, after
   // the pause, and the hero folds away instead of vanishing under the caret.
   const isShowingResults = outcome.hasQuery;

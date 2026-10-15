@@ -13,11 +13,11 @@
     max-width var(--duration-layout) ease;
 }
 
-/* Over results the bar glides onto the results column, beside the department panel, so it
-   lines up with what it controls. */
+/* Over results the bar glides onto the results column, beside the department panel, and
+   spans it, so its edges line up with the results it controls. */
 .barOverResults {
   --panel-offset: calc(var(--results-panel-width) + var(--results-panel-gap));
-  max-width: min(var(--search-width), calc(100% - var(--panel-offset)));
+  max-width: calc(min(100%, var(--content-width)) - var(--panel-offset));
   transform: translateX(calc(var(--panel-offset) / 2));
 }
 

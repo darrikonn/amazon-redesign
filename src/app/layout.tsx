@@ -3,6 +3,7 @@ import { Source_Sans_3 } from "next/font/google";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
 import { createContainer } from "@/composition";
+import { HOME_TITLE, TITLE_TEMPLATE } from "./_ui/page-title";
 import { ShopShell } from "./_ui/shop-shell";
 import "./global.css";
 
@@ -13,7 +14,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Amazon: just say what you need", template: "%s | Amazon" },
+  title: { default: HOME_TITLE, template: TITLE_TEMPLATE },
   description: "Describe what you need and the filters set themselves while you type.",
 };
 
