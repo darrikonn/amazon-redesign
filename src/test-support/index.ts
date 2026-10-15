@@ -8,3 +8,8 @@ export {
   aSession,
   aShopper,
 } from "./builder";
+export {
+  type SessionEndpointStandIn,
+  type StandInRequest,
+  startSessionEndpointStandIn,
+} from "./session-endpoint-stand-in";

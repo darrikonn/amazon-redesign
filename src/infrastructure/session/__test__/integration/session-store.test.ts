@@ -1,56 +1,16 @@
 import { describe, expect, it } from "vitest";
-import type { Session, SessionStore } from "@/core";
+import type { SessionStore } from "@/core";
 import {
   BrowserSessionStore,
   decodeSession,
   encodeSession,
+  InMemoryCookieJar,
+  InMemorySessionEndpoint,
   InMemorySessionStore,
-  type RequestCookieJar,
   RequestSessionStore,
-  type SessionEndpoint,
   sessionCookieValue,
 } from "@/infrastructure";
 import { aSession } from "@/test-support";
-
-// The request's cookies as the framework keeps them: values stored unencoded.
-class CookieJar implements RequestCookieJar {
-  readonly values = new Map<string, string>();
-
-  get(name: string): { value: string } | undefined {
-    const value = this.values.get(name);
-    return value === undefined ? undefined : { value };
-  }
-
-  set(name: string, value: string): void {
-    this.values.set(name, value);
-  }
-
-  delete(name: string): void {
-    this.values.delete(name);
-  }
-
-  // How the browser sees them in document.cookie: encoded, beside other cookies.
-  header(): string {
-    return [
-      "theme=dark",
-      ...[...this.values].map(([name, value]) => `${name}=${encodeURIComponent(value)}`),
-    ].join("; ");
-  }
-}
-
-// Stands in for the session endpoint: the server saves into the jar the browser reads.
-class SessionServer implements SessionEndpoint {
-  readonly jar = new CookieJar();
-  private readonly store = new RequestSessionStore(this.jar);
-
-  async save(session: Session): Promise<void> {
-    await this.store.save(session);
-  }
-
-  async clear(): Promise<void> {
-    await this.store.clear();
-  }
-}
 
 describe("the session cookie", () => {
   it("round trips a session", () => {
@@ -73,7 +33,7 @@ describe("the session cookie", () => {
 describe("RequestSessionStore", () => {
   it("reads, saves, and clears the request's session cookie", async () => {
     // Arrange
-    const jar = new CookieJar();
+    const jar = new InMemoryCookieJar();
     const store: SessionStore = new RequestSessionStore(jar);
 
     // Act
@@ -92,8 +52,8 @@ describe("RequestSessionStore", () => {
 describe("BrowserSessionStore", () => {
   it("signs in and out through the endpoint and reads the cookie the server set", async () => {
     // Arrange
-    const server = new SessionServer();
-    const store = new BrowserSessionStore(server, () => server.jar.header());
+    const endpoint = new InMemorySessionEndpoint();
+    const store = new BrowserSessionStore(endpoint, () => endpoint.cookieHeader());
 
     // Act
     await store.save(aSession({ email: "darri.konn@gmail.com" }));
@@ -103,6 +63,19 @@ describe("BrowserSessionStore", () => {
     // Assert
     expect(signedIn).toEqual(aSession({ email: "darri.konn@gmail.com" }));
     expect(await store.current()).toBeNull();
+    expect(endpoint.calls).toEqual(["save", "clear"]);
+  });
+});
+
+describe("InMemorySessionEndpoint", () => {
+  it("forgets its calls and the cookie on reset", async () => {
+    const endpoint = new InMemorySessionEndpoint();
+    await endpoint.save(aSession());
+
+    endpoint.reset();
+
+    expect(endpoint.calls).toEqual([]);
+    expect(endpoint.cookieHeader()).toBe("theme=dark");
   });
 });
 

@@ -9,8 +9,10 @@ export interface SessionEndpoint {
 }
 
 // The server sets and clears the cookie when the session endpoint is called, so the
-// browser only ever reads it.
+// browser only ever reads it. In the browser the endpoint is on the page's own origin.
 export class FetchSessionEndpoint implements SessionEndpoint {
+  constructor(private readonly url: string = SESSION_ENDPOINT_PATH) {}
+
   async save(session: Session): Promise<void> {
     await this.send("PUT", JSON.stringify(session));
   }
@@ -20,7 +22,7 @@ export class FetchSessionEndpoint implements SessionEndpoint {
   }
 
   private async send(method: "PUT" | "DELETE", body: string | null): Promise<void> {
-    const response = await fetch(SESSION_ENDPOINT_PATH, {
+    const response = await fetch(this.url, {
       method,
       body,
       headers: { "Content-Type": "application/json" },
