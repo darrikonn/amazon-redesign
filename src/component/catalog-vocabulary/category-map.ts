@@ -205,12 +205,14 @@ export const CATEGORY_MAP: Record<CategoryId, CategoryDefinition> = {
     sourceCategories: ["womens-bags"],
   },
   jewellery: {
-    label: "piece of jewellery",
-    plural: "jewellery",
+    // The shop speaks US English; the British spelling is still understood.
+    label: "piece of jewelry",
+    plural: "jewelry",
     synonyms: [
+      "piece of jewelry",
       "piece of jewellery",
-      "jewellery",
       "jewelry",
+      "jewellery",
       "earrings",
       "earring",
       "necklace",

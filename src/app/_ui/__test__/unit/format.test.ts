@@ -24,13 +24,13 @@ describe("format", () => {
   });
 
   it("writes a review's calendar date the same in every time zone", () => {
-    expect(formatReviewDate("2025-04-30")).toBe("30 Apr 2025");
-    expect(formatReviewDate("2026-01-01")).toBe("1 Jan 2026");
+    expect(formatReviewDate("2025-04-30")).toBe("Apr 30, 2025");
+    expect(formatReviewDate("2026-01-01")).toBe("Jan 1, 2026");
   });
 
   it("writes order moments as dates, in UTC", () => {
-    expect(formatOrderDate("2026-10-14T23:30:00.000Z")).toBe("14 Oct 2026");
-    expect(formatDayAndDate("2026-10-16T12:00:00.000Z")).toBe("Friday 16 October");
+    expect(formatOrderDate("2026-10-14T23:30:00.000Z")).toBe("Oct 14, 2026");
+    expect(formatDayAndDate("2026-10-16T12:00:00.000Z")).toBe("Friday, October 16");
   });
 
   it("says tomorrow for next day delivery", () => {

@@ -34,26 +34,21 @@ export function deliveryLocationLabel(location: DeliveryLocation): string {
   return [location.deliveryCity, location.deliveryPostalCode].filter(Boolean).join(" ");
 }
 
-const SHORT_DATE = new Intl.DateTimeFormat("en-GB", {
+// Dates are written the way a US shop writes them ("Oct 14, 2026"), and read in UTC so the
+// server and the browser agree.
+const SHORT_DATE = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   month: "short",
   year: "numeric",
   timeZone: "UTC",
 });
 
-// Review dates are calendar dates (YYYY-MM-DD), read in UTC so no time zone moves them.
+// Review dates are calendar dates (YYYY-MM-DD), so no time zone may move them.
 export function formatReviewDate(calendarDate: string): string {
   return SHORT_DATE.format(new Date(`${calendarDate}T00:00:00Z`));
 }
 
-const DAY_AND_DATE = new Intl.DateTimeFormat("en-GB", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-  timeZone: "UTC",
-});
-
-// Order dates are moments; they are shown in UTC so the server and the browser agree.
+// Order dates are moments.
 export function formatOrderDate(moment: string): string {
   return SHORT_DATE.format(new Date(moment));
 }
@@ -61,6 +56,13 @@ export function formatOrderDate(moment: string): string {
 export function formatDayAndDate(moment: string): string {
   return DAY_AND_DATE.format(new Date(moment));
 }
+
+const DAY_AND_DATE = new Intl.DateTimeFormat("en-US", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  timeZone: "UTC",
+});
 
 export function formatRating(rating: number): string {
   return rating.toFixed(1);

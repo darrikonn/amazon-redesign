@@ -20,7 +20,7 @@ describe("returnStatus", () => {
     expect(returnStatus({ ...line, returnState: "returnable-once-delivered" })).toBe(
       "Returnable once delivered",
     );
-    expect(returnStatus(line)).toBe("Return by 11 Nov 2026");
+    expect(returnStatus(line)).toBe("Return by Nov 11, 2026");
     expect(returnStatus({ ...line, returnState: "window-closed" })).toBe("Return window closed");
   });
 });

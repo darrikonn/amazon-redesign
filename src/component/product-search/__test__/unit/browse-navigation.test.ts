@@ -52,7 +52,7 @@ describe("buildBrowseNavigation", () => {
     expect(departments).toEqual([
       ["Laptops", 1],
       ["Watches", 3],
-      ["Jewellery", 1],
+      ["Jewelry", 1],
     ]);
   });
 
