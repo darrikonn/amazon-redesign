@@ -5,9 +5,10 @@ import type { ProductId } from "@/core";
 import type { ProductView, ViewProduct } from "@/use-case";
 import { useBrowsing } from "./browsing-context";
 import { useContainer } from "./container-context";
-import { deliveryLabel } from "./format";
+import { deliveryLabel, pluralize } from "./format";
 import { Icon } from "./icon";
 import { type CarouselControl, ImageCarousel } from "./image-carousel";
+import { prefersReducedMotion } from "./motion";
 import { Price } from "./price";
 import { ProductInformation } from "./product-information";
 import styles from "./product-modal.module.css";
@@ -28,6 +29,7 @@ export function ProductModal() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const carouselRef = useRef<CarouselControl>(null);
   const titleId = useId();
+  const reviewsId = useId();
   const view = useProductView(useContainer().viewProduct, productId, onClose);
   useModalDialog(dialogRef, productId !== null);
   const shownPreview = preview !== null && preview.id === productId ? preview : null;
@@ -71,7 +73,20 @@ export function ProductModal() {
                 <h2 id={titleId} className={styles.title}>
                   {summary === null ? "Loading product" : summary.name}
                 </h2>
-                {summary !== null && <StarRating rating={summary.rating} />}
+                {summary !== null && (
+                  <div className={styles.ratingLine}>
+                    <StarRating rating={summary.rating} />
+                    {view !== null && view.reviews.length > 0 && (
+                      <button
+                        type="button"
+                        className={styles.reviewsLink}
+                        onClick={() => showReviews(reviewsId)}
+                      >
+                        {pluralize(view.reviews.length, "review", "reviews")}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
               <button
                 type="button"
@@ -83,7 +98,11 @@ export function ProductModal() {
               </button>
             </header>
             <div className={styles.body}>
-              {view === null ? <LoadingDetails /> : <ProductInformation view={view} />}
+              {view === null ? (
+                <LoadingDetails />
+              ) : (
+                <ProductInformation view={view} reviewsId={reviewsId} />
+              )}
             </div>
             {summary !== null && (
               <footer className={styles.footer}>
@@ -154,6 +173,14 @@ function useProductView(
   }, [viewProduct, productId, onMissing]);
 
   return loaded !== null && loaded.id === productId ? loaded : null;
+}
+
+// A button, not a #fragment link: a fragment would add a history entry, and Back is what
+// closes the modal.
+function showReviews(reviewsId: string) {
+  const heading = document.getElementById(reviewsId)?.querySelector("h3");
+  heading?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+  heading?.focus({ preventScroll: true });
 }
 
 function previewImages(preview: ProductPreview | null): readonly string[] {

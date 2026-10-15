@@ -90,6 +90,27 @@
   min-width: 0;
 }
 
+.ratingLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.reviewsLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-teal);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reviewsLink:hover {
+  text-decoration: underline;
+}
+
 .brand {
   color: var(--color-muted);
   font-size: 13px;

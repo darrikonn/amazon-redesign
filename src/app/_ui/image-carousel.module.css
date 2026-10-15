@@ -82,19 +82,30 @@
 .dots {
   position: absolute;
   right: 0;
-  bottom: 16px;
+  bottom: 8px;
   left: 0;
   display: flex;
   justify-content: center;
-  gap: 8px;
 }
 
+/* Each dot is drawn small but takes a 24px target, so it can be hit with a finger. */
 .dot,
 .dotShown {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.dot::before,
+.dotShown::before {
+  content: "";
   width: 8px;
   height: 8px;
-  padding: 0;
-  border: 0;
   border-radius: 999px;
   background: var(--color-star-empty);
   transition:
@@ -102,7 +113,7 @@
     transform var(--duration-quick) ease;
 }
 
-.dotShown {
+.dotShown::before {
   background: var(--color-ink);
   transform: scale(1.25);
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./account-view.module.css";
 import { deliveryLocationLabel } from "./format";
@@ -19,6 +20,7 @@ const PLACES = [
 
 export function AccountView() {
   const { shopper, signOut } = useSession();
+  const router = useRouter();
   const [isChoosingLocation, setIsChoosingLocation] = useState(false);
   if (shopper === null) return null;
 
@@ -33,6 +35,9 @@ export function AccountView() {
           type="button"
           className={page.secondaryButton}
           onClick={() => {
+            // This page needs a signed-in shopper, so signing out here goes home rather
+            // than to a sign-in page for the account just left.
+            router.push("/");
             signOut().catch(reportError);
           }}
         >

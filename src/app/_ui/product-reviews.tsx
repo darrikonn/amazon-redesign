@@ -5,15 +5,16 @@ import styles from "./product-modal.module.css";
 import { StarRating } from "./star-rating";
 
 type ProductReviewsProps = {
+  id: string;
   rating: number;
   reviews: readonly ReviewView[];
 };
 
-export function ProductReviews({ rating, reviews }: ProductReviewsProps) {
+export function ProductReviews({ id, rating, reviews }: ProductReviewsProps) {
   const headingId = useId();
   return (
-    <section className={styles.reviews} aria-labelledby={headingId}>
-      <h3 id={headingId} className={styles.sectionTitle}>
+    <section id={id} className={styles.reviews} aria-labelledby={headingId}>
+      <h3 id={headingId} className={styles.sectionTitle} tabIndex={-1}>
         Ratings and reviews
       </h3>
       <div className={styles.ratingSummary}>

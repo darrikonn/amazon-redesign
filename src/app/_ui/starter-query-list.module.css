@@ -1,8 +1,11 @@
+/* Narrow enough that four starters wrap two and two, not three and an orphan. */
 .list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
+  max-width: 760px;
+  margin: 0 auto;
 }
 
 .pill {

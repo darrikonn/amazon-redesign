@@ -23,7 +23,7 @@ export function DealsView() {
       </div>
       {deals.isLoading && <p className={page.loading}>Finding today’s deals</p>}
       {deals.value !== null && (
-        <ProductShelf label="Today's deals" listings={deals.value.listings} />
+        <ProductShelf label="Today’s deals" listings={deals.value.listings} />
       )}
     </main>
   );

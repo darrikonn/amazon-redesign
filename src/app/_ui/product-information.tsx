@@ -3,7 +3,12 @@ import type { ProductView } from "@/use-case";
 import styles from "./product-modal.module.css";
 import { ProductReviews } from "./product-reviews";
 
-export function ProductInformation({ view }: { view: ProductView }) {
+type ProductInformationProps = {
+  view: ProductView;
+  reviewsId: string;
+};
+
+export function ProductInformation({ view, reviewsId }: ProductInformationProps) {
   return (
     <>
       {view.features.length > 0 && (
@@ -30,7 +35,7 @@ export function ProductInformation({ view }: { view: ProductView }) {
           </Fact>
         ))}
       </dl>
-      <ProductReviews rating={view.rating} reviews={view.reviews} />
+      <ProductReviews id={reviewsId} rating={view.rating} reviews={view.reviews} />
     </>
   );
 }
