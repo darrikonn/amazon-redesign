@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { createContainer } from "@/composition";
+import { shopTitle } from "./_ui/page-title";
 import {
   PRODUCT_PARAMETER,
   type RawSearchParameters,
@@ -12,17 +13,19 @@ type HomePageProps = {
   searchParams: Promise<RawSearchParameters>;
 };
 
-// The tab names what the address shows: an open product, or the search's headline.
+// The tab names what the address shows: an open product, or the search's headline. The
+// layout's title template does not reach a page in its own segment, so the whole title is
+// given here.
 export async function generateMetadata({ searchParams }: HomePageProps): Promise<Metadata> {
   const raw = await searchParams;
   const container = createContainer(await cookies());
   const productId = raw[PRODUCT_PARAMETER];
   if (typeof productId === "string") {
     const product = await container.viewProduct.execute({ productId });
-    if (product !== null) return { title: product.name };
+    if (product !== null) return { title: shopTitle(product.name) };
   }
   const outcome = await container.searchCatalog.execute(readSearchParameters(raw));
-  return outcome.hasQuery ? { title: outcome.headline } : {};
+  return outcome.hasQuery ? { title: shopTitle(outcome.headline) } : {};
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
