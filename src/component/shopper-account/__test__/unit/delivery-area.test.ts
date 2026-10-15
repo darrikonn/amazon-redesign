@@ -6,6 +6,7 @@ describe("delivery areas", () => {
     expect(normalisePostalCode(" 10001 ")).toBe("10001");
     expect(normalisePostalCode("1000")).toBeNull();
     expect(normalisePostalCode("10001-1234")).toBeNull();
+    expect(normalisePostalCode("00000")).toBeNull();
     expect(deliveryCityFor("10001")).toBe("New York");
     expect(deliveryCityFor("12345")).toBeNull();
     expect(deliveryCityFor(DEFAULT_POSTAL_CODE)).toBe("Minneapolis");

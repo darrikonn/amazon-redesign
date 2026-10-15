@@ -21,9 +21,14 @@ const POSTAL_CODE_PATTERN = /^\d{5}$/;
 
 export function normalisePostalCode(text: string): string | null {
   const postalCode = text.trim();
-  return POSTAL_CODE_PATTERN.test(postalCode) ? postalCode : null;
+  return POSTAL_CODE_PATTERN.test(postalCode) && postalCode !== NO_SUCH_POSTAL_CODE
+    ? postalCode
+    : null;
 }
 
 export function deliveryCityFor(postalCode: string): string | null {
   return DELIVERY_AREAS[postalCode] ?? null;
 }
+
+// Five digits, but no place: the US has no ZIP code 00000.
+const NO_SUCH_POSTAL_CODE = "00000";

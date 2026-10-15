@@ -47,14 +47,17 @@ export function suggestRelaxations(
   });
 }
 
+// Closest matches must still be about something: a search left with only a price ("under
+// forty bucks") would show whatever is cheap, which answers nothing the shopper asked.
 // A shopper who asked for a laptop wants laptops, so a relaxation that keeps the category
 // wins over a wider one that drops it (red lipstick is no answer to "red laptop").
 export function findClosestMatches(
   catalog: readonly Product[],
   relaxations: readonly Relaxation[],
 ): ClosestMatches | null {
-  const keepingCategory = relaxations.filter((relaxation) => relaxation.keepsCategory);
-  const widest = widestRelaxation(keepingCategory.length > 0 ? keepingCategory : relaxations);
+  const naming = relaxations.filter((relaxation) => namesAThing(relaxation.text));
+  const keepingCategory = naming.filter((relaxation) => relaxation.keepsCategory);
+  const widest = widestRelaxation(keepingCategory.length > 0 ? keepingCategory : naming);
   if (widest === null) return null;
   const products = sortProducts(
     filterProducts(catalog, interpretQuery(widest.text).intent),
@@ -64,6 +67,16 @@ export function findClosestMatches(
     droppedLabel: widest.droppedLabel,
     products: products.slice(0, RELAXATION_RULES.maximumClosestMatches),
   };
+}
+
+function namesAThing(text: string): boolean {
+  const { intent } = interpretQuery(text);
+  return (
+    intent.category !== null ||
+    intent.color !== null ||
+    intent.tags.length > 0 ||
+    intent.keywords.length > 0
+  );
 }
 
 type RelaxationCandidate = {

@@ -82,4 +82,12 @@ describe("findClosestMatches", () => {
       RELAXATION_RULES.maximumClosestMatches,
     );
   });
+
+  it("shows nothing when only a price would be left to search by", () => {
+    const text = "gift lover under $30";
+    const relaxations = suggestRelaxations(catalog, text, interpretQuery(text));
+
+    expect(relaxations.map((relaxation) => relaxation.text)).toContain("under $30");
+    expect(findClosestMatches(catalog, relaxations)).toBeNull();
+  });
 });
