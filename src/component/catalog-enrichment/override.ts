@@ -2,8 +2,8 @@ import type { CategoryId, Color, ProductSource, Tag } from "@/core";
 import {
   isCategoryId,
   isColor,
+  isProductSource,
   isTag,
-  PRODUCT_SOURCES,
   requireNumber,
   requireRecord,
   requireString,
@@ -26,9 +26,7 @@ export type CatalogOverrides = Readonly<
 
 export function parseOverrides(json: unknown): CatalogOverrides {
   const root = requireRecord(json, "overrides");
-  const unknownSource = Object.keys(root).find(
-    (key) => !PRODUCT_SOURCES.some((source) => source === key),
-  );
+  const unknownSource = Object.keys(root).find((key) => !isProductSource(key));
   if (unknownSource !== undefined) throw new Error(`overrides: unknown source "${unknownSource}"`);
   return {
     dummyjson: readSourceOverrides(root.dummyjson, "dummyjson"),

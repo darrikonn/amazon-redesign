@@ -39,8 +39,8 @@ export type {
   UnderstoodTerm,
   UnderstoodTermKind,
 } from "./search/search-intent";
-export type { SearchSort } from "./search/search-sort";
-export { isSearchSort, SEARCH_SORTS } from "./search/search-sort";
+export type { DefaultSearchSort, SearchSort } from "./search/search-sort";
+export { DEFAULT_SEARCH_SORT, isSearchSort, SEARCH_SORTS } from "./search/search-sort";
 export type { Session } from "./session/session";
 export type { SessionStore } from "./session/session-store";
 export type { Shopper, ShopperId } from "./shopper/shopper";

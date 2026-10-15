@@ -1,3 +1,4 @@
+import { isOneOf } from "../literal/is-one-of";
 // Ordered so that "rose gold" is tried before "gold".
 export const COLORS = [
   "rose gold",
@@ -21,5 +22,5 @@ export const COLORS = [
 export type Color = (typeof COLORS)[number];
 
 export function isColor(value: string): value is Color {
-  return COLORS.some((color) => color === value);
+  return isOneOf(COLORS, value);
 }

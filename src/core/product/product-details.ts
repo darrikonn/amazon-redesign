@@ -1,3 +1,4 @@
+import { isOneOf } from "../literal/is-one-of";
 import type { ProductId } from "./product";
 
 export const AVAILABILITIES = ["in-stock", "low-stock", "out-of-stock"] as const;
@@ -27,5 +28,5 @@ export type ProductDetails = {
 };
 
 export function isAvailability(value: string): value is Availability {
-  return AVAILABILITIES.some((availability) => availability === value);
+  return isOneOf(AVAILABILITIES, value);
 }

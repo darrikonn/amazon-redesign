@@ -1,3 +1,4 @@
+import { isOneOf } from "../literal/is-one-of";
 import type { CategoryId } from "./category";
 import type { Color } from "./color";
 import type { Tag } from "./tag";
@@ -28,5 +29,5 @@ export type Product = {
 };
 
 export function isProductSource(value: string): value is ProductSource {
-  return PRODUCT_SOURCES.some((source) => source === value);
+  return isOneOf(PRODUCT_SOURCES, value);
 }

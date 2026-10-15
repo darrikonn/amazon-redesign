@@ -51,8 +51,7 @@ export function optionalString(
 ): string | null {
   const value = record[key];
   if (value === undefined || value === null) return null;
-  if (typeof value !== "string") throw new Error(`${context}: expected "${key}" to be a string`);
-  return value;
+  return requireString(record, key, context);
 }
 
 export function requireStringArray(

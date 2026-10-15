@@ -1,3 +1,4 @@
+import { isOneOf } from "../literal/is-one-of";
 export const TAGS = [
   "wireless",
   "noise-cancelling",
@@ -50,5 +51,5 @@ export const TAGS = [
 export type Tag = (typeof TAGS)[number];
 
 export function isTag(value: string): value is Tag {
-  return TAGS.some((tag) => tag === value);
+  return isOneOf(TAGS, value);
 }

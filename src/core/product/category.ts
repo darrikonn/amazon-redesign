@@ -1,3 +1,4 @@
+import { isOneOf } from "../literal/is-one-of";
 export const CATEGORY_IDS = [
   "phones",
   "tablets",
@@ -26,5 +27,5 @@ export const CATEGORY_IDS = [
 export type CategoryId = (typeof CATEGORY_IDS)[number];
 
 export function isCategoryId(value: string): value is CategoryId {
-  return CATEGORY_IDS.some((id) => id === value);
+  return isOneOf(CATEGORY_IDS, value);
 }

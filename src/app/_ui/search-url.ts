@@ -1,4 +1,4 @@
-import type { ProductId, SearchSort } from "@/core";
+import type { DefaultSearchSort, ProductId, SearchSort } from "@/core";
 
 export type RawSearchParameters = Record<string, string | string[] | undefined>;
 
@@ -11,7 +11,8 @@ export function readSearchParameters(raw: RawSearchParameters): RequestedSearch 
   return { text: firstValue(raw.q) ?? "", sort: firstValue(raw.sort) ?? "" };
 }
 
-export const DEFAULT_SORT: SearchSort = "best-match";
+// The address leaves out the sort a search starts with; the type ties it to core's default.
+export const DEFAULT_SORT: DefaultSearchSort = "best-match";
 export const PRODUCT_PARAMETER = "product";
 
 type SearchLocation = {

@@ -16,48 +16,45 @@ export type TrackingStep = {
   isReached: boolean;
 };
 
+type Delivery = Pick<Order, "placedAt" | "deliveryDays">;
+
 export type OrderTracking = {
   stage: TrackingStage;
+  isDelivered: boolean;
   steps: readonly TrackingStep[];
   deliveredAt: Date;
 };
 
-// An order ships within a day (sooner for overnight delivery), goes out for delivery the
-// morning it arrives, and arrives after its delivery estimate.
-export function trackOrder(
-  order: Pick<Order, "placedAt" | "deliveryDays">,
-  now: Date,
-): OrderTracking {
-  const placedAt = new Date(order.placedAt);
-  const deliveredAt = later(placedAt, order.deliveryDays * DAY_IN_MILLISECONDS);
-  const shippedAt = later(
-    placedAt,
-    Math.min(
-      TRACKING_RULES.hoursUntilShipped * HOUR_IN_MILLISECONDS,
-      (deliveredAt.getTime() - placedAt.getTime()) / 2,
-    ),
-  );
-  const outForDeliveryAt = new Date(
-    Math.max(
-      shippedAt.getTime(),
-      deliveredAt.getTime() -
-        TRACKING_RULES.hoursOutForDeliveryBeforeArrival * HOUR_IN_MILLISECONDS,
-    ),
-  );
-  const steps = [
-    step("ordered", placedAt, now),
-    step("shipped", shippedAt, now),
-    step("out-for-delivery", outForDeliveryAt, now),
-    step("delivered", deliveredAt, now),
-  ];
-  const reached = steps.filter((entry) => entry.isReached);
-  return { stage: reached.at(-1)?.stage ?? "ordered", steps, deliveredAt };
+export function trackOrder(order: Delivery, now: Date): OrderTracking {
+  const times = stageTimes(order);
+  const steps = TRACKING_STAGES.map((stage) => step(stage, times[stage], now));
+  const stage = steps.filter((entry) => entry.isReached).at(-1)?.stage ?? "ordered";
+  return { stage, isDelivered: stage === "delivered", steps, deliveredAt: times.delivered };
 }
 
-type Delivery = Pick<Order, "placedAt" | "deliveryDays">;
+// An order ships within a day (sooner for overnight delivery), goes out for delivery the
+// morning it arrives, and arrives after its delivery estimate.
+function stageTimes(order: Delivery): Record<TrackingStage, Date> {
+  const ordered = new Date(order.placedAt);
+  const delivered = later(ordered, order.deliveryDays * DAY_IN_MILLISECONDS);
+  const shipped = later(
+    ordered,
+    Math.min(
+      TRACKING_RULES.hoursUntilShipped * HOUR_IN_MILLISECONDS,
+      (delivered.getTime() - ordered.getTime()) / 2,
+    ),
+  );
+  const outForDelivery = new Date(
+    Math.max(
+      shipped.getTime(),
+      delivered.getTime() - TRACKING_RULES.hoursOutForDeliveryBeforeArrival * HOUR_IN_MILLISECONDS,
+    ),
+  );
+  return { ordered, shipped, "out-for-delivery": outForDelivery, delivered };
+}
 
 export function isDelivered(order: Delivery, now: Date): boolean {
-  return trackOrder(order, now).stage === "delivered";
+  return trackOrder(order, now).isDelivered;
 }
 
 export function isOnTheWay(order: Delivery, now: Date): boolean {

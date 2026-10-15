@@ -1,3 +1,4 @@
+import { isOneOf } from "../literal/is-one-of";
 import type { CategoryId } from "../product/category";
 import type { ProductId } from "../product/product";
 import type { ShopperId } from "../shopper/shopper";
@@ -45,5 +46,5 @@ export type Order = {
 };
 
 export function isReturnReason(value: string): value is ReturnReason {
-  return RETURN_REASONS.some((reason) => reason === value);
+  return isOneOf(RETURN_REASONS, value);
 }

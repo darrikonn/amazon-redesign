@@ -1,6 +1,7 @@
 import {
   deliveryCityFor,
   itemCount,
+  type OrderTracking,
   type ReturnState,
   returnableUntil,
   returnStateOf,
@@ -23,6 +24,7 @@ export type OrderSummaryView = {
   isSample: boolean;
   placedAt: string;
   stage: TrackingStage;
+  isOnTheWay: boolean;
   deliveredAt: string;
   totalInCents: number;
   itemCount: number;
@@ -65,6 +67,7 @@ export type OrderView = OrderSummaryView & {
   steps: readonly TrackingStepView[];
   returns: readonly OrderReturnView[];
   returnReasons: readonly ReturnReasonOption[];
+  defaultReturnReason: ReturnReason;
 };
 
 const STAGE_LABELS: Record<TrackingStage, string> = {
@@ -73,6 +76,9 @@ const STAGE_LABELS: Record<TrackingStage, string> = {
   "out-for-delivery": "Out for delivery",
   delivered: "Delivered",
 };
+
+// The reason a return form starts on, the most common one.
+const DEFAULT_RETURN_REASON: ReturnReason = "no-longer-needed";
 
 const RETURN_REASON_LABELS: Record<ReturnReason, string> = {
   "no-longer-needed": "No longer needed",
@@ -99,7 +105,7 @@ export async function photosFor(
 export function toOrderView(order: Order, now: Date, photos: OrderPhotos): OrderView {
   const tracking = trackOrder(order, now);
   return {
-    ...toOrderSummaryView(order, now, photos),
+    ...summaryOf(order, tracking, now, photos),
     deliveryCity: deliveryCityFor(order.deliveryPostalCode),
     deliveryPostalCode: order.deliveryPostalCode,
     steps: tracking.steps.map((step) => ({
@@ -117,16 +123,26 @@ export function toOrderView(order: Order, now: Date, photos: OrderPhotos): Order
       reason,
       label: RETURN_REASON_LABELS[reason],
     })),
+    defaultReturnReason: DEFAULT_RETURN_REASON,
   };
 }
 
 export function toOrderSummaryView(order: Order, now: Date, photos: OrderPhotos): OrderSummaryView {
-  const tracking = trackOrder(order, now);
+  return summaryOf(order, trackOrder(order, now), now, photos);
+}
+
+function summaryOf(
+  order: Order,
+  tracking: OrderTracking,
+  now: Date,
+  photos: OrderPhotos,
+): OrderSummaryView {
   return {
     id: order.id,
     isSample: order.isSample,
     placedAt: order.placedAt,
     stage: tracking.stage,
+    isOnTheWay: !tracking.isDelivered,
     deliveredAt: tracking.deliveredAt.toISOString(),
     totalInCents: totalInCents(order.lines),
     itemCount: itemCount(order.lines),

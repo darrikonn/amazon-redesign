@@ -1,7 +1,7 @@
 import type { BrowseNavigation, Highlight, Listing, SearchResult } from "@/component";
 import { removePhrase, searchProducts, suggestRewrite } from "@/component";
 import type { CategoryId, Product, ProductId, ProductRepository, SearchSort } from "@/core";
-import { isSearchSort, SEARCH_SORTS } from "@/core";
+import { DEFAULT_SEARCH_SORT, isSearchSort, SEARCH_SORTS } from "@/core";
 import { type ProductListing, toProductListing } from "./product-listing";
 
 export type SearchCatalogRequest = {
@@ -76,7 +76,7 @@ export class SearchCatalog {
 
   async execute(request: SearchCatalogRequest): Promise<SearchOutcome> {
     const catalog = await this.products.list();
-    const requestedSort = isSearchSort(request.sort) ? request.sort : DEFAULT_SORT;
+    const requestedSort = isSearchSort(request.sort) ? request.sort : DEFAULT_SEARCH_SORT;
     const outcome = toOutcome(searchProducts(catalog, request.text, requestedSort), requestedSort);
     const rewrite = suggestRewrite(catalog, request.text);
     return {
@@ -92,8 +92,6 @@ export class SearchCatalog {
     };
   }
 }
-
-const DEFAULT_SORT: SearchSort = "best-match";
 
 const SORT_LABELS: Record<SearchSort, string> = {
   "best-match": "Best match",
