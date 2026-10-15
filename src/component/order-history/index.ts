@@ -16,6 +16,7 @@ export {
   returnWindowDaysFrom,
 } from "./order-return";
 export {
+  isDelivered,
   isOnTheWay,
   type OrderTracking,
   TRACKING_RULES,

@@ -1,5 +1,5 @@
 import type { Product, SearchIntent } from "@/core";
-import { tagPhrase } from "../catalog-vocabulary";
+import { categoryLabel, categoryPlural, tagPhrase } from "../catalog-vocabulary";
 
 export function filterProducts(products: readonly Product[], intent: SearchIntent): Product[] {
   return products.filter((product) => matchesIntent(product, intent));
@@ -57,8 +57,8 @@ function describeForKeywords(product: Product): string {
     product.brand ?? "",
     product.tags.map(tagPhrase).join(" "),
     product.color ?? "",
-    product.categoryLabel,
-    product.categoryPlural,
+    categoryLabel(product.category),
+    categoryPlural(product.category),
   ]
     .join(" ")
     .toLowerCase();

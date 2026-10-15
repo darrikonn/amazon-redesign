@@ -34,8 +34,6 @@ function parseProduct(value: unknown, context: string): Product {
     sourceId: requireNumber(record, "sourceId", context),
     name: requireString(record, "name", context),
     category,
-    categoryLabel: requireString(record, "categoryLabel", context),
-    categoryPlural: requireString(record, "categoryPlural", context),
     priceInCents: requireNumber(record, "priceInCents", context),
     discountPercent: requireNumber(record, "discountPercent", context),
     rating: requireNumber(record, "rating", context),

@@ -1,6 +1,6 @@
 import type { Order, OrderLine, ProductId } from "@/core";
 import { addDays } from "../calendar";
-import { trackOrder } from "./order-tracking";
+import { isDelivered, trackOrder } from "./order-tracking";
 
 export const RETURN_RULES = {
   // For products whose source states no policy at all.
@@ -29,7 +29,7 @@ export function isReturned(order: Order, productId: ProductId): boolean {
 export function isReturnable(order: Order, productId: ProductId, now: Date): boolean {
   const line = order.lines.find((candidate) => candidate.productId === productId);
   if (line === undefined || isReturned(order, productId)) return false;
-  if (trackOrder(order, now).stage !== "delivered") return false;
+  if (!isDelivered(order, now)) return false;
   const until = returnableUntil(order, line, now);
   return until !== null && now.getTime() <= until.getTime();
 }

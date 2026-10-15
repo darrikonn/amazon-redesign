@@ -1,6 +1,8 @@
 import type { CategoryId, Interpretation, Product, Tag } from "@/core";
 import { CATEGORY_IDS } from "@/core";
-import { CATEGORY_MAP, capitalize, tagLabel, tagPhrase } from "../catalog-vocabulary";
+import { categoryPlural, tagLabel, tagPhrase } from "../catalog-vocabulary";
+import { mostCommonFirst } from "../collection";
+import { capitalize, compareText } from "../text";
 
 export const NAVIGATION_RULES = {
   maximumGroupLinks: 8,
@@ -57,9 +59,9 @@ function departmentEntry(
   const inCategory = catalog.filter((product) => product.category === category);
   return {
     link: {
-      label: capitalize(CATEGORY_MAP[category].plural),
+      label: capitalize(categoryPlural(category)),
       productCount: inCategory.length,
-      text: CATEGORY_MAP[category].plural,
+      text: categoryPlural(category),
       isCurrent: isExactly(interpretation, category, null),
     },
     containsResults: category === resultCategory,
@@ -83,8 +85,8 @@ function groupLinks(
   interpretation: Interpretation,
   category: CategoryId,
 ): NavigationLink[] {
-  const plural = CATEGORY_MAP[category].plural;
-  return countBy(inCategory.flatMap((product) => product.tags))
+  const plural = categoryPlural(category);
+  return mostCommonFirst(inCategory.flatMap((product) => product.tags))
     .slice(0, NAVIGATION_RULES.maximumGroupLinks)
     .map(([tag, productCount]) => ({
       label: tagLabel(tag),
@@ -92,13 +94,6 @@ function groupLinks(
       text: `${tagPhrase(tag)} ${plural}`,
       isCurrent: isExactly(interpretation, category, tag),
     }));
-}
-
-// Most common first; ties keep the order of first appearance, so the result is stable.
-function countBy<Key>(keys: readonly Key[]): [Key, number][] {
-  const counts = new Map<Key, number>();
-  for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
-  return [...counts.entries()].sort(([, first], [, second]) => second - first);
 }
 
 // Best rated first, preferring products the results are not already showing, so the panel
@@ -110,12 +105,7 @@ function popularProducts(inCategory: readonly Product[], matches: readonly Produ
       (first, second) =>
         Number(shown.has(first.id)) - Number(shown.has(second.id)) ||
         second.rating - first.rating ||
-        compareIds(first, second),
+        compareText(first.id, second.id),
     )
     .slice(0, NAVIGATION_RULES.maximumPopularProducts);
-}
-
-function compareIds(first: Product, second: Product): number {
-  if (first.id === second.id) return 0;
-  return first.id < second.id ? -1 : 1;
 }

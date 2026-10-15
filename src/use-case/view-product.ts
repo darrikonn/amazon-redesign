@@ -1,4 +1,4 @@
-import { colorLabel, tagLabel } from "@/component";
+import { categoryLabel, colorLabel, tagLabel } from "@/component";
 import type {
   CategoryId,
   Color,
@@ -72,7 +72,7 @@ function toProductView(product: Product, details: ProductDetails | null): Produc
     name: product.name,
     brand: product.brand,
     category: product.category,
-    categoryLabel: product.categoryLabel,
+    categoryLabel: categoryLabel(product.category),
     color: product.color,
     priceInCents: product.priceInCents,
     rating: product.rating,

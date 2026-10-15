@@ -12,7 +12,7 @@ beforeEach(() => {
   fakes.sessions.seedSession(aSession({ email: "robin.lee@example.com" }));
   fakes.products.seedProducts([
     aProduct({ id: "lamp" }),
-    aProduct({ id: "bag", category: "bags", categoryLabel: "bag", categoryPlural: "bags" }),
+    aProduct({ id: "bag", category: "bags" }),
   ]);
 });
 

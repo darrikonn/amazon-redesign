@@ -1,6 +1,8 @@
 import type { Interpretation, Product, SearchIntent, Tag } from "@/core";
-import { CATEGORY_MAP, capitalize, tagLabel, tagPhrase } from "../catalog-vocabulary";
+import { categoryPlural, tagLabel, tagPhrase } from "../catalog-vocabulary";
+import { mostCommonFirst } from "../collection";
 import { appendPhrase, formatDollars, INTERPRETATION_RULES } from "../query-interpretation";
+import { capitalize } from "../text";
 import { countResults } from "./count-results";
 
 export const REFINEMENT_RULES = {
@@ -60,7 +62,7 @@ function categoryCandidates(intent: SearchIntent, matches: readonly Product[]): 
   if (intent.category !== null) return [];
   const categories = [...new Set(matches.map((product) => product.category))];
   return categories.map((id) => {
-    const name = CATEGORY_MAP[id].plural;
+    const name = categoryPlural(id);
     return { label: capitalize(name), phrase: name };
   });
 }
@@ -102,14 +104,8 @@ function medianPriceCeilingInCents(matches: readonly Product[]): number {
 }
 
 function mostCommonTags(intent: SearchIntent, matches: readonly Product[]): Tag[] {
-  const frequency = new Map<Tag, number>();
-  for (const product of matches) {
-    for (const tag of product.tags) {
-      if (intent.tags.includes(tag)) continue;
-      frequency.set(tag, (frequency.get(tag) ?? 0) + 1);
-    }
-  }
-  return [...frequency.entries()]
-    .sort(([, firstCount], [, secondCount]) => secondCount - firstCount)
-    .map(([tag]) => tag);
+  const unasked = matches
+    .flatMap((product) => product.tags)
+    .filter((tag) => !intent.tags.includes(tag));
+  return mostCommonFirst(unasked).map(([tag]) => tag);
 }

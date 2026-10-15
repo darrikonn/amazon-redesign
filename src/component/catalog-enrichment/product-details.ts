@@ -1,5 +1,6 @@
 import type { Availability, ProductDetails, ProductReview, ProductSource } from "@/core";
 import { isAvailability } from "@/core";
+import { compareText } from "../text";
 import {
   parseDummyJsonResponse,
   parseFakeStoreResponse,
@@ -7,7 +8,7 @@ import {
   type RawFakeStoreProduct,
   type RawReview,
 } from "./raw-source";
-import { blankToNull, compareText, productIdFor } from "./source-text";
+import { blankToNull, productIdFor } from "./source-text";
 
 export function buildProductDetails(source: ProductSource, rawResponse: unknown): ProductDetails[] {
   const details =

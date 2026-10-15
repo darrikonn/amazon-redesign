@@ -1,4 +1,4 @@
-import { cardDetailsFor } from "@/component";
+import { cardDetailsFor, categoryLabel } from "@/component";
 import type { Product } from "@/core";
 import type { DealPriceView, ProductListing } from "./search-catalog";
 
@@ -14,7 +14,7 @@ export function toShelfListing(product: Product, options: ShelfOptions = {}): Pr
     id: product.id,
     name: product.name,
     category: product.category,
-    categoryLabel: product.categoryLabel,
+    categoryLabel: categoryLabel(product.category),
     color: product.color,
     details: options.details ?? cardDetailsFor(product),
     rating: product.rating,

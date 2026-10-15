@@ -16,8 +16,6 @@ export function aProduct(overrides: Partial<Product> = {}): Product {
     sourceId: 1,
     name: "Test laptop",
     category: "laptops",
-    categoryLabel: "laptop",
-    categoryPlural: "laptops",
     priceInCents: 99_900,
     discountPercent: 0,
     rating: 4.2,

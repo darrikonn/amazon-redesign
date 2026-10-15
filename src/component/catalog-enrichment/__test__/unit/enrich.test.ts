@@ -153,8 +153,6 @@ describe("normaliseDummyJsonProduct", () => {
       sourceId: 7,
       name: "Brown Leather Belt Watch",
       category: "watches",
-      categoryLabel: "watch",
-      categoryPlural: "watches",
       priceInCents: 8999,
       discountPercent: 13,
       rating: 2,
@@ -203,8 +201,6 @@ describe("applyOverrides", () => {
       color: "purple",
       tags: ["casual"],
       category: "bags",
-      categoryLabel: "bag",
-      categoryPlural: "bags",
     });
   });
 

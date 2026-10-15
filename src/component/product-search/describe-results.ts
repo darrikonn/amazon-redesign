@@ -1,6 +1,7 @@
 import type { SearchIntent } from "@/core";
-import { CATEGORY_MAP, tagInSentence } from "../catalog-vocabulary";
+import { categoryLabel, categoryPlural, tagInSentence } from "../catalog-vocabulary";
 import { formatDollars, INTERPRETATION_RULES } from "../query-interpretation";
+import { joinWithAnd } from "../text";
 
 export function describeResults(intent: SearchIntent, resultCount: number): string {
   const count = resultCount === 0 ? "No" : String(resultCount);
@@ -13,8 +14,7 @@ export function describeResults(intent: SearchIntent, resultCount: number): stri
 
 function nounFor(intent: SearchIntent, resultCount: number): string {
   if (intent.category === null) return resultCount === 1 ? "product" : "products";
-  const category = CATEGORY_MAP[intent.category];
-  return resultCount === 1 ? category.label : category.plural;
+  return resultCount === 1 ? categoryLabel(intent.category) : categoryPlural(intent.category);
 }
 
 function isPresent(value: string | null): value is string {
@@ -59,8 +59,5 @@ function describeRating(intent: SearchIntent): string | null {
 // Words the interpreter did not understand still filter the results, so the headline says so.
 function describeKeywords(intent: SearchIntent): string | null {
   if (intent.keywords.length === 0) return null;
-  const quoted = intent.keywords.map((keyword) => `“${keyword}”`);
-  const last = quoted.at(-1) ?? "";
-  const listed = quoted.length < 2 ? last : `${quoted.slice(0, -1).join(", ")} and ${last}`;
-  return `matching ${listed}`;
+  return `matching ${joinWithAnd(intent.keywords.map((keyword) => `“${keyword}”`))}`;
 }

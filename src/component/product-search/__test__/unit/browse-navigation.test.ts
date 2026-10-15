@@ -9,11 +9,9 @@ import {
 import type { Product } from "@/core";
 import { aProduct } from "@/test-support";
 
-const watch = { category: "watches", categoryLabel: "watch", categoryPlural: "watches" } as const;
+const watch = { category: "watches" } as const;
 const jewellery = {
   category: "jewellery",
-  categoryLabel: "piece of jewellery",
-  categoryPlural: "jewellery",
 } as const;
 
 const catalog: Product[] = [

@@ -4,7 +4,7 @@ import { aProduct } from "@/test-support";
 
 const catalog = [
   aProduct({ id: "laptop", tags: ["compact"] }),
-  aProduct({ id: "bag", category: "bags", categoryLabel: "bag", categoryPlural: "bags" }),
+  aProduct({ id: "bag", category: "bags" }),
 ];
 
 describe("countResults", () => {

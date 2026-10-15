@@ -3,7 +3,7 @@ import { STARTER_QUERIES } from "@/component";
 import { createLocalContainer, createTestContainer } from "@/composition";
 import { aProduct } from "@/test-support";
 
-const watch = { category: "watches", categoryLabel: "watch", categoryPlural: "watches" } as const;
+const watch = { category: "watches" } as const;
 
 describe("ViewStorefront", () => {
   it("offers the starter queries and every department with products, with its sub-groups", async () => {

@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  capitalize,
   categoryLabel,
   categoryPlural,
   colorLabel,
@@ -25,8 +24,7 @@ describe("labels", () => {
     expect(tagInSentence("magsafe")).toBe("MagSafe");
   });
 
-  it("capitalizes colours and text", () => {
+  it("capitalizes colours", () => {
     expect(colorLabel("rose gold")).toBe("Rose gold");
-    expect(capitalize("")).toBe("");
   });
 });

@@ -1,4 +1,4 @@
-import { capitalize } from "../catalog-vocabulary";
+import { capitalize } from "../text";
 
 export type ShopperName = {
   firstName: string;

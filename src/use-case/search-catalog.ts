@@ -1,5 +1,5 @@
 import type { BrowseNavigation, Highlight, Listing, SearchResult } from "@/component";
-import { removePhrase, searchProducts, suggestRewrite } from "@/component";
+import { categoryLabel, removePhrase, searchProducts, suggestRewrite } from "@/component";
 import type { CategoryId, Color, Product, ProductId, ProductRepository, SearchSort } from "@/core";
 import { isSearchSort, SEARCH_SORTS } from "@/core";
 
@@ -187,7 +187,7 @@ function toProductListing(listing: Listing): ProductListing {
     id: product.id,
     name: product.name,
     category: product.category,
-    categoryLabel: product.categoryLabel,
+    categoryLabel: categoryLabel(product.category),
     color: product.color,
     details: listing.details,
     rating: product.rating,

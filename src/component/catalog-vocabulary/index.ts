@@ -11,7 +11,6 @@ export {
 } from "./category-map";
 export { COLOR_WORDS } from "./color-word";
 export {
-  capitalize,
   categoryLabel,
   categoryPlural,
   colorLabel,

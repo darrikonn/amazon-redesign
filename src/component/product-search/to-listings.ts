@@ -1,5 +1,6 @@
 import type { Product, SearchIntent, SearchSort, Tag } from "@/core";
-import { capitalize, colorLabel, tagLabel } from "../catalog-vocabulary";
+import { categoryLabel, colorLabel, tagLabel } from "../catalog-vocabulary";
+import { capitalize } from "../text";
 
 export const LISTING_RULES = {
   maximumExtraDetails: 2,
@@ -63,5 +64,5 @@ export function cardDetailsFor(product: Product, askedTags: readonly Tag[] = [])
     .map(tagLabel);
   const details = [...(product.color === null ? [] : [colorLabel(product.color)]), ...extraTags];
   if (details.length > 0) return details;
-  return [product.brand ?? capitalize(product.categoryLabel)];
+  return [product.brand ?? capitalize(categoryLabel(product.category))];
 }

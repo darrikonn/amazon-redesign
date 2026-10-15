@@ -1,5 +1,6 @@
 import type { Interpretation, Product } from "@/core";
 import { interpretQuery, removePhrase } from "../query-interpretation";
+import { joinWithAnd } from "../text";
 import { countResults } from "./count-results";
 import { filterProducts } from "./filter-products";
 import { sortProducts } from "./sort-products";
@@ -68,15 +69,10 @@ function unknownWordsCandidate(interpretation: Interpretation): RelaxationCandid
   if (keywords.length < RELAXATION_RULES.minimumKeywordsToDropTogether) return [];
   return [
     {
-      label: joinLabels(keywords.map((term) => term.label)),
+      label: joinWithAnd(keywords.map((term) => term.label)),
       phrases: keywords.map((term) => term.phrase),
     },
   ];
-}
-
-function joinLabels(labels: readonly string[]): string {
-  const last = labels.at(-1) ?? "";
-  return labels.length < 2 ? last : `${labels.slice(0, -1).join(", ")} and ${last}`;
 }
 
 function widestRelaxation(relaxations: readonly Relaxation[]): Relaxation | null {

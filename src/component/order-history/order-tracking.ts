@@ -54,8 +54,14 @@ export function trackOrder(
   return { stage: reached.at(-1)?.stage ?? "ordered", steps, deliveredAt };
 }
 
-export function isOnTheWay(order: Pick<Order, "placedAt" | "deliveryDays">, now: Date): boolean {
-  return trackOrder(order, now).stage !== "delivered";
+type Delivery = Pick<Order, "placedAt" | "deliveryDays">;
+
+export function isDelivered(order: Delivery, now: Date): boolean {
+  return trackOrder(order, now).stage === "delivered";
+}
+
+export function isOnTheWay(order: Delivery, now: Date): boolean {
+  return !isDelivered(order, now);
 }
 
 function later(date: Date, milliseconds: number): Date {

@@ -7,7 +7,7 @@ import {
 import { aProduct } from "@/test-support";
 
 const lamp = aProduct({ id: "lamp" });
-const bag = aProduct({ id: "bag", category: "bags", categoryLabel: "bag", categoryPlural: "bags" });
+const bag = aProduct({ id: "bag", category: "bags" });
 
 function seeded(): InMemoryProductRepository {
   const repository = new InMemoryProductRepository();

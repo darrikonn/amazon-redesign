@@ -1,6 +1,6 @@
 import type { Order, ProductId } from "@/core";
 import { isReturned } from "./order-return";
-import { trackOrder } from "./order-tracking";
+import { isDelivered } from "./order-tracking";
 
 export const BUY_AGAIN_RULES = {
   maximumProducts: 24,
@@ -16,7 +16,7 @@ export type Purchase = {
 export function buyAgainPurchases(orders: readonly Order[], now: Date): Purchase[] {
   const purchases = new Map<ProductId, { count: number; lastPlacedAt: number }>();
   for (const order of orders) {
-    if (trackOrder(order, now).stage !== "delivered") continue;
+    if (!isDelivered(order, now)) continue;
     const placedAt = new Date(order.placedAt).getTime();
     for (const line of order.lines) {
       if (isReturned(order, line.productId)) continue;

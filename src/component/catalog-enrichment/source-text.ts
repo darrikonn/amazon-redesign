@@ -10,8 +10,3 @@ export function blankToNull(value: string | null): string | null {
   const trimmed = value?.trim() ?? "";
   return trimmed === "" ? null : trimmed;
 }
-
-export function compareText(first: string, second: string): number {
-  if (first === second) return 0;
-  return first < second ? -1 : 1;
-}

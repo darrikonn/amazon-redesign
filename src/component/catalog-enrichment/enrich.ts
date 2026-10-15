@@ -7,7 +7,10 @@ import {
   COLOR_WORDS,
   TAG_RULES,
 } from "../catalog-vocabulary";
+import { countOccurrences } from "../collection";
+import { dollarsToCents } from "../money";
 import { wholePhrasePattern } from "../query-interpretation";
+import { compareText } from "../text";
 import type { CatalogOverrides, ProductOverride } from "./override";
 import { buildProductDetails } from "./product-details";
 import {
@@ -16,7 +19,7 @@ import {
   type RawDummyJsonProduct,
   type RawFakeStoreProduct,
 } from "./raw-source";
-import { blankToNull, compareText, productIdFor } from "./source-text";
+import { blankToNull, productIdFor } from "./source-text";
 
 export const ENRICHMENT_RULES = {
   maximumNameLength: 60,
@@ -187,8 +190,6 @@ type SourceFacts = {
   brand: string | null;
 };
 
-const CENTS_PER_DOLLAR = 100;
-
 function productFrom(source: ProductSource, sourceId: number, facts: SourceFacts): Product {
   const category = mapCategory(facts.sourceCategory, facts.title);
   return {
@@ -197,9 +198,7 @@ function productFrom(source: ProductSource, sourceId: number, facts: SourceFacts
     sourceId,
     name: trimName(facts.title),
     category,
-    categoryLabel: CATEGORY_MAP[category].label,
-    categoryPlural: CATEGORY_MAP[category].plural,
-    priceInCents: Math.round(facts.priceInDollars * CENTS_PER_DOLLAR),
+    priceInCents: dollarsToCents(facts.priceInDollars),
     discountPercent: facts.discountPercent,
     rating:
       Math.round(facts.rating * ENRICHMENT_RULES.ratingPrecision) /
@@ -263,15 +262,9 @@ function withOverride(product: Product, override: ProductOverride): Product {
     ...(override.deliveryDays === undefined ? {} : { deliveryDays: override.deliveryDays }),
     ...(override.brand === undefined ? {} : { brand: override.brand }),
     category,
-    categoryLabel: CATEGORY_MAP[category].label,
-    categoryPlural: CATEGORY_MAP[category].plural,
   };
 }
 
 function countTags(products: readonly Product[]): Map<Tag, number> {
-  const counts = new Map<Tag, number>();
-  for (const product of products) {
-    for (const tag of product.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
-  }
-  return counts;
+  return countOccurrences(products.flatMap((product) => product.tags));
 }

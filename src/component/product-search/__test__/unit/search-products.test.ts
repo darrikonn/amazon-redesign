@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { searchProducts } from "@/component";
 import { aProduct } from "@/test-support";
 
-const bag = { category: "bags", categoryLabel: "bag", categoryPlural: "bags" } as const;
+const bag = { category: "bags" } as const;
 
 const catalog = [
   aProduct({ ...bag, id: "bag-a", priceInCents: 1500, rating: 4.6, tags: ["leather"] }),

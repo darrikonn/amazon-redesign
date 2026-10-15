@@ -8,7 +8,7 @@ import {
 import type { Product } from "@/core";
 import { aProduct } from "@/test-support";
 
-const bag = { category: "bags", categoryLabel: "bag", categoryPlural: "bags" } as const;
+const bag = { category: "bags" } as const;
 
 const catalog: Product[] = [
   aProduct({ ...bag, id: "white-bag", color: "white", priceInCents: 1500, rating: 4.1 }),

@@ -10,8 +10,6 @@ const watch = aProduct({
   name: "Brown Leather Belt Watch",
   brand: "Fashion Timepieces",
   category: "watches",
-  categoryLabel: "watch",
-  categoryPlural: "watches",
   color: "brown",
   tags: ["leather", "luxury"],
   priceInCents: 8_999,

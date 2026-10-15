@@ -2,12 +2,13 @@ import type { CategoryId, Color, Tag } from "@/core";
 import {
   CATEGORY_MAP,
   COLOR_WORDS,
-  capitalize,
+  categoryPlural,
   KNOWN_COLORS,
   LIVE_CATEGORIES,
   LIVE_TAGS,
   TAG_RULES,
 } from "../catalog-vocabulary";
+import { capitalize } from "../text";
 
 export type VocabularyPhrase<Id> = {
   id: Id;
@@ -97,7 +98,7 @@ export const STOP_WORDS: ReadonlySet<string> = new Set([
 ]);
 
 export function categoryChipLabel(category: CategoryId): string {
-  return capitalize(CATEGORY_MAP[category].plural);
+  return capitalize(categoryPlural(category));
 }
 
 function longestFirst<Id>(phrases: readonly VocabularyPhrase<Id>[]): VocabularyPhrase<Id>[] {

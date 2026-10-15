@@ -7,8 +7,6 @@ const catalog = [
     id: "earbuds",
     name: "Beats Flex Wireless Earphones",
     category: "audio",
-    categoryLabel: "audio device",
-    categoryPlural: "audio devices",
     tags: ["wireless"],
     priceInCents: 4999,
   }),

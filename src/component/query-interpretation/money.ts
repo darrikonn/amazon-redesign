@@ -1,13 +1,13 @@
-const CENTS_PER_DOLLAR = 100;
+import { centsToDollars, dollarsToCents } from "../money";
 
 export function parseAmountInCents(amount: string | undefined): number {
   const text = (amount ?? "0").trim();
   const dollars = /^\d/.test(text) ? Number(text.replaceAll(",", "")) : wordsToNumber(text);
-  return Math.round(dollars * CENTS_PER_DOLLAR);
+  return dollarsToCents(dollars);
 }
 
 export function formatDollars(cents: number): string {
-  const dollars = cents / CENTS_PER_DOLLAR;
+  const dollars = centsToDollars(cents);
   const fractionDigits = Number.isInteger(dollars) ? 0 : 2;
   return `$${dollars.toLocaleString("en-US", { minimumFractionDigits: fractionDigits, maximumFractionDigits: 2 })}`;
 }
