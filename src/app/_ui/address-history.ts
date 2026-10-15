@@ -1,17 +1,29 @@
-// The shop's own writes to the address. Each hands the framework only the shop's keys: it
-// adds its own, and when handed those it skips keeping usePathname and useSearchParams in
-// step with the new address, which left sign-in links pointing at an older search.
+// The browser history, as the shop uses it. Each write hands the framework only the shop's
+// keys: it adds its own, and when handed those it skips keeping usePathname and
+// useSearchParams in step with the new address, which left sign-in links pointing at an
+// older search.
+export type AddressHistory = {
+  currentUrl: () => string;
+  isProductEntry: () => boolean;
+  pushProductEntry: (url: string) => void;
+  replaceAddress: (url: string) => void;
+  back: () => void;
+};
 
-export function pushProductEntry(url: string) {
-  window.history.pushState({ [OPENED_PRODUCT]: true }, "", url);
-}
-
-export function isProductEntry(): boolean {
-  return window.history.state?.[OPENED_PRODUCT] === true;
-}
+export const BROWSER_HISTORY: AddressHistory = {
+  currentUrl: () => window.location.href,
+  isProductEntry,
+  pushProductEntry: (url) => window.history.pushState({ [OPENED_PRODUCT]: true }, "", url),
+  replaceAddress,
+  back: () => window.history.back(),
+};
 
 export function replaceAddress(url: string) {
   window.history.replaceState(isProductEntry() ? { [OPENED_PRODUCT]: true } : {}, "", url);
+}
+
+function isProductEntry(): boolean {
+  return window.history.state?.[OPENED_PRODUCT] === true;
 }
 
 // Marks a history entry that opening a product pushed, so closing steps back to the entry

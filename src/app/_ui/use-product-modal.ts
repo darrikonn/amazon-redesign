@@ -1,8 +1,9 @@
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ProductId } from "@/core";
-import { isProductEntry, pushProductEntry, replaceAddress } from "./address-history";
-import { PRODUCT_PARAMETER, productIdIn, withProduct } from "./search-url";
+import { BROWSER_HISTORY } from "./address-history";
+import { ProductModalHistory } from "./product-modal-history";
+import { PRODUCT_PARAMETER } from "./search-url";
 
 export type ProductModalState = {
   productId: ProductId | null;
@@ -10,9 +11,8 @@ export type ProductModalState = {
   close: () => void;
 };
 
-// The open product lives in the address, so Back closes the modal, Forward reopens it,
-// and a shared link opens it straight away (ADR 0029). Which search the address shows is
-// kept in step with the screen by the storefront, not here.
+// The rules are ProductModalHistory's; this keeps React's state in step with them. Which
+// search the address shows is kept in step with the screen by the storefront, not here.
 export function useProductModal(): ProductModalState {
   const pathname = usePathname();
   const productInAddress = useSearchParams().get(PRODUCT_PARAMETER);
@@ -24,33 +24,27 @@ export function useProductModal(): ProductModalState {
     setShownPathname(pathname);
     setProductId(productInAddress);
   }
-  // history.back() lands later, so a second close before it lands must not step back again.
-  const isGoingBackRef = useRef(false);
+  const [history] = useState(() => new ProductModalHistory(BROWSER_HISTORY));
 
   useEffect(() => {
     function followHistory() {
-      isGoingBackRef.current = false;
-      setProductId(productIdIn(window.location.href));
+      setProductId(history.followHistory());
     }
     window.addEventListener("popstate", followHistory);
     return () => window.removeEventListener("popstate", followHistory);
-  }, []);
+  }, [history]);
 
-  const open = useCallback((nextProductId: ProductId) => {
-    pushProductEntry(withProduct(window.location.href, nextProductId));
-    setProductId(nextProductId);
-  }, []);
+  const open = useCallback(
+    (nextProductId: ProductId) => {
+      history.open(nextProductId);
+      setProductId(nextProductId);
+    },
+    [history],
+  );
 
   const close = useCallback(() => {
-    if (isGoingBackRef.current) return;
-    if (isProductEntry()) {
-      isGoingBackRef.current = true;
-      window.history.back();
-      return;
-    }
-    replaceAddress(withProduct(window.location.href, null));
-    setProductId(null);
-  }, []);
+    if (history.close() === "closed") setProductId(null);
+  }, [history]);
 
   return { productId, open, close };
 }

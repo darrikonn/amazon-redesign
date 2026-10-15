@@ -9,6 +9,7 @@ import { useBrowsing, useInPlaceSearch } from "./browsing-context";
 import { useCart } from "./cart-context";
 import { Collapsible } from "./collapsible";
 import { useContainer } from "./container-context";
+import { recoverFocus } from "./focus-recovery";
 import { scrollToTop } from "./motion";
 import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
@@ -64,7 +65,7 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
     [choose, keepsTypedText, text],
   );
 
-  useFocusRecovery(chosenTextRef, isShowingResults, text, outcome.text, inputRef);
+  useFocusRecovery({ chosenTextRef, isShowingResults, text, searchedText: outcome.text, inputRef });
   // While the home page is open, the header's department menu and logo search in place.
   useInPlaceSearch(choose);
 
@@ -167,31 +168,37 @@ function useAddressInStepWithScreen(text: string, sort: SearchSort, productId: P
 
 const DEMO_IDLE_DELAY_IN_MILLISECONDS = 4000;
 
-// Choosing something can fold away the very control that was used (a starter query, the
-// last chip, the example arrow), which would leave keyboard focus nowhere.
-// Focus then moves to the results headline, or back to the input on the way home.
-function useFocusRecovery(
-  chosenTextRef: RefObject<string | null>,
-  isShowingResults: boolean,
-  text: string,
-  searchedText: string,
-  inputRef: RefObject<HTMLTextAreaElement | null>,
-) {
-  // Watches the bar as well as the search, because choosing the text that was already
-  // searched (the example arrow on an emptied bar) changes only the bar. Once the shopper
-  // has typed something else, focus is theirs and is left alone.
+type FocusRecoveryInputs = {
+  chosenTextRef: RefObject<string | null>;
+  isShowingResults: boolean;
+  text: string;
+  searchedText: string;
+  inputRef: RefObject<HTMLTextAreaElement | null>;
+};
+
+// Watches the bar as well as the search, because choosing the text that was already
+// searched (the example arrow on an emptied bar) changes only the bar (focus-recovery.ts).
+function useFocusRecovery(inputs: FocusRecoveryInputs) {
+  const { chosenTextRef, isShowingResults, text, searchedText, inputRef } = inputs;
   useEffect(() => {
-    const chosenText = chosenTextRef.current;
-    if (chosenText === null || searchedText !== chosenText) return;
-    chosenTextRef.current = null;
-    if (text !== chosenText) return;
-    const active = document.activeElement;
-    if (active !== null && active !== document.body && active.closest("[inert]") === null) return;
-    const target = isShowingResults
-      ? document.getElementById(RESULTS_HEADLINE_ID)
-      : inputRef.current;
-    target?.focus({ preventScroll: true });
+    const recovery = recoverFocus({
+      chosenText: chosenTextRef.current,
+      searchedText,
+      text,
+      isFocusLost: isFocusLost(document.activeElement),
+      isShowingResults,
+    });
+    if (recovery.isSettled) chosenTextRef.current = null;
+    if (recovery.target === "results-headline") {
+      document.getElementById(RESULTS_HEADLINE_ID)?.focus({ preventScroll: true });
+    }
+    if (recovery.target === "search-input") inputRef.current?.focus({ preventScroll: true });
   }, [chosenTextRef, isShowingResults, text, searchedText, inputRef]);
+}
+
+// Focus is lost when it fell back to the page itself or sits inside folded, inert content.
+function isFocusLost(active: Element | null): boolean {
+  return active === null || active === document.body || active.closest("[inert]") !== null;
 }
 
 function Hero() {
