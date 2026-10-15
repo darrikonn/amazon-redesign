@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 import type { ProductListing } from "@/use-case";
 import { useBrowsing } from "./browsing-context";
 import { useCart } from "./cart-context";
@@ -19,22 +19,28 @@ export function ProductShelf({ label, listings, renderAction }: ProductShelfProp
   const { cart, toggleCart } = useCart();
   const { openProduct } = useBrowsing();
   const pathname = usePathname();
+  const headingId = useId();
   return (
-    <ul className={page.grid} aria-label={label}>
-      {listings.map((listing) => (
-        <li key={listing.id} className={page.gridItem}>
-          <ProductCard
-            listing={listing}
-            href={withProduct(pathname, listing.id)}
-            isInCart={cart.productIds.includes(listing.id)}
-            onOpen={openProduct}
-            onToggleCart={(productId) => {
-              toggleCart(productId).catch(reportError);
-            }}
-          />
-          {renderAction?.(listing)}
-        </li>
-      ))}
-    </ul>
+    <section aria-labelledby={headingId}>
+      <h2 id={headingId} className="visually-hidden">
+        {label}
+      </h2>
+      <ul className={page.grid}>
+        {listings.map((listing) => (
+          <li key={listing.id} className={page.gridItem}>
+            <ProductCard
+              listing={listing}
+              href={withProduct(pathname, listing.id)}
+              isInCart={cart.productIds.includes(listing.id)}
+              onOpen={openProduct}
+              onToggleCart={(productId) => {
+                toggleCart(productId).catch(reportError);
+              }}
+            />
+            {renderAction?.(listing)}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

@@ -5,12 +5,14 @@ import { type FormEvent, useCallback, useId, useState } from "react";
 import type { ProductId } from "@/core";
 import type { OrderView } from "@/use-case";
 import { useContainer } from "./container-context";
+import { EmptyState } from "./empty-state";
 import { deliveryLocationLabel, formatDayAndDate, formatOrderDate, splitPrice } from "./format";
 import styles from "./order-detail-view.module.css";
 import { orderStatus } from "./order-status";
 import { ProductThumbnail } from "./product-thumbnail";
 import { returnStatus } from "./return-status";
 import page from "./shop-page.module.css";
+import { SHOP_PLACES } from "./shop-place";
 import { useLoaded } from "./use-loaded";
 
 type OrderDetailViewProps = {
@@ -33,12 +35,15 @@ export function OrderDetailView({ orderId, isJustPlaced }: OrderDetailViewProps)
   if (order.value === null) {
     return (
       <main className={page.main}>
-        <div className={`${page.panel} ${page.empty}`}>
-          <p className={page.emptyTitle}>We could not find that order</p>
-          <Link href="/orders" className={page.primaryButton}>
+        <EmptyState
+          icon="package"
+          title="We could not find that order"
+          message="It may belong to another account, or the link may be old."
+        >
+          <Link href={SHOP_PLACES.orders.href} className={page.primaryButton}>
             See your orders
           </Link>
-        </div>
+        </EmptyState>
       </main>
     );
   }

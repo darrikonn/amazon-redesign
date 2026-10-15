@@ -10,11 +10,13 @@
   --color-accent-tint: rgba(255, 153, 0, 0.16);
   --color-accent-wash: #fff6e8;
   --color-accent-wash-hover: #ffecd0;
+  --color-accent-deep: #c45500;
   --color-surface: #ffffff;
   --color-surface-alt: #f7f9fa;
   --color-surface-quiet: #f1f3f4;
   --color-divider: #e7e9ea;
   --color-border: #d5d9d9;
+  --color-field-border: #888c8c;
   --color-muted: #565959;
   --color-placeholder: #6f7373;
   --color-teal: #007185;
@@ -113,9 +115,8 @@ ul {
   list-style: none;
 }
 
-button:focus-visible,
-a:focus-visible,
-textarea:focus-visible {
+/* One focus ring for every control, and for scrolling panes the keyboard can reach. */
+:focus-visible {
   outline: 3px solid var(--color-accent-soft);
   outline-offset: 2px;
 }

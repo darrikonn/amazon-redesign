@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AmazonLogo } from "./amazon-logo";
+import { SHOP_PLACES, type ShopPlace } from "./shop-place";
 import styles from "./site-footer.module.css";
 
 type FooterColumn = {
@@ -7,40 +8,31 @@ type FooterColumn = {
   links: readonly { label: string; href: string }[];
 };
 
+function linkTo(place: ShopPlace) {
+  return { label: place.title, href: place.href };
+}
+
 const COLUMNS: readonly FooterColumn[] = [
   {
     heading: "Shop",
-    links: [
-      { label: "Today's Deals", href: "/deals" },
-      { label: "Buy Again", href: "/buy-again" },
-      { label: "Gift Cards", href: "#gift-cards" },
-      { label: "Registry", href: "#registry" },
-    ],
+    links: [linkTo(SHOP_PLACES.deals), linkTo(SHOP_PLACES.buyAgain), linkTo(SHOP_PLACES.cart)],
   },
   {
     heading: "Your account",
     links: [
-      { label: "Your Orders", href: "/orders" },
-      { label: "Returns", href: "/orders" },
-      { label: "Your Lists", href: "/lists" },
-      { label: "Prime", href: "#prime" },
-    ],
-  },
-  {
-    heading: "More from Amazon",
-    links: [
-      { label: "Prime Video", href: "#prime-video" },
-      { label: "Amazon Music", href: "#amazon-music" },
-      { label: "Groceries", href: "#groceries" },
-      { label: "Pharmacy", href: "#pharmacy" },
+      linkTo(SHOP_PLACES.account),
+      linkTo(SHOP_PLACES.orders),
+      linkTo(SHOP_PLACES.trackOrder),
+      linkTo(SHOP_PLACES.list),
     ],
   },
   {
     heading: "Help",
     links: [
-      { label: "Customer Service", href: "#customer-service" },
-      { label: "Shipping Rates", href: "#shipping-rates" },
-      { label: "Accessibility", href: "#accessibility" },
+      { label: "All help topics", href: SHOP_PLACES.help.href },
+      { label: "Delivery", href: "/help#delivery" },
+      { label: "Returns", href: "/help#returns" },
+      { label: "Accessibility", href: "/help#accessibility" },
     ],
   },
 ];
@@ -52,17 +44,11 @@ export function SiteFooter() {
         {COLUMNS.map((column) => (
           <nav key={column.heading} aria-label={column.heading} className={styles.column}>
             <p className={styles.heading}>{column.heading}</p>
-            {column.links.map((link) =>
-              link.href.startsWith("/") ? (
-                <Link key={link.label} href={link.href} className={styles.link}>
-                  {link.label}
-                </Link>
-              ) : (
-                <a key={link.label} href={link.href} className={styles.link}>
-                  {link.label}
-                </a>
-              ),
-            )}
+            {column.links.map((link) => (
+              <Link key={link.label} href={link.href} className={styles.link}>
+                {link.label}
+              </Link>
+            ))}
           </nav>
         ))}
       </div>

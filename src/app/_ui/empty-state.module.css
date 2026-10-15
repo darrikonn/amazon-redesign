@@ -1,0 +1,27 @@
+.empty {
+  align-items: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.iconTile {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--color-accent-wash);
+  color: var(--color-accent-deep);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}

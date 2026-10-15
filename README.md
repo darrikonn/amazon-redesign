@@ -44,10 +44,11 @@ The header keeps three things beside the logo: the department menu, one account 
 
 - **Sign in** (`/sign-in`) takes only an email. There is no password; the name comes from the address (`darri.konn@example.com` is greeted as Darri). Sign out is at the bottom of the account menu.
 - **Delivering to** sets the delivery ZIP code; a dozen US ZIP codes also name their city. On a phone it has its own line under the bar.
-- **Your account** (`/account`) links to everything below, and **Your lists** (`/lists`) holds products saved with the heart in a product's details.
-- **Your orders and returns** (`/orders`) lists orders with where each one is; an order's page tracks it (ordered, shipped, out for delivery, delivered) and starts a return for items still inside their return window.
-- **Cart** (`/cart`) changes quantities, deletes items, and places the order.
-- **Buy again** (`/buy-again`), **Track an order** (`/orders?show=on-the-way`), and **Today's deals** (`/deals`) are also the home page shortcuts.
+- **Your account** (`/account`) links to everything below, and **Your list** (`/lists`) holds products saved with the heart in a product's details.
+- **Your orders** (`/orders`) lists orders with where each one is; an order's page tracks it (ordered, shipped, out for delivery, delivered) and starts a return for items still inside their return window.
+- **Your cart** (`/cart`) changes quantities, deletes items, and places the order.
+- **Buy again** (`/buy-again`), **Track an order** (`/orders?show=on-the-way`), and **Today’s deals** (`/deals`) are also the home page shortcuts.
+- **Help** (`/help`), linked from the footer, explains delivery, returns, the account, and accessibility. Every footer link goes to a real page, and an unknown address shows the shop's own "Page not found" page (ADR 0031).
 
 None of it has a backend. The session is a cookie holding the email and ZIP code; the cart, orders, returns, and list are kept in the browser's `localStorage`, so they stay on this device and survive a reload. A new shopper starts with three sample orders, marked "Sample order", so tracking, returns, and buy again have something to show. ADR 0030 records the design.
 

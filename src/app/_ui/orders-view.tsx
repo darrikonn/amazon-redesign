@@ -5,11 +5,13 @@ import { useCallback } from "react";
 import type { OrderFilter, OrderSummaryView } from "@/use-case";
 import { useCart } from "./cart-context";
 import { useContainer } from "./container-context";
+import { EmptyState } from "./empty-state";
 import { formatOrderDate, pluralize, splitPrice } from "./format";
 import { orderStatus } from "./order-status";
 import styles from "./orders-view.module.css";
 import { ProductThumbnail } from "./product-thumbnail";
 import page from "./shop-page.module.css";
+import { SHOP_PLACES } from "./shop-place";
 import { useLoaded } from "./use-loaded";
 
 type OrdersViewProps = {
@@ -46,14 +48,14 @@ export function OrdersView({ show }: OrdersViewProps) {
       </div>
       {list.isLoading && <p className={page.loading}>Loading your orders</p>}
       {list.value !== null && list.value.orders.length === 0 && (
-        <div className={`${page.panel} ${page.empty}`}>
-          <p className={page.emptyTitle}>
-            {shown === "on-the-way" ? "Nothing is on its way right now" : "No orders yet"}
-          </p>
-          <Link href="/deals" className={page.primaryButton}>
+        <EmptyState
+          icon="package"
+          title={shown === "on-the-way" ? "Nothing is on its way right now" : "No orders yet"}
+        >
+          <Link href={SHOP_PLACES.deals.href} className={page.primaryButton}>
             See today’s deals
           </Link>
-        </div>
+        </EmptyState>
       )}
       {list.value?.orders.map((order) => (
         <OrderCard key={order.id} order={order} />

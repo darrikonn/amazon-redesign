@@ -8,11 +8,13 @@ import type { CartLineView, CartView } from "@/use-case";
 import { useCart } from "./cart-context";
 import styles from "./cart-page-view.module.css";
 import { useContainer } from "./container-context";
+import { EmptyState } from "./empty-state";
 import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
 import { Icon } from "./icon";
 import { ProductThumbnail } from "./product-thumbnail";
 import { useSession } from "./session-context";
 import page from "./shop-page.module.css";
+import { SHOP_PLACES } from "./shop-place";
 import { signInHref } from "./sign-in-href";
 import { useLoaded } from "./use-loaded";
 
@@ -34,20 +36,18 @@ export function CartPageView() {
       <h1 className={page.title}>Your cart</h1>
       {cart.isLoading && <p className={page.loading}>Loading your cart</p>}
       {view !== null && view.lines.length === 0 && (
-        <div className={`${page.panel} ${page.empty}`}>
-          <p className={page.emptyTitle}>Your cart is empty</p>
-          <p className={page.muted}>
-            Describe what you need on the home page, or browse the deals.
-          </p>
-          <div className={styles.emptyActions}>
-            <Link href="/" className={page.primaryButton}>
-              Start shopping
-            </Link>
-            <Link href="/deals" className={page.secondaryButton}>
-              Today’s deals
-            </Link>
-          </div>
-        </div>
+        <EmptyState
+          icon="cart"
+          title="Your cart is empty"
+          message="Describe what you need on the home page, or browse the deals."
+        >
+          <Link href="/" className={page.primaryButton}>
+            Start shopping
+          </Link>
+          <Link href={SHOP_PLACES.deals.href} className={page.secondaryButton}>
+            {SHOP_PLACES.deals.title}
+          </Link>
+        </EmptyState>
       )}
       {view !== null && view.lines.length > 0 && (
         <div className={styles.layout}>

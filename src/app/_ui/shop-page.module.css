@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  max-width: var(--content-width);
+  max-width: var(--page-width);
   margin: 0 auto;
   padding: 24px 24px 72px;
 }
@@ -43,17 +43,6 @@
   background: var(--color-surface);
   color: var(--color-ink);
   box-shadow: var(--shadow-card);
-}
-
-.empty {
-  align-items: center;
-  padding: 40px 24px;
-  text-align: center;
-}
-
-.emptyTitle {
-  font-size: 20px;
-  font-weight: 800;
 }
 
 .muted {
@@ -129,6 +118,24 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* A quiet text action under a card, on the dark page. */
+.cardAction {
+  align-self: center;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--color-on-dark-muted);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.cardAction:hover {
+  color: var(--color-on-dark);
+  text-decoration: underline;
 }
 
 .loading {

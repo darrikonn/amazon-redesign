@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useCallback } from "react";
 import { useContainer } from "./container-context";
+import { EmptyState } from "./empty-state";
 import { ProductShelf } from "./product-shelf";
 import page from "./shop-page.module.css";
+import { SHOP_PLACES } from "./shop-place";
 import { useLoaded } from "./use-loaded";
 
 export function BuyAgainView() {
@@ -19,13 +21,15 @@ export function BuyAgainView() {
       </div>
       {shelf.isLoading && <p className={page.loading}>Loading your regular items</p>}
       {shelf.value !== null && shelf.value.listings.length === 0 && (
-        <div className={`${page.panel} ${page.empty}`}>
-          <p className={page.emptyTitle}>Nothing to buy again yet</p>
-          <p className={page.muted}>Products from your delivered orders show up here.</p>
-          <Link href="/deals" className={page.primaryButton}>
+        <EmptyState
+          icon="refresh"
+          title="Nothing to buy again yet"
+          message="Products from your delivered orders show up here."
+        >
+          <Link href={SHOP_PLACES.deals.href} className={page.primaryButton}>
             See today’s deals
           </Link>
-        </div>
+        </EmptyState>
       )}
       {shelf.value !== null && shelf.value.listings.length > 0 && (
         <ProductShelf label="Buy again" listings={shelf.value.listings} />

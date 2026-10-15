@@ -1,0 +1,52 @@
+.topicLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.topicLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--color-glass-border);
+  border-radius: 999px;
+  background: var(--color-glass);
+  font-size: 15px;
+  font-weight: 700;
+  transition: background var(--duration-base) ease;
+}
+
+.topicLink:hover {
+  background: var(--color-glass-hover);
+}
+
+/* Clears the page top when a topic link scrolls here. */
+.topic {
+  scroll-margin-top: 24px;
+}
+
+.topicTitle {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  list-style: disc;
+}
+
+.topicAction {
+  align-self: flex-start;
+  color: var(--color-teal);
+  font-weight: 700;
+}
+
+.topicAction:hover {
+  text-decoration: underline;
+}

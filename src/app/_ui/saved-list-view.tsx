@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback } from "react";
 import type { ProductListing } from "@/use-case";
 import { useContainer } from "./container-context";
+import { EmptyState } from "./empty-state";
 import { ProductShelf } from "./product-shelf";
 import { useSavedList } from "./saved-list-context";
 import page from "./shop-page.module.css";
@@ -24,19 +25,19 @@ export function SavedListView() {
     <main className={page.main}>
       <div>
         <h1 className={page.title}>Your list</h1>
-        <p className={page.lede}>Products you saved for later. Open one to save or unsave it.</p>
+        <p className={page.lede}>Products you saved for later.</p>
       </div>
       {list.isLoading && <p className={page.loading}>Loading your list</p>}
       {list.value !== null && listings.length === 0 && (
-        <div className={`${page.panel} ${page.empty}`}>
-          <p className={page.emptyTitle}>Your list is empty</p>
-          <p className={page.muted}>
-            Save a product with the heart in its details to find it here.
-          </p>
+        <EmptyState
+          icon="heart"
+          title="Your list is empty"
+          message="Open any product and tap its heart to save it here."
+        >
           <Link href="/" className={page.primaryButton}>
             Find something
           </Link>
-        </div>
+        </EmptyState>
       )}
       {listings.length > 0 && (
         <ProductShelf
@@ -45,7 +46,8 @@ export function SavedListView() {
           renderAction={(listing: ProductListing) => (
             <button
               type="button"
-              className={page.secondaryButton}
+              className={page.cardAction}
+              aria-label={`Remove ${listing.name} from your list`}
               onClick={() => {
                 toggleSaved(listing.id).catch(reportError);
               }}
