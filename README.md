@@ -46,7 +46,7 @@ The header, the home page shortcuts, and the menu all lead somewhere real:
 - **Deliver to** sets the delivery ZIP code; a dozen US ZIP codes also name their city.
 - **Account & Lists** (`/account`) links to everything below, and **Your list** (`/lists`) holds products saved with the heart in a product's details.
 - **Returns & Orders** (`/orders`) lists orders with where each one is; an order's page tracks it (ordered, shipped, out for delivery, delivered) and starts a return for items still inside their return window.
-- **Cart** (`/cart`) changes quantities, saves items for later, and places the order.
+- **Cart** (`/cart`) changes quantities, deletes items, and places the order.
 - **Buy again** (`/buy-again`), **Track an order** (`/orders?show=on-the-way`), and **Today's deals** (`/deals`) are the home page shortcuts.
 
 None of it has a backend. The session is a cookie holding the email and ZIP code; the cart, orders, returns, and list are kept in the browser's `localStorage`, so they stay on this device and survive a reload. A new shopper starts with three sample orders, marked "Sample order", so tracking, returns, and buy again have something to show. ADR 0030 records the design.

@@ -7,6 +7,7 @@ import type { ProductId } from "@/core";
 import type { CartLineView, CartView } from "@/use-case";
 import styles from "./cart-page-view.module.css";
 import { deliveryLabel, pluralize, splitPrice } from "./format";
+import { Icon } from "./icon";
 import { ProductThumbnail } from "./product-thumbnail";
 import { useShop } from "./shop-context";
 import page from "./shop-page.module.css";
@@ -76,9 +77,7 @@ type CartLineProps = {
 
 function CartLine({ line, maximumQuantity, onChangeQuantity }: CartLineProps) {
   const quantities = Array.from({ length: maximumQuantity }, (_, index) => index + 1);
-  const { shopper, savedProductIds, toggleSaved } = useShop();
   const quantityId = useId();
-  const isSaved = savedProductIds.includes(line.productId);
   return (
     <li className={styles.line}>
       <ProductThumbnail image={line.image} category={line.category} size="large" />
@@ -91,33 +90,36 @@ function CartLine({ line, maximumQuantity, onChangeQuantity }: CartLineProps) {
           <label htmlFor={quantityId} className="visually-hidden">
             Quantity of {line.name}
           </label>
-          <select
-            id={quantityId}
-            className={styles.quantity}
-            value={line.quantity}
-            onChange={(event) => onChangeQuantity(Number(event.target.value))}
+          {/* Drawn by the page, not the browser: some browsers draw their own menu face
+              and ignore its text colour, which left the quantity invisible. */}
+          <span className={styles.quantityField}>
+            <select
+              id={quantityId}
+              className={styles.quantity}
+              value={line.quantity}
+              onChange={(event) => onChangeQuantity(Number(event.target.value))}
+            >
+              {quantities.map((quantity) => (
+                <option key={quantity} value={quantity}>
+                  Qty {quantity}
+                </option>
+              ))}
+            </select>
+            <Icon
+              name="chevron-right"
+              size={14}
+              strokeWidth={2.6}
+              className={styles.quantityIcon}
+            />
+          </span>
+          <button
+            type="button"
+            className={styles.deleteButton}
+            aria-label={`Delete ${line.name} from your cart`}
+            onClick={() => onChangeQuantity(0)}
           >
-            {quantities.map((quantity) => (
-              <option key={quantity} value={quantity}>
-                Qty {quantity}
-              </option>
-            ))}
-          </select>
-          <button type="button" className={styles.textButton} onClick={() => onChangeQuantity(0)}>
             Delete
           </button>
-          {shopper !== null && (
-            <button
-              type="button"
-              className={styles.textButton}
-              onClick={() => {
-                if (!isSaved) toggleSaved(line.productId).catch(reportError);
-                onChangeQuantity(0);
-              }}
-            >
-              Save for later
-            </button>
-          )}
         </div>
       </div>
       <span className={styles.linePrice}>{splitPrice(line.lineTotalInCents).spoken}</span>
