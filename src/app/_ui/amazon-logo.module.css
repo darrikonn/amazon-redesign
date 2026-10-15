@@ -3,20 +3,26 @@
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-bottom: 6px;
 }
 
+/* All lowercase, the word has no ascenders, so its letters sit low in their line box.
+   Lifting them by that difference puts their middle at the box's middle, where the menu
+   icon and the header items beside the logo are centred. */
 .wordmark {
+  position: relative;
+  top: -2px;
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
 }
 
-/* Sits under the letters from the a to the z, as in the original mark. */
+/* Sits under the letters from the a to the z, as in the original mark. It hangs below the
+   wordmark without adding to its height, so whatever sits beside the logo centres on the
+   letters, not on the letters and the smile together. */
 .smile {
   position: absolute;
-  bottom: -2px;
+  top: calc(100% - 7px);
   left: 5%;
   width: 76%;
   height: 13px;
