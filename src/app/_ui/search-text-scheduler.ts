@@ -1,6 +1,6 @@
 import type { Timer, TimerHandle } from "./timer";
 
-export const SEARCH_PAUSE_IN_MILLISECONDS = 250;
+export const SEARCH_PAUSE_IN_MILLISECONDS = 600;
 
 // Decides when typed text becomes the searched text. Typing, including backspacing the
 // bar empty, waits for a pause, so the search does not rerun on every keystroke and the

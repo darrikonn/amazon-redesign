@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (2026-10-14). Amended by ADR 0027: the search now runs after a 250 ms typing pause rather than on every keystroke.
+Accepted (2026-10-14). Amended by ADR 0027: the search now runs after a 600 ms typing pause rather than on every keystroke.
 
 ## Context
 
