@@ -86,6 +86,11 @@
   min-width: 0;
 }
 
+a.lineName:hover {
+  color: var(--color-title-hover);
+  text-decoration: underline;
+}
+
 .lineName {
   font-weight: 700;
 }

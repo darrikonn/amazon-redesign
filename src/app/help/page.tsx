@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import { HelpView } from "../_ui/help-view";
+import { titledPage } from "../_ui/page-metadata";
 
-export const metadata: Metadata = { title: "Help" };
+export const generateMetadata = titledPage("Help");
 
 export default function HelpPage() {
   return <HelpView />;

@@ -7,6 +7,7 @@ import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
 import { formatOrderDate, pluralize, splitPrice } from "./format";
 import { OrderLineCartButton } from "./order-line-cart-button";
+import { OrderLineName } from "./order-line-name";
 import { orderStatus } from "./order-status";
 import styles from "./orders-view.module.css";
 import { ProductThumbnail } from "./product-thumbnail";
@@ -87,7 +88,7 @@ export function OrderCard({ order }: { order: OrderSummaryView }) {
             <li key={line.productId} className={styles.line}>
               <ProductThumbnail image={line.image} category={line.category} />
               <div className={styles.lineText}>
-                <span className={styles.lineName}>{line.name}</span>
+                <OrderLineName line={line} className={styles.lineName} />
                 <span className={styles.lineMeta}>
                   Quantity {line.quantity}
                   {line.returnState === "returned" && ", return started"}

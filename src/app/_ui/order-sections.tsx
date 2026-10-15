@@ -3,6 +3,7 @@ import type { OrderView } from "@/use-case";
 import { deliveryLocationLabel, formatOrderDate, splitPrice } from "./format";
 import styles from "./order-detail-view.module.css";
 import { OrderLineCartButton } from "./order-line-cart-button";
+import { OrderLineName } from "./order-line-name";
 import { orderStatus } from "./order-status";
 import { ProductThumbnail } from "./product-thumbnail";
 import { returnStatus } from "./return-status";
@@ -44,7 +45,7 @@ export function ItemsSection({ order }: SectionProps) {
           <li key={line.productId} className={styles.line}>
             <ProductThumbnail image={line.image} category={line.category} size="large" />
             <div className={styles.lineText}>
-              <span className={styles.lineName}>{line.name}</span>
+              <OrderLineName line={line} className={styles.lineName} />
               <span className={page.muted}>
                 {line.quantity} at {splitPrice(line.priceInCents).spoken}
               </span>

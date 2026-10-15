@@ -1,7 +1,12 @@
 import { isOnTheWay } from "@/component";
 import type { Clock, OrderRepository, ProductRepository, SessionStore } from "@/core";
 import { isOneOf } from "@/core";
-import { newestFirst, type OrderSummaryView, photosFor, toOrderSummaryView } from "./order-view";
+import {
+  catalogueFactsFor,
+  newestFirst,
+  type OrderSummaryView,
+  toOrderSummaryView,
+} from "./order-view";
 import { currentShopper } from "./session-shopper";
 
 export const ORDER_FILTERS = ["all", "on-the-way"] as const;
@@ -34,8 +39,8 @@ export class ListOrders {
     const orders = (await this.orders.listByOwner(shopper.id))
       .filter((order) => show === "all" || isOnTheWay(order, now))
       .sort(newestFirst);
-    const photos = await photosFor(this.products, orders);
-    return { show, orders: orders.map((order) => toOrderSummaryView(order, now, photos)) };
+    const facts = await catalogueFactsFor(this.products, orders);
+    return { show, orders: orders.map((order) => toOrderSummaryView(order, now, facts)) };
   }
 }
 

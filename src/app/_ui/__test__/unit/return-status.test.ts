@@ -7,6 +7,7 @@ const line: OrderLineView = {
   name: "Lamp",
   category: "laptops",
   image: null,
+  rating: 4.5,
   priceInCents: 1_000,
   quantity: 1,
   returnState: "returnable",

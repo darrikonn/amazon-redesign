@@ -11,7 +11,8 @@ import { RETURN_FORM_ID } from "./shop-place";
 const RETURN_REFUSALS = {
   "nothing-chosen": "Choose at least one item to return.",
   "unknown-reason": "Choose why you are returning them.",
-  "not-returnable": "One of those items can no longer be returned. Choose the others.",
+  "not-returnable":
+    "Something changed since this page opened, so the list now shows only what can still be returned.",
   "not-found": "This order is no longer in your account.",
   "signed-out": "Sign in again to start a return.",
 } as const;
@@ -30,9 +31,11 @@ export function useReturnFormInView() {
 type ReturnFormProps = {
   order: OrderView;
   onReturned: (order: OrderView) => void;
+  // A newer copy of the order, read after a refusal that shows this one is out of date.
+  onRefreshed: (order: OrderView) => void;
 };
 
-export function ReturnForm({ order, onReturned }: ReturnFormProps) {
+export function ReturnForm({ order, onReturned, onRefreshed }: ReturnFormProps) {
   const container = useContainer();
   const reasonId = useId();
   const [chosen, setChosen] = useState<readonly ProductId[]>([]);
@@ -61,6 +64,14 @@ export function ReturnForm({ order, onReturned }: ReturnFormProps) {
       return;
     }
     setMessage(RETURN_REFUSALS[result.status]);
+    // Another tab may have returned the item already; the form shows what is true now.
+    if (result.status === "not-returnable") {
+      const fresh = await container.viewOrder.execute({ orderId: order.id });
+      if (fresh !== null) {
+        setChosen([]);
+        onRefreshed(fresh);
+      }
+    }
   }
 
   return (

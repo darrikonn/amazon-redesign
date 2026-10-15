@@ -37,6 +37,8 @@ export type OrderLineView = {
   name: string;
   category: CategoryId;
   image: string | null;
+  // Null when the product has left the catalogue.
+  rating: number | null;
   priceInCents: number;
   quantity: number;
   returnState: ReturnState;
@@ -87,25 +89,28 @@ const RETURN_REASON_LABELS: Record<ReturnReason, string> = {
   "found-better-price": "Found a better price",
 };
 
-// Photos are not part of an order's snapshot; they come from the catalogue when shown, and
-// a product that has left it is drawn with its category glyph.
-export type OrderPhotos = ReadonlyMap<ProductId, string | null>;
+// The photo and the rating are not part of an order's snapshot; they come from the
+// catalogue when shown, and a product that has left it is drawn with its category glyph and
+// cannot be opened.
+export type CatalogueFacts = ReadonlyMap<ProductId, { image: string | null; rating: number }>;
 
-export async function photosFor(
+export async function catalogueFactsFor(
   products: ProductRepository,
   orders: readonly Order[],
-): Promise<OrderPhotos> {
+): Promise<CatalogueFacts> {
   const productIds = [
     ...new Set(orders.flatMap((order) => order.lines.map((line) => line.productId))),
   ];
   const found = await products.getMany(productIds);
-  return new Map(found.map((product) => [product.id, product.image]));
+  return new Map(
+    found.map((product) => [product.id, { image: product.image, rating: product.rating }]),
+  );
 }
 
-export function toOrderView(order: Order, now: Date, photos: OrderPhotos): OrderView {
+export function toOrderView(order: Order, now: Date, facts: CatalogueFacts): OrderView {
   const tracking = trackOrder(order, now);
   return {
-    ...summaryOf(order, tracking, now, photos),
+    ...summaryOf(order, tracking, now, facts),
     deliveryCity: deliveryCityFor(order.deliveryPostalCode),
     deliveryPostalCode: order.deliveryPostalCode,
     steps: tracking.steps.map((step) => ({
@@ -127,15 +132,19 @@ export function toOrderView(order: Order, now: Date, photos: OrderPhotos): Order
   };
 }
 
-export function toOrderSummaryView(order: Order, now: Date, photos: OrderPhotos): OrderSummaryView {
-  return summaryOf(order, trackOrder(order, now), now, photos);
+export function toOrderSummaryView(
+  order: Order,
+  now: Date,
+  facts: CatalogueFacts,
+): OrderSummaryView {
+  return summaryOf(order, trackOrder(order, now), now, facts);
 }
 
 function summaryOf(
   order: Order,
   tracking: OrderTracking,
   now: Date,
-  photos: OrderPhotos,
+  facts: CatalogueFacts,
 ): OrderSummaryView {
   return {
     id: order.id,
@@ -151,7 +160,8 @@ function summaryOf(
       productId: line.productId,
       name: line.name,
       category: line.category,
-      image: photos.get(line.productId) ?? null,
+      image: facts.get(line.productId)?.image ?? null,
+      rating: facts.get(line.productId)?.rating ?? null,
       priceInCents: line.priceInCents,
       quantity: line.quantity,
       returnState: returnStateOf(order, line, now),

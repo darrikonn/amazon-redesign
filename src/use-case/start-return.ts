@@ -1,7 +1,7 @@
 import { isReturnable } from "@/component";
 import type { Clock, OrderRepository, ProductRepository, SessionStore } from "@/core";
 import { isReturnReason } from "@/core";
-import { type OrderView, photosFor, toOrderView } from "./order-view";
+import { catalogueFactsFor, type OrderView, toOrderView } from "./order-view";
 import { currentShopper } from "./session-shopper";
 
 export type StartReturnRequest = {
@@ -49,7 +49,7 @@ export class StartReturn {
     const saved = await this.orders.demand(shopper.id, updated.id);
     return {
       status: "started",
-      order: toOrderView(saved, now, await photosFor(this.products, [saved])),
+      order: toOrderView(saved, now, await catalogueFactsFor(this.products, [saved])),
     };
   }
 }

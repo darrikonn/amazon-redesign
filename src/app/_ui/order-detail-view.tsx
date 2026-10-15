@@ -94,7 +94,9 @@ function OrderDetail({ order, isJustPlaced, onChange }: OrderDetailProps) {
       <TrackingSection order={order} />
       <ItemsSection order={order} />
       {order.returns.length > 0 && <ReturnsSection order={order} headingRef={returnsHeadingRef} />}
-      {returnable.length > 0 && <ReturnForm order={order} onReturned={returned} />}
+      {returnable.length > 0 && (
+        <ReturnForm order={order} onReturned={returned} onRefreshed={onChange} />
+      )}
     </main>
   );
 }

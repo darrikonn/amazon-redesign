@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import { OrdersView } from "../_ui/orders-view";
+import { titledPage } from "../_ui/page-metadata";
 import { requireShopper } from "../_ui/require-shopper";
 import type { RawSearchParameters } from "../_ui/search-url";
 import { orderListHref } from "../_ui/shop-place";
 
-export const metadata: Metadata = { title: "Your orders" };
+export const generateMetadata = titledPage("Your orders");
 
 type OrdersPageProps = {
   searchParams: Promise<RawSearchParameters>;

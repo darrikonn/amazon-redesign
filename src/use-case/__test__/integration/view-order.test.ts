@@ -53,10 +53,10 @@ describe("ViewOrder", () => {
     ]);
   });
 
-  it("shows each line's photo from the catalogue and the city of the order's ZIP code", async () => {
+  it("shows each line's photo and rating from the catalogue, and the city of the ZIP code", async () => {
     // Arrange
     fakes.products.seedProduct(
-      aProduct({ id: "lamp", image: "https://cdn.dummyjson.com/lamp.webp" }),
+      aProduct({ id: "lamp", image: "https://cdn.dummyjson.com/lamp.webp", rating: 4.6 }),
     );
     fakes.orders.seedOrder({ ...delivered, deliveryPostalCode: "98101" });
 
@@ -65,9 +65,9 @@ describe("ViewOrder", () => {
 
     // Assert
     expect(order?.deliveryCity).toBe("Seattle");
-    expect(order?.lines.map((line) => line.image)).toEqual([
-      "https://cdn.dummyjson.com/lamp.webp",
-      null,
+    expect(order?.lines.map((line) => [line.image, line.rating])).toEqual([
+      ["https://cdn.dummyjson.com/lamp.webp", 4.6],
+      [null, null],
     ]);
   });
 

@@ -1,5 +1,5 @@
 import type { Clock, OrderRepository, ProductRepository, SessionStore } from "@/core";
-import { type OrderView, photosFor, toOrderView } from "./order-view";
+import { catalogueFactsFor, type OrderView, toOrderView } from "./order-view";
 import { currentShopper } from "./session-shopper";
 
 export type ViewOrderRequest = {
@@ -20,6 +20,6 @@ export class ViewOrder {
     if (shopper === null) return null;
     const order = await this.orders.get(shopper.id, request.orderId);
     if (order === null) return null;
-    return toOrderView(order, this.clock.now(), await photosFor(this.products, [order]));
+    return toOrderView(order, this.clock.now(), await catalogueFactsFor(this.products, [order]));
   }
 }
