@@ -125,10 +125,11 @@
   font-weight: 700;
 }
 
+/* Status, not a link: muted, so only real links are teal. */
 .returnStatus {
-  color: var(--color-teal);
+  color: var(--color-muted);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .total {
@@ -184,8 +185,11 @@
 }
 
 @media (max-width: 760px) {
+  /* Two lines kept for every label, so the dates beneath line up when one wraps. */
   .stepLabel {
-    font-size: 14px;
+    min-height: 2.6em;
+    font-size: 13px;
+    line-height: 1.3;
   }
 
   .stepDate {

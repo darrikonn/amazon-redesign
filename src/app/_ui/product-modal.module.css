@@ -302,6 +302,7 @@
 
 .delivery strong {
   color: var(--color-ink);
+  white-space: nowrap;
 }
 
 .actions {
@@ -324,8 +325,8 @@
 }
 
 .saveButtonSaved {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  border-color: var(--color-accent-deep);
+  color: var(--color-accent-deep);
 }
 
 .saveButtonSaved svg {

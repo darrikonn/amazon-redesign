@@ -22,7 +22,9 @@
 }
 
 /* Clears the page top when a topic link scrolls here. */
+/* Lines of help read best short, so the panels stop at a reading width. */
 .topic {
+  max-width: 820px;
   scroll-margin-top: 24px;
 }
 

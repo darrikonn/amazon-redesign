@@ -1,7 +1,8 @@
 import Link from "next/link";
-import type { MouseEvent } from "react";
-import type { Color, ProductId } from "@/core";
+import type { MouseEvent, ReactNode } from "react";
+import type { Color } from "@/core";
 import type { ProductListing } from "@/use-case";
+import type { CartProduct } from "./cart-context";
 import { deliveryLabel, splitPrice } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
@@ -16,12 +17,21 @@ type ProductCardProps = {
   href: string;
   isInCart: boolean;
   onOpen: (preview: ProductPreview) => void;
-  onToggleCart: (productId: ProductId) => void;
+  onToggleCart: (product: CartProduct) => void;
+  // A page's own action for this product, inside the card (Remove from list).
+  action?: ReactNode;
 };
 
 // The title link stretches over the whole card, so the card opens the product anywhere
 // it is clicked; only the cart button sits above it.
-export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: ProductCardProps) {
+export function ProductCard({
+  listing,
+  href,
+  isInCart,
+  onOpen,
+  onToggleCart,
+  action,
+}: ProductCardProps) {
   function open(event: MouseEvent<HTMLAnchorElement>) {
     if (!isPlainClick(event)) return;
     event.preventDefault();
@@ -101,7 +111,7 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
             className={isInCart ? styles.cartButtonAdded : styles.cartButton}
             aria-label={cartButtonLabel(listing, isInCart)}
             disabled={!listing.canBuy && !isInCart}
-            onClick={() => onToggleCart(listing.id)}
+            onClick={() => onToggleCart(listing)}
           >
             <Icon
               name={isInCart ? "check" : "add-to-cart"}
@@ -110,6 +120,7 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
             />
           </button>
         </div>
+        {action !== undefined && <div className={styles.action}>{action}</div>}
       </div>
     </article>
   );

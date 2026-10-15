@@ -75,7 +75,7 @@ export function CartButton({ productId, name, availability }: CartButtonProps) {
       aria-label={isInCart ? `In cart: remove ${name}` : `Add to cart: ${name}`}
       disabled={availability === "loading" && !isInCart}
       onClick={() => {
-        toggleCart(productId).catch(reportError);
+        toggleCart({ id: productId, name }).catch(reportError);
       }}
     >
       <Icon name={isInCart ? "check" : "add-to-cart"} size={22} strokeWidth={2.4} />

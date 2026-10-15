@@ -11,6 +11,7 @@
   --color-accent-wash: #fff6e8;
   --color-accent-wash-hover: #ffecd0;
   --color-accent-deep: #c45500;
+  --color-accent-ink: #a34700;
   --color-surface: #ffffff;
   --color-surface-alt: #f7f9fa;
   --color-surface-quiet: #f1f3f4;
@@ -31,7 +32,7 @@
   --color-title-hover: #c7511f;
   --color-glass: rgba(255, 255, 255, 0.06);
   --color-glass-hover: rgba(255, 255, 255, 0.11);
-  --color-glass-border: rgba(255, 255, 255, 0.12);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
   --color-glass-border-hover: rgba(255, 255, 255, 0.28);
   --color-scrim: rgba(10, 14, 19, 0.72);
   --color-deal: #cc0c39;

@@ -28,12 +28,12 @@ export function AccountView() {
     <main className={page.main}>
       <div className={page.heading}>
         <div>
-          <h1 className={page.title}>Hello, {shopper.fullName}</h1>
-          <p className={page.lede}>{shopper.email}</p>
+          <h1 className={`${page.title} ${styles.greeting}`}>Hello, {shopper.fullName}</h1>
+          <p className={`${page.lede} ${styles.email}`}>{shopper.email}</p>
         </div>
         <button
           type="button"
-          className={page.secondaryButton}
+          className={page.ghostButton}
           onClick={() => {
             // This page needs a signed-in shopper, so signing out here goes home rather
             // than to a sign-in page for the account just left.

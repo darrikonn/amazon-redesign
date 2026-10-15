@@ -201,8 +201,8 @@
   .panel {
     position: fixed;
     top: 64px;
-    right: 12px;
-    width: min(300px, calc(100vw - 24px));
+    right: 16px;
+    width: min(300px, calc(100vw - 32px));
   }
 }
 

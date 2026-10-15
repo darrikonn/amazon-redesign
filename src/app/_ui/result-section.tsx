@@ -51,8 +51,8 @@ export function ResultSection({
             href={productHref(listing.id)}
             isInCart={cart.productIds.includes(listing.id)}
             onOpen={openProduct}
-            onToggleCart={(productId) => {
-              toggleCart(productId).catch(reportError);
+            onToggleCart={(product) => {
+              toggleCart(product).catch(reportError);
             }}
           />
         </li>

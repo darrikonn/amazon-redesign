@@ -107,7 +107,7 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--color-star-empty);
+  background: var(--color-muted);
   transition:
     background-color var(--duration-quick) ease,
     transform var(--duration-quick) ease;

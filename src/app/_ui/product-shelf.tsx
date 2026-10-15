@@ -33,11 +33,11 @@ export function ProductShelf({ label, listings, renderAction }: ProductShelfProp
               href={withProduct(pathname, listing.id)}
               isInCart={cart.productIds.includes(listing.id)}
               onOpen={openProduct}
-              onToggleCart={(productId) => {
-                toggleCart(productId).catch(reportError);
+              onToggleCart={(product) => {
+                toggleCart(product).catch(reportError);
               }}
+              action={renderAction?.(listing)}
             />
-            {renderAction?.(listing)}
           </li>
         ))}
       </ul>

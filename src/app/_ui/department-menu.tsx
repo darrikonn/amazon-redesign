@@ -75,50 +75,46 @@ type DepartmentEntryProps = {
 };
 
 // The name searches the department; the arrow only opens its sub-groups, so a shopper
-// can look inside before going anywhere.
+// can look inside before going anywhere. Every department has the arrow, even one with no
+// groups, so the rows read alike.
 function DepartmentEntry({ department, onPick }: DepartmentEntryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const groupsId = useId();
-  const hasGroups = department.groups.length > 0;
   return (
     <li>
       <div className={styles.row}>
         <SearchLink query={department.query} className={styles.item} onPick={onPick}>
           {department.label}
         </SearchLink>
-        {hasGroups && (
-          <button
-            type="button"
-            className={isExpanded ? styles.expandOpen : styles.expand}
-            aria-label={`${department.label} categories`}
-            aria-expanded={isExpanded}
-            aria-controls={groupsId}
-            onClick={() => setIsExpanded((expanded) => !expanded)}
-          >
-            <Icon name="chevron-right" size={16} strokeWidth={2.4} />
-          </button>
-        )}
+        <button
+          type="button"
+          className={isExpanded ? styles.expandOpen : styles.expand}
+          aria-label={`${department.label} categories`}
+          aria-expanded={isExpanded}
+          aria-controls={groupsId}
+          onClick={() => setIsExpanded((expanded) => !expanded)}
+        >
+          <Icon name="chevron-right" size={16} strokeWidth={2.4} />
+        </button>
       </div>
-      {hasGroups && (
-        <Collapsible isOpen={isExpanded}>
-          <ul id={groupsId} className={styles.groups}>
-            <li>
-              <SearchLink query={department.query} className={styles.group} onPick={onPick}>
-                All {department.label.toLowerCase()}
-                <span className={styles.count}>{department.productCount}</span>
+      <Collapsible isOpen={isExpanded}>
+        <ul id={groupsId} className={styles.groups}>
+          <li>
+            <SearchLink query={department.query} className={styles.group} onPick={onPick}>
+              All {department.label.toLowerCase()}
+              <span className={styles.count}>{department.productCount}</span>
+            </SearchLink>
+          </li>
+          {department.groups.map((group) => (
+            <li key={group.query}>
+              <SearchLink query={group.query} className={styles.group} onPick={onPick}>
+                {group.label}
+                <span className={styles.count}>{group.productCount}</span>
               </SearchLink>
             </li>
-            {department.groups.map((group) => (
-              <li key={group.query}>
-                <SearchLink query={group.query} className={styles.group} onPick={onPick}>
-                  {group.label}
-                  <span className={styles.count}>{group.productCount}</span>
-                </SearchLink>
-              </li>
-            ))}
-          </ul>
-        </Collapsible>
-      )}
+          ))}
+        </ul>
+      </Collapsible>
     </li>
   );
 }

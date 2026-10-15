@@ -9,8 +9,8 @@ export function NotFoundView() {
       <h1 className={page.title}>Page not found</h1>
       <EmptyState
         icon="search"
-        title="We couldn’t find that page"
-        message="The link may be old or mistyped. Say what you need on the home page instead."
+        title="The link may be old or mistyped"
+        message="Say what you need on the home page instead, or try one of these."
       >
         <Link href="/" className={page.primaryButton}>
           Start shopping
