@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  isColor,
   isRecord,
   optionalNumber,
+  optionalOneOf,
   optionalString,
   requireArray,
   requireNumber,
+  requireOneOf,
   requireRecord,
   requireString,
   requireStringArray,
@@ -42,5 +45,15 @@ describe("json readers", () => {
       '"tags[1]" is not a string',
     );
     expect(() => requireRecord([], "product")).toThrow("product: expected an object");
+  });
+});
+
+describe("requireOneOf", () => {
+  it("narrows a string to its closed list, and names the list when it is not on it", () => {
+    expect(requireOneOf("red", isColor, "colour", "product 1")).toBe("red");
+    expect(() => requireOneOf("plaid", isColor, "colour", "product 1")).toThrow(
+      'product 1: unknown colour "plaid"',
+    );
+    expect(optionalOneOf(null, isColor, "colour", "product 1")).toBeNull();
   });
 });

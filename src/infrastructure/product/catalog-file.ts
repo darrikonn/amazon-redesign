@@ -1,13 +1,15 @@
-import type { Product, Tag } from "@/core";
+import type { Product } from "@/core";
 import {
   isCategoryId,
   isColor,
   isProductSource,
   isTag,
   optionalNumber,
+  optionalOneOf,
   optionalString,
   requireArray,
   requireNumber,
+  requireOneOf,
   requireRecord,
   requireString,
   requireStringArray,
@@ -23,34 +25,33 @@ export function parseCatalogFile(json: unknown): Product[] {
 
 function parseProduct(value: unknown, context: string): Product {
   const record = requireRecord(value, context);
-  const source = requireString(record, "source", context);
-  const category = requireString(record, "category", context);
-  const color = optionalString(record, "color", context);
-  if (!isProductSource(source)) throw new Error(`${context}: unknown source "${source}"`);
-  if (!isCategoryId(category)) throw new Error(`${context}: unknown category "${category}"`);
-  if (color !== null && !isColor(color)) throw new Error(`${context}: unknown colour "${color}"`);
   return {
     id: requireString(record, "id", context),
-    source,
+    source: requireOneOf(
+      requireString(record, "source", context),
+      isProductSource,
+      "source",
+      context,
+    ),
     sourceId: requireNumber(record, "sourceId", context),
     name: requireString(record, "name", context),
-    category,
+    category: requireOneOf(
+      requireString(record, "category", context),
+      isCategoryId,
+      "category",
+      context,
+    ),
     priceInCents: requireNumber(record, "priceInCents", context),
     discountPercent: requireNumber(record, "discountPercent", context),
     rating: requireNumber(record, "rating", context),
     reviewCount: requireNumber(record, "reviewCount", context),
     deliveryDays: requireNumber(record, "deliveryDays", context),
-    color,
-    tags: readTags(requireStringArray(record, "tags", context), context),
+    color: optionalOneOf(optionalString(record, "color", context), isColor, "colour", context),
+    tags: requireStringArray(record, "tags", context).map((tag) =>
+      requireOneOf(tag, isTag, "tag", context),
+    ),
     image: optionalString(record, "image", context),
     brand: optionalString(record, "brand", context),
     stock: optionalNumber(record, "stock", context),
   };
-}
-
-function readTags(tags: readonly string[], context: string): Tag[] {
-  return tags.map((tag) => {
-    if (!isTag(tag)) throw new Error(`${context}: unknown tag "${tag}"`);
-    return tag;
-  });
 }

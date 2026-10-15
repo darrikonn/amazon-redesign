@@ -5,6 +5,7 @@ import {
   optionalString,
   requireArray,
   requireNumber,
+  requireOneOf,
   requireRecord,
   requireString,
   requireStringArray,
@@ -34,12 +35,15 @@ export function parseStoredOrder(value: unknown, context: string): Order {
 
 function parseLine(value: unknown, context: string): OrderLine {
   const record = requireRecord(value, context);
-  const category = requireString(record, "category", context);
-  if (!isCategoryId(category)) throw new Error(`${context}: unknown category "${category}"`);
   return {
     productId: requireString(record, "productId", context),
     name: requireString(record, "name", context),
-    category,
+    category: requireOneOf(
+      requireString(record, "category", context),
+      isCategoryId,
+      "category",
+      context,
+    ),
     priceInCents: requireNumber(record, "priceInCents", context),
     quantity: requireNumber(record, "quantity", context),
     returnWindowDays: requireNumber(record, "returnWindowDays", context),
@@ -48,11 +52,14 @@ function parseLine(value: unknown, context: string): OrderLine {
 
 function parseReturn(value: unknown, context: string): OrderReturn {
   const record = requireRecord(value, context);
-  const reason = requireString(record, "reason", context);
-  if (!isReturnReason(reason)) throw new Error(`${context}: unknown reason "${reason}"`);
   return {
     productIds: requireStringArray(record, "productIds", context),
-    reason,
+    reason: requireOneOf(
+      requireString(record, "reason", context),
+      isReturnReason,
+      "reason",
+      context,
+    ),
     requestedAt: requireString(record, "requestedAt", context),
   };
 }

@@ -64,3 +64,25 @@ export function requireStringArray(
     return item;
   });
 }
+
+type Guard<Value extends string> = (value: string) => value is Value;
+
+// One of a closed list of literals (ADR 0003); `noun` names the list in the error.
+export function requireOneOf<Value extends string>(
+  value: string,
+  isValue: Guard<Value>,
+  noun: string,
+  context: string,
+): Value {
+  if (!isValue(value)) throw new Error(`${context}: unknown ${noun} "${value}"`);
+  return value;
+}
+
+export function optionalOneOf<Value extends string>(
+  value: string | null,
+  isValue: Guard<Value>,
+  noun: string,
+  context: string,
+): Value | null {
+  return value === null ? null : requireOneOf(value, isValue, noun, context);
+}

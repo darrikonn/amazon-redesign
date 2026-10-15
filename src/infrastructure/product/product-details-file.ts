@@ -1,6 +1,7 @@
-import type { Availability, ProductDetails, ProductReview } from "@/core";
+import type { ProductDetails, ProductReview } from "@/core";
 import {
   isAvailability,
+  optionalOneOf,
   optionalString,
   requireArray,
   requireNumber,
@@ -23,7 +24,12 @@ function parseDetails(value: unknown, context: string): ProductDetails {
     productId: requireString(record, "productId", context),
     description: requireString(record, "description", context),
     images: requireStringArray(record, "images", context),
-    availability: readAvailability(optionalString(record, "availability", context), context),
+    availability: optionalOneOf(
+      optionalString(record, "availability", context),
+      isAvailability,
+      "availability",
+      context,
+    ),
     shipping: optionalString(record, "shipping", context),
     warranty: optionalString(record, "warranty", context),
     returnPolicy: optionalString(record, "returnPolicy", context),
@@ -31,12 +37,6 @@ function parseDetails(value: unknown, context: string): ProductDetails {
       parseReview(review, `${context} review ${reviewIndex}`),
     ),
   };
-}
-
-function readAvailability(value: string | null, context: string): Availability | null {
-  if (value === null) return null;
-  if (!isAvailability(value)) throw new Error(`${context}: unknown availability "${value}"`);
-  return value;
 }
 
 function parseReview(value: unknown, context: string): ProductReview {

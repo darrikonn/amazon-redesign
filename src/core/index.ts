@@ -5,9 +5,11 @@ export { NotFoundError } from "./error/not-found-error";
 export {
   isRecord,
   optionalNumber,
+  optionalOneOf,
   optionalString,
   requireArray,
   requireNumber,
+  requireOneOf,
   requireRecord,
   requireString,
   requireStringArray,

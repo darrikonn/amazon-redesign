@@ -5,6 +5,7 @@ import {
   isProductSource,
   isTag,
   requireNumber,
+  requireOneOf,
   requireRecord,
   requireString,
   requireStringArray,
@@ -72,8 +73,7 @@ function readOverride(value: unknown, context: string): ProductOverride {
 }
 
 function readCategory(value: string, context: string): CategoryId {
-  if (!isCategoryId(value)) throw new Error(`${context}: unknown category "${value}"`);
-  return value;
+  return requireOneOf(value, isCategoryId, "category", context);
 }
 
 function readColor(value: unknown, context: string): Color | null {
@@ -84,6 +84,5 @@ function readColor(value: unknown, context: string): Color | null {
 }
 
 function readTag(value: string, context: string): Tag {
-  if (!isTag(value)) throw new Error(`${context}: unknown tag "${value}"`);
-  return value;
+  return requireOneOf(value, isTag, "tag", context);
 }
