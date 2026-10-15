@@ -68,4 +68,9 @@ export {
 } from "./view-product";
 export { type SavedListView, ViewSavedList } from "./view-saved-list";
 export { type SessionView, type ShopperView, ViewSession } from "./view-session";
-export { type Department, type Storefront, ViewStorefront } from "./view-storefront";
+export {
+  type Department,
+  type DepartmentGroup,
+  type Storefront,
+  ViewStorefront,
+} from "./view-storefront";

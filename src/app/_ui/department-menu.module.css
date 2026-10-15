@@ -67,3 +67,76 @@
 .item:hover {
   background: var(--color-teal-hover);
 }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.row .item {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.expand,
+.expandOpen {
+  display: grid;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-muted);
+  transition:
+    transform var(--duration-layout) ease,
+    background var(--duration-quick) ease;
+}
+
+.expand:hover,
+.expandOpen:hover {
+  background: var(--color-teal-hover);
+  color: var(--color-ink);
+}
+
+.expandOpen {
+  transform: rotate(90deg);
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 0 6px 12px;
+  padding-left: 10px;
+  border-left: 2px solid var(--color-divider);
+}
+
+.group {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.group:hover {
+  background: var(--color-teal-hover);
+}
+
+.count {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 400;
+}

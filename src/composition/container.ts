@@ -65,7 +65,7 @@ export function assembleContainer(ports: Ports): Container {
   const { products, productDetails, cartLines, orders, savedItems, sessions, clock } = ports;
   return {
     searchCatalog: new SearchCatalog(products),
-    viewStorefront: new ViewStorefront(),
+    viewStorefront: new ViewStorefront(products),
     viewProduct: new ViewProduct(products, productDetails),
     viewSession: new ViewSession(sessions),
     signIn: new SignIn(sessions, cartLines, orders, products, productDetails, clock),

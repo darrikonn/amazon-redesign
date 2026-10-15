@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { type RefObject, useEffect, useId, useRef, useState } from "react";
 import type { Department } from "@/use-case";
+import { Collapsible } from "./collapsible";
 import styles from "./department-menu.module.css";
 import { Icon } from "./icon";
 import { useShop } from "./shop-context";
@@ -33,9 +34,9 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
     toggleRef.current?.focus();
   });
 
-  function pick(department: Department) {
+  function pick(query: string) {
     setIsOpen(false);
-    search(department.query);
+    search(query);
   }
 
   function close() {
@@ -59,12 +60,7 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
         <p className={styles.heading}>Shop by department</p>
         <ul>
           {departments.map((department) => (
-            <li key={department.query}>
-              <button type="button" className={styles.item} onClick={() => pick(department)}>
-                {department.label}
-                <Icon name="chevron-right" size={16} strokeWidth={2.4} />
-              </button>
-            </li>
+            <DepartmentEntry key={department.query} department={department} onPick={pick} />
           ))}
         </ul>
         <p className={styles.heading}>Your account</p>
@@ -73,7 +69,6 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
             <li key={link.href}>
               <Link href={link.href} className={styles.item} onClick={close}>
                 {link.label}
-                <Icon name="chevron-right" size={16} strokeWidth={2.4} />
               </Link>
             </li>
           ))}
@@ -81,7 +76,6 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
             {shopper === null ? (
               <Link href={signInHref(address)} className={styles.item} onClick={close}>
                 Sign in
-                <Icon name="chevron-right" size={16} strokeWidth={2.4} />
               </Link>
             ) : (
               <button
@@ -99,6 +93,64 @@ export function DepartmentMenu({ departments }: DepartmentMenuProps) {
         </ul>
       </nav>
     </div>
+  );
+}
+
+type DepartmentEntryProps = {
+  department: Department;
+  onPick: (query: string) => void;
+};
+
+// The name searches the department; the arrow only opens its sub-groups, so a shopper
+// can look inside before going anywhere.
+function DepartmentEntry({ department, onPick }: DepartmentEntryProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const groupsId = useId();
+  const hasGroups = department.groups.length > 0;
+  return (
+    <li>
+      <div className={styles.row}>
+        <button type="button" className={styles.item} onClick={() => onPick(department.query)}>
+          {department.label}
+        </button>
+        {hasGroups && (
+          <button
+            type="button"
+            className={isExpanded ? styles.expandOpen : styles.expand}
+            aria-label={`${department.label} categories`}
+            aria-expanded={isExpanded}
+            aria-controls={groupsId}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+          >
+            <Icon name="chevron-right" size={16} strokeWidth={2.4} />
+          </button>
+        )}
+      </div>
+      {hasGroups && (
+        <Collapsible isOpen={isExpanded}>
+          <ul id={groupsId} className={styles.groups}>
+            <li>
+              <button
+                type="button"
+                className={styles.group}
+                onClick={() => onPick(department.query)}
+              >
+                All {department.label.toLowerCase()}
+                <span className={styles.count}>{department.productCount}</span>
+              </button>
+            </li>
+            {department.groups.map((group) => (
+              <li key={group.query}>
+                <button type="button" className={styles.group} onClick={() => onPick(group.query)}>
+                  {group.label}
+                  <span className={styles.count}>{group.productCount}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Collapsible>
+      )}
+    </li>
   );
 }
 
