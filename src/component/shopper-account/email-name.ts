@@ -5,10 +5,18 @@ export type ShopperName = {
   fullName: string;
 };
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const EMAIL_RULES = {
+  // The longest address mail servers accept (RFC 5321); a longer one would also overflow
+  // the session cookie, which the browser then silently drops.
+  maximumLength: 254,
+} as const;
+
+// Letters, digits, and the punctuation addresses really use, an @, and a dotted domain.
+const EMAIL_PATTERN = /^[a-z0-9._%+'-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
 
 export function normaliseEmail(text: string): string | null {
   const email = text.trim().toLowerCase();
+  if (email.length > EMAIL_RULES.maximumLength) return null;
   return EMAIL_PATTERN.test(email) ? email : null;
 }
 

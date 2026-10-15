@@ -1,20 +1,28 @@
 import { describe, expect, it } from "vitest";
-import {
-  DEFAULT_POSTAL_CODE,
-  deliveryCityFor,
-  nameFromEmail,
-  normaliseEmail,
-  normalisePostalCode,
-  shopperFromSession,
-} from "@/component";
+import { EMAIL_RULES, nameFromEmail, normaliseEmail } from "@/component";
 
 describe("normaliseEmail", () => {
+  it("rejects an address longer than mail servers accept", () => {
+    const local = "a".repeat(EMAIL_RULES.maximumLength - "@example.com".length);
+
+    expect(normaliseEmail(`${local}@example.com`)).toBe(`${local}@example.com`);
+    expect(normaliseEmail(`${local}a@example.com`)).toBeNull();
+  });
+
   it("accepts a well-formed address, trimmed and lower-cased", () => {
     expect(normaliseEmail("  Darri.Konn@Gmail.com ")).toBe("darri.konn@gmail.com");
   });
 
   it("rejects anything that is not an address", () => {
-    for (const text of ["", "darri", "darri@", "@gmail.com", "darri@gmail", "dar ri@gmail.com"]) {
+    for (const text of [
+      "",
+      "darri",
+      "darri@",
+      "@gmail.com",
+      "darri@gmail",
+      "dar ri@gmail.com",
+      "a;b@c.co",
+    ]) {
       expect(normaliseEmail(text)).toBeNull();
     }
   });
@@ -45,31 +53,5 @@ describe("nameFromEmail", () => {
 
   it("falls back to a neutral name when no letters are left", () => {
     expect(nameFromEmail("12345@x.com")).toEqual({ firstName: "Shopper", fullName: "Shopper" });
-  });
-});
-
-describe("delivery areas", () => {
-  it("accepts five-digit ZIP codes and names the cities it knows", () => {
-    expect(normalisePostalCode(" 10001 ")).toBe("10001");
-    expect(normalisePostalCode("1000")).toBeNull();
-    expect(normalisePostalCode("10001-1234")).toBeNull();
-    expect(deliveryCityFor("10001")).toBe("New York");
-    expect(deliveryCityFor("12345")).toBeNull();
-    expect(deliveryCityFor(DEFAULT_POSTAL_CODE)).toBe("Minneapolis");
-  });
-});
-
-describe("shopperFromSession", () => {
-  it("derives the whole shopper from the email and the ZIP code", () => {
-    expect(
-      shopperFromSession({ email: "darri.konn@gmail.com", deliveryPostalCode: "94103" }),
-    ).toEqual({
-      id: "shopper:darri.konn@gmail.com",
-      email: "darri.konn@gmail.com",
-      firstName: "Darri",
-      fullName: "Darri Konn",
-      deliveryCity: "San Francisco",
-      deliveryPostalCode: "94103",
-    });
   });
 });

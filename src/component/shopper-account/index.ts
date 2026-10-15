@@ -1,3 +1,3 @@
 export { DEFAULT_POSTAL_CODE, deliveryCityFor, normalisePostalCode } from "./delivery-area";
-export { nameFromEmail, normaliseEmail, type ShopperName } from "./email-name";
+export { EMAIL_RULES, nameFromEmail, normaliseEmail, type ShopperName } from "./email-name";
 export { GUEST_SHOPPER_ID, shopperFromSession, shopperIdFor } from "./shopper-from-session";
