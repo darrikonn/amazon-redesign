@@ -20,7 +20,6 @@ export type ProductDetails = {
   description: string;
   images: readonly string[];
   availability: Availability | null;
-  stock: number | null;
   shipping: string | null;
   warranty: string | null;
   returnPolicy: string | null;

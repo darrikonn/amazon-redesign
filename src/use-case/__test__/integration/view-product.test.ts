@@ -81,10 +81,10 @@ describe("ViewProduct", () => {
 
   it("says how many are left when stock is low, and that an empty shelf cannot be bought", async () => {
     // Arrange
-    fakes.products.seedProduct(aProduct({ id: "gone" }));
+    fakes.products.seedProducts([{ ...watch, stock: 4 }, aProduct({ id: "gone", stock: 0 })]);
     fakes.productDetails.seedManyDetails([
-      aProductDetails({ productId: "watch", availability: "low-stock", stock: 4 }),
-      aProductDetails({ productId: "gone", availability: "out-of-stock", stock: 0 }),
+      aProductDetails({ productId: "watch", availability: "low-stock" }),
+      aProductDetails({ productId: "gone", availability: "out-of-stock" }),
     ]);
 
     // Act
@@ -100,8 +100,9 @@ describe("ViewProduct", () => {
 
   it("says low stock without a number when the count is unknown", async () => {
     // Arrange
+    fakes.products.seedProduct({ ...watch, stock: null });
     fakes.productDetails.seedDetails(
-      aProductDetails({ productId: "watch", availability: "low-stock", stock: null }),
+      aProductDetails({ productId: "watch", availability: "low-stock" }),
     );
 
     // Act

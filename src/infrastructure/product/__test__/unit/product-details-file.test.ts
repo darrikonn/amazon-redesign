@@ -8,7 +8,6 @@ describe("parseProductDetailsFile", () => {
     const sparse = aProductDetails({
       productId: "fakestore-0003",
       availability: null,
-      stock: null,
       shipping: null,
       warranty: null,
       returnPolicy: null,
@@ -25,9 +24,6 @@ describe("parseProductDetailsFile", () => {
     expect(() =>
       parseProductDetailsFile([{ ...aProductDetails(), availability: "discontinued" }]),
     ).toThrow('unknown availability "discontinued"');
-    expect(() => parseProductDetailsFile([{ ...aProductDetails(), stock: "many" }])).toThrow(
-      '"stock"',
-    );
     expect(() =>
       parseProductDetailsFile([{ ...aProductDetails(), reviews: [{ rating: 5 }] }]),
     ).toThrow('"reviewerName"');

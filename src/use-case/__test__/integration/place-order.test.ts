@@ -72,4 +72,22 @@ describe("PlaceOrder", () => {
     expect(first).not.toEqual(second);
     expect(fakes.orders.storedOrders()).toHaveLength(2);
   });
+
+  it("waits, naming them, while anything in the cart cannot be ordered as it is", async () => {
+    // Arrange
+    fakes.sessions.seedSession(aSession());
+    fakes.products.seedProduct(aProduct({ id: "volleyball", name: "Volleyball", stock: 0 }));
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "lamp", quantity: 1 }));
+    fakes.cartLines.seedLine(
+      aCartLine({ ownerId: SHOPPER_ID, productId: "volleyball", quantity: 1 }),
+    );
+
+    // Act
+    const result = await container.placeOrder.execute();
+
+    // Assert
+    expect(result).toEqual({ status: "unavailable", productNames: ["Volleyball"] });
+    expect(fakes.orders.storedOrders()).toEqual([]);
+    expect(fakes.cartLines.storedLines()).toHaveLength(2);
+  });
 });

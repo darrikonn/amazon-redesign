@@ -6,7 +6,6 @@
       "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 99,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 week warranty",
     "returnPolicy": "No return policy",
@@ -38,7 +37,6 @@
       "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 34,
     "shipping": "Ships in 2 weeks",
     "warranty": "1 year warranty",
     "returnPolicy": "7 days return policy",
@@ -70,7 +68,6 @@
       "https://cdn.dummyjson.com/product-images/beauty/powder-canister/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 89,
     "shipping": "Ships in 1-2 business days",
     "warranty": "3 months warranty",
     "returnPolicy": "No return policy",
@@ -102,7 +99,6 @@
       "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 91,
     "shipping": "Ships in 1 week",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -134,7 +130,6 @@
       "https://cdn.dummyjson.com/product-images/beauty/red-nail-polish/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 79,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -168,7 +163,6 @@
       "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 29,
     "shipping": "Ships overnight",
     "warranty": "1 week warranty",
     "returnPolicy": "90 days return policy",
@@ -202,7 +196,6 @@
       "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 58,
     "shipping": "Ships overnight",
     "warranty": "3 year warranty",
     "returnPolicy": "No return policy",
@@ -236,7 +229,6 @@
       "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 98,
     "shipping": "Ships in 2 weeks",
     "warranty": "1 week warranty",
     "returnPolicy": "7 days return policy",
@@ -270,7 +262,6 @@
       "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/3.webp"
     ],
     "availability": "low-stock",
-    "stock": 4,
     "shipping": "Ships in 1 month",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -304,7 +295,6 @@
       "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 91,
     "shipping": "Ships overnight",
     "warranty": "6 months warranty",
     "returnPolicy": "No return policy",
@@ -338,7 +328,6 @@
       "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 88,
     "shipping": "Ships in 1 month",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -372,7 +361,6 @@
       "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 60,
     "shipping": "Ships in 1 week",
     "warranty": "Lifetime warranty",
     "returnPolicy": "7 days return policy",
@@ -406,7 +394,6 @@
       "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 64,
     "shipping": "Ships overnight",
     "warranty": "5 year warranty",
     "returnPolicy": "7 days return policy",
@@ -440,7 +427,6 @@
       "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 26,
     "shipping": "Ships overnight",
     "warranty": "2 year warranty",
     "returnPolicy": "60 days return policy",
@@ -474,7 +460,6 @@
       "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/3.webp"
     ],
     "availability": "low-stock",
-    "stock": 7,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "60 days return policy",
@@ -506,7 +491,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/apple/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 8,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 year warranty",
     "returnPolicy": "90 days return policy",
@@ -538,7 +522,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/beef-steak/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 86,
     "shipping": "Ships overnight",
     "warranty": "3 year warranty",
     "returnPolicy": "60 days return policy",
@@ -570,7 +553,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/cat-food/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 46,
     "shipping": "Ships overnight",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -603,7 +585,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/chicken-meat/2.webp"
     ],
     "availability": "in-stock",
-    "stock": 97,
     "shipping": "Ships in 1 month",
     "warranty": "1 year warranty",
     "returnPolicy": "7 days return policy",
@@ -635,7 +616,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 10,
     "shipping": "Ships in 1-2 business days",
     "warranty": "Lifetime warranty",
     "returnPolicy": "30 days return policy",
@@ -667,7 +647,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/cucumber/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 84,
     "shipping": "Ships in 1-2 business days",
     "warranty": "2 year warranty",
     "returnPolicy": "7 days return policy",
@@ -699,7 +678,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/dog-food/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 71,
     "shipping": "Ships in 1-2 business days",
     "warranty": "No warranty",
     "returnPolicy": "60 days return policy",
@@ -731,7 +709,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/eggs/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 9,
     "shipping": "Ships in 1 week",
     "warranty": "1 week warranty",
     "returnPolicy": "No return policy",
@@ -763,7 +740,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/fish-steak/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 74,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "60 days return policy",
@@ -795,7 +771,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/green-bell-pepper/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 33,
     "shipping": "Ships in 1 week",
     "warranty": "1 month warranty",
     "returnPolicy": "30 days return policy",
@@ -827,7 +802,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/green-chili-pepper/1.webp"
     ],
     "availability": "low-stock",
-    "stock": 3,
     "shipping": "Ships in 1 week",
     "warranty": "2 year warranty",
     "returnPolicy": "30 days return policy",
@@ -859,7 +833,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/honey-jar/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 34,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "90 days return policy",
@@ -894,7 +867,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/ice-cream/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 27,
     "shipping": "Ships in 2 weeks",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -926,7 +898,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/juice/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 50,
     "shipping": "Ships in 1 week",
     "warranty": "6 months warranty",
     "returnPolicy": "No return policy",
@@ -958,7 +929,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/kiwi/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 99,
     "shipping": "Ships overnight",
     "warranty": "6 months warranty",
     "returnPolicy": "7 days return policy",
@@ -990,7 +960,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/lemon/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 31,
     "shipping": "Ships in 1 month",
     "warranty": "No warranty",
     "returnPolicy": "7 days return policy",
@@ -1022,7 +991,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/milk/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 27,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -1054,7 +1022,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/mulberry/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 99,
     "shipping": "Ships in 1 week",
     "warranty": "2 year warranty",
     "returnPolicy": "No return policy",
@@ -1086,7 +1053,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/nescafe-coffee/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 57,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -1118,7 +1084,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/potatoes/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 13,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "90 days return policy",
@@ -1150,7 +1115,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/protein-powder/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 80,
     "shipping": "Ships in 1 month",
     "warranty": "1 week warranty",
     "returnPolicy": "No return policy",
@@ -1182,7 +1146,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/red-onions/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 82,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "7 days return policy",
@@ -1214,7 +1177,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/rice/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 59,
     "shipping": "Ships overnight",
     "warranty": "6 months warranty",
     "returnPolicy": "No return policy",
@@ -1246,7 +1208,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/soft-drinks/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 53,
     "shipping": "Ships in 2 weeks",
     "warranty": "6 months warranty",
     "returnPolicy": "7 days return policy",
@@ -1278,7 +1239,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/strawberry/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 46,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 week warranty",
     "returnPolicy": "No return policy",
@@ -1311,7 +1271,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/tissue-paper-box/2.webp"
     ],
     "availability": "in-stock",
-    "stock": 86,
     "shipping": "Ships in 1-2 business days",
     "warranty": "No warranty",
     "returnPolicy": "90 days return policy",
@@ -1343,7 +1302,6 @@
       "https://cdn.dummyjson.com/product-images/groceries/water/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 53,
     "shipping": "Ships in 1 month",
     "warranty": "3 months warranty",
     "returnPolicy": "7 days return policy",
@@ -1377,7 +1335,6 @@
       "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 47,
     "shipping": "Ships in 1 month",
     "warranty": "1 week warranty",
     "returnPolicy": "90 days return policy",
@@ -1409,7 +1366,6 @@
       "https://cdn.dummyjson.com/product-images/home-decoration/family-tree-photo-frame/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 77,
     "shipping": "Ships in 2 weeks",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -1443,7 +1399,6 @@
       "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 28,
     "shipping": "Ships in 1 week",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -1478,7 +1433,6 @@
       "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 59,
     "shipping": "Ships in 3-5 business days",
     "warranty": "Lifetime warranty",
     "returnPolicy": "30 days return policy",
@@ -1510,7 +1464,6 @@
       "https://cdn.dummyjson.com/product-images/home-decoration/table-lamp/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 9,
     "shipping": "Ships in 1-2 business days",
     "warranty": "3 months warranty",
     "returnPolicy": "90 days return policy",
@@ -1542,7 +1495,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/bamboo-spatula/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 37,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "60 days return policy",
@@ -1575,7 +1527,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-aluminium-cup/2.webp"
     ],
     "availability": "in-stock",
-    "stock": 75,
     "shipping": "Ships overnight",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -1607,7 +1558,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-whisk/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 73,
     "shipping": "Ships in 1 month",
     "warranty": "3 months warranty",
     "returnPolicy": "30 days return policy",
@@ -1642,7 +1592,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 9,
     "shipping": "Ships in 1-2 business days",
     "warranty": "5 year warranty",
     "returnPolicy": "7 days return policy",
@@ -1674,7 +1623,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/carbon-steel-wok/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 40,
     "shipping": "Ships in 1-2 business days",
     "warranty": "2 year warranty",
     "returnPolicy": "7 days return policy",
@@ -1706,7 +1654,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/chopping-board/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 14,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 months warranty",
     "returnPolicy": "No return policy",
@@ -1738,7 +1685,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/citrus-squeezer-yellow/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 22,
     "shipping": "Ships in 3-5 business days",
     "warranty": "2 year warranty",
     "returnPolicy": "60 days return policy",
@@ -1770,7 +1716,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/egg-slicer/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 40,
     "shipping": "Ships in 1 month",
     "warranty": "1 week warranty",
     "returnPolicy": "No return policy",
@@ -1805,7 +1750,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 21,
     "shipping": "Ships in 1 week",
     "warranty": "2 year warranty",
     "returnPolicy": "7 days return policy",
@@ -1837,7 +1781,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/fine-mesh-strainer/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 85,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "7 days return policy",
@@ -1869,7 +1812,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/fork/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 7,
     "shipping": "Ships in 1 month",
     "warranty": "No warranty",
     "returnPolicy": "No return policy",
@@ -1901,7 +1843,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/glass/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 46,
     "shipping": "Ships overnight",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -1933,7 +1874,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/grater-black/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 84,
     "shipping": "Ships in 1 week",
     "warranty": "1 month warranty",
     "returnPolicy": "60 days return policy",
@@ -1965,7 +1905,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/hand-blender/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 84,
     "shipping": "Ships in 1 week",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -1997,7 +1936,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/ice-cube-tray/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 13,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -2029,7 +1967,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/kitchen-sieve/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 68,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -2061,7 +1998,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/knife/1.webp"
     ],
     "availability": "low-stock",
-    "stock": 7,
     "shipping": "Ships in 1 week",
     "warranty": "1 month warranty",
     "returnPolicy": "7 days return policy",
@@ -2093,7 +2029,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/lunch-box/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 94,
     "shipping": "Ships in 1-2 business days",
     "warranty": "5 year warranty",
     "returnPolicy": "30 days return policy",
@@ -2128,7 +2063,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 59,
     "shipping": "Ships in 1 week",
     "warranty": "1 year warranty",
     "returnPolicy": "7 days return policy",
@@ -2161,7 +2095,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/mug-tree-stand/2.webp"
     ],
     "availability": "in-stock",
-    "stock": 88,
     "shipping": "Ships in 1 month",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -2193,7 +2126,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/pan/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 90,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -2225,7 +2157,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/plate/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 66,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "90 days return policy",
@@ -2257,7 +2188,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/red-tongs/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 82,
     "shipping": "Ships in 1 week",
     "warranty": "No warranty",
     "returnPolicy": "30 days return policy",
@@ -2289,7 +2219,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/silver-pot-with-glass-cap/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 40,
     "shipping": "Ships in 1 month",
     "warranty": "1 year warranty",
     "returnPolicy": "90 days return policy",
@@ -2321,7 +2250,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/slotted-turner/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 88,
     "shipping": "Ships in 1-2 business days",
     "warranty": "Lifetime warranty",
     "returnPolicy": "7 days return policy",
@@ -2353,7 +2281,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/spice-rack/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 79,
     "shipping": "Ships overnight",
     "warranty": "1 week warranty",
     "returnPolicy": "7 days return policy",
@@ -2385,7 +2312,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/spoon/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 59,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "90 days return policy",
@@ -2417,7 +2343,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/tray/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 71,
     "shipping": "Ships in 2 weeks",
     "warranty": "5 year warranty",
     "returnPolicy": "7 days return policy",
@@ -2449,7 +2374,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/wooden-rolling-pin/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 80,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 year warranty",
     "returnPolicy": "30 days return policy",
@@ -2481,7 +2405,6 @@
       "https://cdn.dummyjson.com/product-images/kitchen-accessories/yellow-peeler/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 35,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "90 days return policy",
@@ -2515,7 +2438,6 @@
       "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 24,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 year warranty",
     "returnPolicy": "90 days return policy",
@@ -2549,7 +2471,6 @@
       "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 45,
     "shipping": "Ships in 1 month",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -2583,7 +2504,6 @@
       "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 75,
     "shipping": "Ships overnight",
     "warranty": "No warranty",
     "returnPolicy": "60 days return policy",
@@ -2617,7 +2537,6 @@
       "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 40,
     "shipping": "Ships in 2 weeks",
     "warranty": "6 months warranty",
     "returnPolicy": "No return policy",
@@ -2651,7 +2570,6 @@
       "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 74,
     "shipping": "Ships in 2 weeks",
     "warranty": "2 year warranty",
     "returnPolicy": "60 days return policy",
@@ -2686,7 +2604,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 38,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "30 days return policy",
@@ -2721,7 +2638,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 90,
     "shipping": "Ships overnight",
     "warranty": "3 year warranty",
     "returnPolicy": "30 days return policy",
@@ -2756,7 +2672,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 82,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 week warranty",
     "returnPolicy": "7 days return policy",
@@ -2791,7 +2706,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/4.webp"
     ],
     "availability": "low-stock",
-    "stock": 2,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 year warranty",
     "returnPolicy": "30 days return policy",
@@ -2826,7 +2740,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 95,
     "shipping": "Ships in 1-2 business days",
     "warranty": "No warranty",
     "returnPolicy": "30 days return policy",
@@ -2861,7 +2774,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 7,
     "shipping": "Ships in 1 week",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -2896,7 +2808,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 12,
     "shipping": "Ships in 2 weeks",
     "warranty": "6 months warranty",
     "returnPolicy": "No return policy",
@@ -2931,7 +2842,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 90,
     "shipping": "Ships in 1-2 business days",
     "warranty": "5 year warranty",
     "returnPolicy": "90 days return policy",
@@ -2966,7 +2876,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 17,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 week warranty",
     "returnPolicy": "30 days return policy",
@@ -3001,7 +2910,6 @@
       "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 62,
     "shipping": "Ships overnight",
     "warranty": "3 months warranty",
     "returnPolicy": "60 days return policy",
@@ -3035,7 +2943,6 @@
       "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 32,
     "shipping": "Ships in 1 month",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -3069,7 +2976,6 @@
       "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 100,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 week warranty",
     "returnPolicy": "7 days return policy",
@@ -3103,7 +3009,6 @@
       "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 40,
     "shipping": "Ships in 1 week",
     "warranty": "3 months warranty",
     "returnPolicy": "90 days return policy",
@@ -3137,7 +3042,6 @@
       "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 36,
     "shipping": "Ships overnight",
     "warranty": "6 months warranty",
     "returnPolicy": "7 days return policy",
@@ -3171,7 +3075,6 @@
       "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 86,
     "shipping": "Ships in 1 month",
     "warranty": "2 year warranty",
     "returnPolicy": "7 days return policy",
@@ -3205,7 +3108,6 @@
       "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 55,
     "shipping": "Ships in 1 month",
     "warranty": "5 year warranty",
     "returnPolicy": "90 days return policy",
@@ -3238,7 +3140,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/2.webp"
     ],
     "availability": "in-stock",
-    "stock": 61,
     "shipping": "Ships in 1 week",
     "warranty": "6 months warranty",
     "returnPolicy": "7 days return policy",
@@ -3272,7 +3173,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 67,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "No return policy",
@@ -3304,7 +3204,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 59,
     "shipping": "Ships in 2 weeks",
     "warranty": "No warranty",
     "returnPolicy": "No return policy",
@@ -3336,7 +3235,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/1.webp"
     ],
     "availability": "low-stock",
-    "stock": 1,
     "shipping": "Ships in 1 week",
     "warranty": "2 year warranty",
     "returnPolicy": "90 days return policy",
@@ -3368,7 +3266,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-homepod-mini-cosmic-grey/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 27,
     "shipping": "Ships in 1 month",
     "warranty": "3 months warranty",
     "returnPolicy": "90 days return policy",
@@ -3401,7 +3298,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-iphone-charger/2.webp"
     ],
     "availability": "in-stock",
-    "stock": 31,
     "shipping": "Ships in 2 weeks",
     "warranty": "1 year warranty",
     "returnPolicy": "90 days return policy",
@@ -3434,7 +3330,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-magsafe-battery-pack/2.webp"
     ],
     "availability": "low-stock",
-    "stock": 1,
     "shipping": "Ships overnight",
     "warranty": "2 year warranty",
     "returnPolicy": "No return policy",
@@ -3468,7 +3363,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-watch-series-4-gold/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 33,
     "shipping": "Ships in 1 month",
     "warranty": "6 months warranty",
     "returnPolicy": "No return policy",
@@ -3500,7 +3394,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/beats-flex-wireless-earphones/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 50,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "7 days return policy",
@@ -3535,7 +3428,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/iphone-12-silicone-case-with-magsafe-plum/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 69,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 months warranty",
     "returnPolicy": "90 days return policy",
@@ -3568,7 +3460,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/monopod/2.webp"
     ],
     "availability": "in-stock",
-    "stock": 48,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "60 days return policy",
@@ -3600,7 +3491,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/selfie-lamp-with-iphone/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 58,
     "shipping": "Ships in 2 weeks",
     "warranty": "Lifetime warranty",
     "returnPolicy": "60 days return policy",
@@ -3632,7 +3522,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/selfie-stick-monopod/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 11,
     "shipping": "Ships in 1-2 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "30 days return policy",
@@ -3664,7 +3553,6 @@
       "https://cdn.dummyjson.com/product-images/mobile-accessories/tv-studio-camera-pedestal/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 15,
     "shipping": "Ships in 1-2 business days",
     "warranty": "3 months warranty",
     "returnPolicy": "7 days return policy",
@@ -3699,7 +3587,6 @@
       "https://cdn.dummyjson.com/product-images/motorcycle/generic-motorcycle/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 34,
     "shipping": "Ships in 2 weeks",
     "warranty": "1 year warranty",
     "returnPolicy": "7 days return policy",
@@ -3734,7 +3621,6 @@
       "https://cdn.dummyjson.com/product-images/motorcycle/kawasaki-z800/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 52,
     "shipping": "Ships in 3-5 business days",
     "warranty": "Lifetime warranty",
     "returnPolicy": "90 days return policy",
@@ -3769,7 +3655,6 @@
       "https://cdn.dummyjson.com/product-images/motorcycle/motogp-ci.h1/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 10,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "30 days return policy",
@@ -3804,7 +3689,6 @@
       "https://cdn.dummyjson.com/product-images/motorcycle/scooter-motorcycle/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 84,
     "shipping": "Ships overnight",
     "warranty": "5 year warranty",
     "returnPolicy": "7 days return policy",
@@ -3839,7 +3723,6 @@
       "https://cdn.dummyjson.com/product-images/motorcycle/sportbike-motorcycle/4.webp"
     ],
     "availability": "out-of-stock",
-    "stock": 0,
     "shipping": "Ships in 2 weeks",
     "warranty": "5 year warranty",
     "returnPolicy": "30 days return policy",
@@ -3873,7 +3756,6 @@
       "https://cdn.dummyjson.com/product-images/skin-care/attitude-super-leaves-hand-soap/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 94,
     "shipping": "Ships overnight",
     "warranty": "6 months warranty",
     "returnPolicy": "60 days return policy",
@@ -3907,7 +3789,6 @@
       "https://cdn.dummyjson.com/product-images/skin-care/olay-ultra-moisture-shea-butter-body-wash/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 34,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -3941,7 +3822,6 @@
       "https://cdn.dummyjson.com/product-images/skin-care/vaseline-men-body-and-face-lotion/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 95,
     "shipping": "Ships overnight",
     "warranty": "Lifetime warranty",
     "returnPolicy": "90 days return policy",
@@ -3975,7 +3855,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/iphone-5s/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 25,
     "shipping": "Ships in 1 month",
     "warranty": "Lifetime warranty",
     "returnPolicy": "60 days return policy",
@@ -4009,7 +3888,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/iphone-6/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 60,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "7 days return policy",
@@ -4043,7 +3921,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 56,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -4077,7 +3954,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/iphone-x/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 37,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 months warranty",
     "returnPolicy": "7 days return policy",
@@ -4111,7 +3987,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/oppo-a57/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 19,
     "shipping": "Ships in 3-5 business days",
     "warranty": "Lifetime warranty",
     "returnPolicy": "90 days return policy",
@@ -4145,7 +4020,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/oppo-f19-pro-plus/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 78,
     "shipping": "Ships in 1 week",
     "warranty": "3 year warranty",
     "returnPolicy": "90 days return policy",
@@ -4180,7 +4054,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/oppo-k1/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 55,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "30 days return policy",
@@ -4214,7 +4087,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/realme-c35/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 48,
     "shipping": "Ships overnight",
     "warranty": "3 year warranty",
     "returnPolicy": "90 days return policy",
@@ -4248,7 +4120,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/realme-x/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 12,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -4282,7 +4153,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/realme-xt/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 80,
     "shipping": "Ships in 1 month",
     "warranty": "3 year warranty",
     "returnPolicy": "60 days return policy",
@@ -4316,7 +4186,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s7/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 67,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 months warranty",
     "returnPolicy": "No return policy",
@@ -4350,7 +4219,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s8/3.webp"
     ],
     "availability": "out-of-stock",
-    "stock": 0,
     "shipping": "Ships in 1 week",
     "warranty": "2 year warranty",
     "returnPolicy": "No return policy",
@@ -4384,7 +4252,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s10/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 19,
     "shipping": "Ships in 2 weeks",
     "warranty": "No warranty",
     "returnPolicy": "30 days return policy",
@@ -4418,7 +4285,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/vivo-s1/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 50,
     "shipping": "Ships in 3-5 business days",
     "warranty": "6 months warranty",
     "returnPolicy": "7 days return policy",
@@ -4452,7 +4318,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/vivo-v9/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 82,
     "shipping": "Ships in 1 month",
     "warranty": "2 year warranty",
     "returnPolicy": "60 days return policy",
@@ -4486,7 +4351,6 @@
       "https://cdn.dummyjson.com/product-images/smartphones/vivo-x21/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 7,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "60 days return policy",
@@ -4518,7 +4382,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/american-football/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 53,
     "shipping": "Ships in 1 month",
     "warranty": "6 months warranty",
     "returnPolicy": "90 days return policy",
@@ -4550,7 +4413,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-ball/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 100,
     "shipping": "Ships in 1 week",
     "warranty": "6 months warranty",
     "returnPolicy": "30 days return policy",
@@ -4584,7 +4446,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-glove/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 22,
     "shipping": "Ships in 2 weeks",
     "warranty": "Lifetime warranty",
     "returnPolicy": "90 days return policy",
@@ -4616,7 +4477,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/basketball/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 75,
     "shipping": "Ships in 1 week",
     "warranty": "1 year warranty",
     "returnPolicy": "90 days return policy",
@@ -4648,7 +4508,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/basketball-rim/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 43,
     "shipping": "Ships overnight",
     "warranty": "3 months warranty",
     "returnPolicy": "No return policy",
@@ -4680,7 +4539,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-ball/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 30,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -4712,7 +4570,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-bat/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 98,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -4747,7 +4604,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 10,
     "shipping": "Ships overnight",
     "warranty": "Lifetime warranty",
     "returnPolicy": "60 days return policy",
@@ -4779,7 +4635,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-wicket/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 25,
     "shipping": "Ships overnight",
     "warranty": "3 months warranty",
     "returnPolicy": "No return policy",
@@ -4811,7 +4666,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/feather-shuttlecock/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 95,
     "shipping": "Ships in 1-2 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "60 days return policy",
@@ -4843,7 +4697,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/football/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 96,
     "shipping": "Ships overnight",
     "warranty": "Lifetime warranty",
     "returnPolicy": "7 days return policy",
@@ -4875,7 +4728,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/golf-ball/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 84,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -4907,7 +4759,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/iron-golf/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 90,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 months warranty",
     "returnPolicy": "7 days return policy",
@@ -4939,7 +4790,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/metal-baseball-bat/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 16,
     "shipping": "Ships in 1 week",
     "warranty": "3 year warranty",
     "returnPolicy": "60 days return policy",
@@ -4971,7 +4821,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/tennis-ball/1.webp"
     ],
     "availability": "in-stock",
-    "stock": 28,
     "shipping": "Ships in 1 week",
     "warranty": "5 year warranty",
     "returnPolicy": "7 days return policy",
@@ -5003,7 +4852,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/tennis-racket/1.webp"
     ],
     "availability": "low-stock",
-    "stock": 6,
     "shipping": "Ships overnight",
     "warranty": "5 year warranty",
     "returnPolicy": "7 days return policy",
@@ -5035,7 +4883,6 @@
       "https://cdn.dummyjson.com/product-images/sports-accessories/volleyball/1.webp"
     ],
     "availability": "out-of-stock",
-    "stock": 0,
     "shipping": "Ships in 1 week",
     "warranty": "1 week warranty",
     "returnPolicy": "90 days return policy",
@@ -5069,7 +4916,6 @@
       "https://cdn.dummyjson.com/product-images/sunglasses/black-sun-glasses/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 60,
     "shipping": "Ships in 1-2 business days",
     "warranty": "No warranty",
     "returnPolicy": "7 days return policy",
@@ -5103,7 +4949,6 @@
       "https://cdn.dummyjson.com/product-images/sunglasses/classic-sun-glasses/3.webp"
     ],
     "availability": "low-stock",
-    "stock": 1,
     "shipping": "Ships in 1 month",
     "warranty": "6 months warranty",
     "returnPolicy": "90 days return policy",
@@ -5137,7 +4982,6 @@
       "https://cdn.dummyjson.com/product-images/sunglasses/green-and-black-glasses/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 24,
     "shipping": "Ships overnight",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -5171,7 +5015,6 @@
       "https://cdn.dummyjson.com/product-images/sunglasses/party-glasses/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 86,
     "shipping": "Ships overnight",
     "warranty": "3 months warranty",
     "returnPolicy": "7 days return policy",
@@ -5205,7 +5048,6 @@
       "https://cdn.dummyjson.com/product-images/sunglasses/sunglasses/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 27,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "60 days return policy",
@@ -5240,7 +5082,6 @@
       "https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 47,
     "shipping": "Ships in 1-2 business days",
     "warranty": "2 year warranty",
     "returnPolicy": "No return policy",
@@ -5275,7 +5116,6 @@
       "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-s8-plus-grey/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 62,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 months warranty",
     "returnPolicy": "7 days return policy",
@@ -5310,7 +5150,6 @@
       "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-white/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 92,
     "shipping": "Ships overnight",
     "warranty": "3 months warranty",
     "returnPolicy": "7 days return policy",
@@ -5345,7 +5184,6 @@
       "https://cdn.dummyjson.com/product-images/tops/blue-frock/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 52,
     "shipping": "Ships in 2 weeks",
     "warranty": "Lifetime warranty",
     "returnPolicy": "60 days return policy",
@@ -5380,7 +5218,6 @@
       "https://cdn.dummyjson.com/product-images/tops/girl-summer-dress/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 43,
     "shipping": "Ships in 1 month",
     "warranty": "Lifetime warranty",
     "returnPolicy": "60 days return policy",
@@ -5415,7 +5252,6 @@
       "https://cdn.dummyjson.com/product-images/tops/gray-dress/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 55,
     "shipping": "Ships in 1 month",
     "warranty": "1 month warranty",
     "returnPolicy": "90 days return policy",
@@ -5450,7 +5286,6 @@
       "https://cdn.dummyjson.com/product-images/tops/short-frock/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 22,
     "shipping": "Ships in 1-2 business days",
     "warranty": "1 year warranty",
     "returnPolicy": "30 days return policy",
@@ -5485,7 +5320,6 @@
       "https://cdn.dummyjson.com/product-images/tops/tartan-dress/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 73,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -5522,7 +5356,6 @@
       "https://cdn.dummyjson.com/product-images/vehicle/300-touring/6.webp"
     ],
     "availability": "in-stock",
-    "stock": 54,
     "shipping": "Ships in 2 weeks",
     "warranty": "3 year warranty",
     "returnPolicy": "30 days return policy",
@@ -5559,7 +5392,6 @@
       "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/6.webp"
     ],
     "availability": "in-stock",
-    "stock": 57,
     "shipping": "Ships in 3-5 business days",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -5596,7 +5428,6 @@
       "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/6.webp"
     ],
     "availability": "in-stock",
-    "stock": 82,
     "shipping": "Ships in 1 month",
     "warranty": "1 year warranty",
     "returnPolicy": "60 days return policy",
@@ -5633,7 +5464,6 @@
       "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/6.webp"
     ],
     "availability": "in-stock",
-    "stock": 95,
     "shipping": "Ships in 1 month",
     "warranty": "2 year warranty",
     "returnPolicy": "30 days return policy",
@@ -5670,7 +5500,6 @@
       "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/6.webp"
     ],
     "availability": "in-stock",
-    "stock": 53,
     "shipping": "Ships overnight",
     "warranty": "1 month warranty",
     "returnPolicy": "60 days return policy",
@@ -5704,7 +5533,6 @@
       "https://cdn.dummyjson.com/product-images/womens-bags/blue-women's-handbag/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 76,
     "shipping": "Ships in 1 week",
     "warranty": "1 year warranty",
     "returnPolicy": "7 days return policy",
@@ -5738,7 +5566,6 @@
       "https://cdn.dummyjson.com/product-images/womens-bags/heshe-women's-leather-bag/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 99,
     "shipping": "Ships overnight",
     "warranty": "5 year warranty",
     "returnPolicy": "90 days return policy",
@@ -5772,7 +5599,6 @@
       "https://cdn.dummyjson.com/product-images/womens-bags/prada-women-bag/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 75,
     "shipping": "Ships in 1-2 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "60 days return policy",
@@ -5806,7 +5632,6 @@
       "https://cdn.dummyjson.com/product-images/womens-bags/white-faux-leather-backpack/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 39,
     "shipping": "Ships in 1 week",
     "warranty": "2 year warranty",
     "returnPolicy": "90 days return policy",
@@ -5840,7 +5665,6 @@
       "https://cdn.dummyjson.com/product-images/womens-bags/women-handbag-black/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 11,
     "shipping": "Ships in 1 month",
     "warranty": "Lifetime warranty",
     "returnPolicy": "60 days return policy",
@@ -5875,7 +5699,6 @@
       "https://cdn.dummyjson.com/product-images/womens-dresses/black-women's-gown/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 25,
     "shipping": "Ships in 1 week",
     "warranty": "Lifetime warranty",
     "returnPolicy": "No return policy",
@@ -5910,7 +5733,6 @@
       "https://cdn.dummyjson.com/product-images/womens-dresses/corset-leather-with-skirt/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 30,
     "shipping": "Ships overnight",
     "warranty": "2 year warranty",
     "returnPolicy": "30 days return policy",
@@ -5945,7 +5767,6 @@
       "https://cdn.dummyjson.com/product-images/womens-dresses/corset-with-black-skirt/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 33,
     "shipping": "Ships in 1 week",
     "warranty": "1 month warranty",
     "returnPolicy": "No return policy",
@@ -5980,7 +5801,6 @@
       "https://cdn.dummyjson.com/product-images/womens-dresses/dress-pea/4.webp"
     ],
     "availability": "low-stock",
-    "stock": 6,
     "shipping": "Ships overnight",
     "warranty": "2 year warranty",
     "returnPolicy": "90 days return policy",
@@ -6015,7 +5835,6 @@
       "https://cdn.dummyjson.com/product-images/womens-dresses/marni-red-&-black-suit/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 62,
     "shipping": "Ships in 2 weeks",
     "warranty": "5 year warranty",
     "returnPolicy": "90 days return policy",
@@ -6049,7 +5868,6 @@
       "https://cdn.dummyjson.com/product-images/womens-jewellery/green-crystal-earring/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 54,
     "shipping": "Ships in 3-5 business days",
     "warranty": "5 year warranty",
     "returnPolicy": "60 days return policy",
@@ -6083,7 +5901,6 @@
       "https://cdn.dummyjson.com/product-images/womens-jewellery/green-oval-earring/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 73,
     "shipping": "Ships in 3-5 business days",
     "warranty": "3 months warranty",
     "returnPolicy": "60 days return policy",
@@ -6117,7 +5934,6 @@
       "https://cdn.dummyjson.com/product-images/womens-jewellery/tropical-earring/3.webp"
     ],
     "availability": "low-stock",
-    "stock": 1,
     "shipping": "Ships in 1-2 business days",
     "warranty": "3 year warranty",
     "returnPolicy": "7 days return policy",
@@ -6152,7 +5968,6 @@
       "https://cdn.dummyjson.com/product-images/womens-shoes/black-&-brown-slipper/4.webp"
     ],
     "availability": "low-stock",
-    "stock": 3,
     "shipping": "Ships in 1 month",
     "warranty": "Lifetime warranty",
     "returnPolicy": "60 days return policy",
@@ -6187,7 +6002,6 @@
       "https://cdn.dummyjson.com/product-images/womens-shoes/calvin-klein-heel-shoes/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 93,
     "shipping": "Ships in 1 week",
     "warranty": "2 year warranty",
     "returnPolicy": "60 days return policy",
@@ -6222,7 +6036,6 @@
       "https://cdn.dummyjson.com/product-images/womens-shoes/golden-shoes-woman/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 88,
     "shipping": "Ships in 2 weeks",
     "warranty": "6 months warranty",
     "returnPolicy": "7 days return policy",
@@ -6257,7 +6070,6 @@
       "https://cdn.dummyjson.com/product-images/womens-shoes/pampi-shoes/4.webp"
     ],
     "availability": "in-stock",
-    "stock": 49,
     "shipping": "Ships in 1 week",
     "warranty": "No warranty",
     "returnPolicy": "60 days return policy",
@@ -6292,7 +6104,6 @@
       "https://cdn.dummyjson.com/product-images/womens-shoes/red-shoes/4.webp"
     ],
     "availability": "low-stock",
-    "stock": 7,
     "shipping": "Ships in 1 month",
     "warranty": "No warranty",
     "returnPolicy": "60 days return policy",
@@ -6326,7 +6137,6 @@
       "https://cdn.dummyjson.com/product-images/womens-watches/iwc-ingenieur-automatic-steel/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 90,
     "shipping": "Ships overnight",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",
@@ -6360,7 +6170,6 @@
       "https://cdn.dummyjson.com/product-images/womens-watches/rolex-cellini-moonphase/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 52,
     "shipping": "Ships in 1 week",
     "warranty": "1 month warranty",
     "returnPolicy": "30 days return policy",
@@ -6394,7 +6203,6 @@
       "https://cdn.dummyjson.com/product-images/womens-watches/rolex-datejust-women/3.webp"
     ],
     "availability": "low-stock",
-    "stock": 4,
     "shipping": "Ships in 2 weeks",
     "warranty": "5 year warranty",
     "returnPolicy": "No return policy",
@@ -6428,7 +6236,6 @@
       "https://cdn.dummyjson.com/product-images/womens-watches/watch-gold-for-women/3.webp"
     ],
     "availability": "out-of-stock",
-    "stock": 0,
     "shipping": "Ships in 1-2 business days",
     "warranty": "2 year warranty",
     "returnPolicy": "60 days return policy",
@@ -6462,7 +6269,6 @@
       "https://cdn.dummyjson.com/product-images/womens-watches/women's-wrist-watch/3.webp"
     ],
     "availability": "in-stock",
-    "stock": 12,
     "shipping": "Ships in 2 weeks",
     "warranty": "1 year warranty",
     "returnPolicy": "No return policy",

@@ -30,7 +30,6 @@ describe("ViewCart", () => {
       itemCount: 2,
       subtotalInCents: 5_000,
       isSignedIn: true,
-      maximumQuantity: 10,
       lines: [
         {
           productId: "lamp",
@@ -40,6 +39,8 @@ describe("ViewCart", () => {
           priceInCents: 2_500,
           deliveryDays: 3,
           quantity: 2,
+          maximumQuantity: 10,
+          shortage: null,
           rating: 4.2,
           lineTotalInCents: 5_000,
         },
@@ -81,5 +82,29 @@ describe("ViewCart", () => {
       lines: [],
       subtotalInCents: 0,
     });
+  });
+
+  it("says which lines cannot be ordered as they are, after stock ran out or fell", async () => {
+    // Arrange
+    fakes.sessions.seedSession(aSession());
+    fakes.products.seedProducts([
+      aProduct({ id: "volleyball", stock: 0 }),
+      aProduct({ id: "charger", stock: 2 }),
+    ]);
+    fakes.cartLines.seedLine(
+      aCartLine({ ownerId: SHOPPER_ID, productId: "volleyball", quantity: 1 }),
+    );
+    fakes.cartLines.seedLine(aCartLine({ ownerId: SHOPPER_ID, productId: "charger", quantity: 3 }));
+
+    // Act
+    const cart = await container.viewCart.execute();
+
+    // Assert
+    expect(cart.lines.map((line) => [line.productId, line.shortage, line.maximumQuantity])).toEqual(
+      [
+        ["volleyball", "Out of stock", 1],
+        ["charger", "Only 2 left", 3],
+      ],
+    );
   });
 });

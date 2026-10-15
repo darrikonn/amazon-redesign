@@ -1,4 +1,4 @@
-import { newCartLine } from "@/component";
+import { canBuy, newCartLine } from "@/component";
 import type { CartLineRepository, Clock, ProductId, ProductRepository, SessionStore } from "@/core";
 import { type CartSummary, summarizeCart } from "./cart-summary";
 import { cartOwnerOf, currentShopper } from "./session-shopper";
@@ -7,7 +7,8 @@ export type ToggleCartItemRequest = {
   productId: ProductId;
 };
 
-// The card's one-tap button: adds one, or takes the product out of the cart entirely.
+// The card's one-tap button: adds one, or takes the product out of the cart entirely. A
+// sold-out product is never added.
 export class ToggleCartItem {
   constructor(
     private readonly sessions: SessionStore,
@@ -21,7 +22,9 @@ export class ToggleCartItem {
     const product = await this.products.demand(request.productId);
     const existing = await this.cartLines.get(ownerId, product.id);
     if (existing === null) {
-      await this.cartLines.save(newCartLine(ownerId, product.id, 1, this.clock.now()));
+      if (canBuy(product)) {
+        await this.cartLines.save(newCartLine(ownerId, product.id, 1, this.clock.now()));
+      }
     } else {
       await this.cartLines.remove(ownerId, product.id);
     }

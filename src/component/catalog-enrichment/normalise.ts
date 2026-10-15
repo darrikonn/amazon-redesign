@@ -35,6 +35,7 @@ function normaliseDummyJsonProduct(raw: RawDummyJsonProduct): Product {
     deliveryDays: deliveryDaysFrom(raw.shippingInformation),
     image: raw.thumbnail,
     brand: raw.brand,
+    stock: raw.stock,
   });
 }
 
@@ -51,6 +52,7 @@ function normaliseFakeStoreProduct(raw: RawFakeStoreProduct): Product {
     deliveryDays: NORMALISATION_RULES.fakeStoreDeliveryDays,
     image: raw.image,
     brand: null,
+    stock: null,
   });
 }
 
@@ -66,6 +68,7 @@ type SourceFacts = {
   deliveryDays: number;
   image: string | null;
   brand: string | null;
+  stock: number | null;
 };
 
 function productFrom(source: ProductSource, sourceId: number, facts: SourceFacts): Product {
@@ -84,5 +87,6 @@ function productFrom(source: ProductSource, sourceId: number, facts: SourceFacts
     tags: deriveTags([...facts.sourceTags, facts.title, facts.description]),
     image: blankToNull(facts.image),
     brand: blankToNull(facts.brand),
+    stock: facts.stock,
   };
 }

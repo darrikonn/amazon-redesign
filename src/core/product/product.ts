@@ -26,6 +26,8 @@ export type Product = {
   tags: readonly Tag[];
   image: string | null;
   brand: string | null;
+  // Units the source has; 0 is sold out, and null means the source does not say.
+  stock: number | null;
 };
 
 export function isProductSource(value: string): value is ProductSource {

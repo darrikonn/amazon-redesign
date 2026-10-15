@@ -1,4 +1,4 @@
-import { categoryLabel, colorLabel, tagLabel } from "@/component";
+import { canBuy, categoryLabel, colorLabel, tagLabel } from "@/component";
 import type {
   CategoryId,
   Color,
@@ -80,7 +80,7 @@ function toProductView(product: Product, details: ProductDetails | null): Produc
     features: featuresOf(product),
     description: details?.description ?? null,
     images: imagesOf(product, details),
-    availability: details === null ? null : availabilityOf(details),
+    availability: details === null ? null : availabilityOf(product, details),
     facts: details === null ? [] : factsOf(details),
     reviews: (details?.reviews ?? []).map((review, index) => ({
       id: `${product.id}-review-${index + 1}`,
@@ -99,14 +99,16 @@ function imagesOf(product: Product, details: ProductDetails | null): readonly st
   return product.image === null ? [] : [product.image];
 }
 
-function availabilityOf(details: ProductDetails): AvailabilityView | null {
+// Whether it can be bought is the cart's rule (canBuy), so the modal and the cart agree.
+function availabilityOf(product: Product, details: ProductDetails): AvailabilityView | null {
+  const isBuyable = canBuy(product);
   switch (details.availability) {
     case "in-stock":
-      return { label: "In stock", canBuy: true };
+      return { label: "In stock", canBuy: isBuyable };
     case "low-stock":
-      return { label: lowStockLabel(details.stock), canBuy: true };
+      return { label: lowStockLabel(product.stock), canBuy: isBuyable };
     case "out-of-stock":
-      return { label: "Out of stock", canBuy: false };
+      return { label: "Out of stock", canBuy: isBuyable };
     case null:
       return null;
   }

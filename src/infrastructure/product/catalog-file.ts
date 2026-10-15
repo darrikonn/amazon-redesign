@@ -4,6 +4,7 @@ import {
   isColor,
   isProductSource,
   isTag,
+  optionalNumber,
   optionalString,
   requireArray,
   requireNumber,
@@ -43,6 +44,7 @@ function parseProduct(value: unknown, context: string): Product {
     tags: readTags(requireStringArray(record, "tags", context), context),
     image: optionalString(record, "image", context),
     brand: optionalString(record, "brand", context),
+    stock: optionalNumber(record, "stock", context),
   };
 }
 

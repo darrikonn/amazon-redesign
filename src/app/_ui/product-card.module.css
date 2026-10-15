@@ -166,6 +166,12 @@
   font-size: 14px;
 }
 
+.soldOut {
+  color: var(--color-deal);
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .deliveryDate {
   color: var(--color-ink);
   font-weight: 700;
@@ -201,6 +207,13 @@
 .cartButton:hover,
 .cartButtonAdded:hover {
   filter: brightness(0.95);
+}
+
+.cartButton:disabled {
+  background: var(--color-surface-quiet);
+  color: var(--color-muted);
+  cursor: not-allowed;
+  filter: none;
 }
 
 .cartButton:active,

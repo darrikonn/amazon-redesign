@@ -85,17 +85,22 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
                 List price <s>{splitPrice(listing.deal.listPriceInCents).spoken}</s>
               </p>
             )}
-            <p className={styles.delivery}>
-              FREE delivery{" "}
-              <strong className={styles.deliveryDate}>{deliveryLabel(listing.deliveryDays)}</strong>
-            </p>
+            {listing.canBuy ? (
+              <p className={styles.delivery}>
+                FREE delivery{" "}
+                <strong className={styles.deliveryDate}>
+                  {deliveryLabel(listing.deliveryDays)}
+                </strong>
+              </p>
+            ) : (
+              <p className={styles.soldOut}>Currently out of stock</p>
+            )}
           </div>
           <button
             type="button"
             className={isInCart ? styles.cartButtonAdded : styles.cartButton}
-            aria-label={
-              isInCart ? `Remove ${listing.name} from cart` : `Add ${listing.name} to cart`
-            }
+            aria-label={cartButtonLabel(listing, isInCart)}
+            disabled={!listing.canBuy && !isInCart}
             onClick={() => onToggleCart(listing.id)}
           >
             <Icon
@@ -108,6 +113,12 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
       </div>
     </article>
   );
+}
+
+// A sold-out product cannot go in; one already in the cart can still come out.
+function cartButtonLabel(listing: ProductListing, isInCart: boolean): string {
+  if (isInCart) return `Remove ${listing.name} from cart`;
+  return listing.canBuy ? `Add ${listing.name} to cart` : `${listing.name} is out of stock`;
 }
 
 // A phone card has room for two details; the rest wait for a wider screen.

@@ -6,7 +6,6 @@ export {
   aProductDetails,
   aSavedItem,
   aSession,
-  aShopper,
 } from "./builder";
 export {
   type SessionEndpointStandIn,

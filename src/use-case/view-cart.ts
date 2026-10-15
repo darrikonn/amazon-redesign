@@ -1,8 +1,9 @@
-import { CART_RULES, lineTotalInCents, totalInCents } from "@/component";
+import { lineTotalInCents, quantityLimitFor, totalInCents } from "@/component";
 import type {
   CartLine,
   CartLineRepository,
   CategoryId,
+  Product,
   ProductId,
   ProductRepository,
   SessionStore,
@@ -18,6 +19,9 @@ export type CartLineView = {
   priceInCents: number;
   deliveryDays: number;
   quantity: number;
+  maximumQuantity: number;
+  // Why the line cannot be ordered as it is, or null when it can.
+  shortage: string | null;
   rating: number;
   lineTotalInCents: number;
 };
@@ -26,7 +30,6 @@ export type CartView = CartSummary & {
   lines: readonly CartLineView[];
   subtotalInCents: number;
   isSignedIn: boolean;
-  maximumQuantity: number;
 };
 
 export class ViewCart {
@@ -63,6 +66,9 @@ export async function toCartView(
         priceInCents: product.priceInCents,
         deliveryDays: product.deliveryDays,
         quantity: line.quantity,
+        // The select always offers the quantity already chosen, even if stock fell since.
+        maximumQuantity: Math.max(quantityLimitFor(product), line.quantity),
+        shortage: shortageOf(product, line.quantity),
         rating: product.rating,
         lineTotalInCents: lineTotalInCents({
           priceInCents: product.priceInCents,
@@ -77,6 +83,11 @@ export async function toCartView(
     lines: views,
     subtotalInCents: totalInCents(views),
     isSignedIn,
-    maximumQuantity: CART_RULES.maximumQuantity,
   };
+}
+
+function shortageOf(product: Product, quantity: number): string | null {
+  const limit = quantityLimitFor(product);
+  if (quantity <= limit) return null;
+  return limit === 0 ? "Out of stock" : `Only ${limit} left`;
 }

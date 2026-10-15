@@ -1,7 +1,6 @@
 import type { Availability, ProductDetails, ProductReview } from "@/core";
 import {
   isAvailability,
-  optionalNumber,
   optionalString,
   requireArray,
   requireNumber,
@@ -25,7 +24,6 @@ function parseDetails(value: unknown, context: string): ProductDetails {
     description: requireString(record, "description", context),
     images: requireStringArray(record, "images", context),
     availability: readAvailability(optionalString(record, "availability", context), context),
-    stock: optionalNumber(record, "stock", context),
     shipping: optionalString(record, "shipping", context),
     warranty: optionalString(record, "warranty", context),
     returnPolicy: optionalString(record, "returnPolicy", context),

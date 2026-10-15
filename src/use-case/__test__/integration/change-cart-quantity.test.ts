@@ -59,4 +59,19 @@ describe("ChangeCartQuantity", () => {
       container.changeCartQuantity.execute({ productId: "ghost", quantity: 1 }),
     ).rejects.toBeInstanceOf(NotFoundError);
   });
+
+  it("holds the quantity at what is left in stock", async () => {
+    // Arrange
+    fakes.products.seedProduct(aProduct({ id: "charger", stock: 1 }));
+
+    // Act
+    const cart = await container.changeCartQuantity.execute({ productId: "charger", quantity: 5 });
+
+    // Assert
+    expect(cart.lines.find((line) => line.productId === "charger")).toMatchObject({
+      quantity: 1,
+      maximumQuantity: 1,
+      shortage: null,
+    });
+  });
 });

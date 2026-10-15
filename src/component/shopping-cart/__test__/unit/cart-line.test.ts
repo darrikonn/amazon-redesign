@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { CART_RULES, clampQuantity, mergeIntoCart, newCartLine } from "@/component";
+import {
+  CART_RULES,
+  canBuy,
+  clampQuantity,
+  mergeIntoCart,
+  newCartLine,
+  quantityLimitFor,
+} from "@/component";
 import { aCartLine } from "@/test-support";
 
 const now = new Date("2026-10-14T15:00:00.000Z");
@@ -60,5 +67,20 @@ describe("mergeIntoCart", () => {
     );
 
     expect(merged[0]?.quantity).toBe(CART_RULES.maximumQuantity);
+  });
+});
+
+describe("quantityLimitFor", () => {
+  it("is the cart's limit, or what is left in stock if that is less", () => {
+    expect(quantityLimitFor({ stock: null })).toBe(CART_RULES.maximumQuantity);
+    expect(quantityLimitFor({ stock: 50 })).toBe(CART_RULES.maximumQuantity);
+    expect(quantityLimitFor({ stock: 3 })).toBe(3);
+    expect(clampQuantity(5, quantityLimitFor({ stock: 3 }))).toBe(3);
+  });
+
+  it("allows none of a sold-out product", () => {
+    expect(quantityLimitFor({ stock: 0 })).toBe(0);
+    expect(canBuy({ stock: 0 })).toBe(false);
+    expect(canBuy({ stock: 1 })).toBe(true);
   });
 });

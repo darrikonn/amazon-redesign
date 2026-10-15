@@ -11,7 +11,12 @@ describe("parseCatalogFile", () => {
       brand: "Heshe",
     });
 
-    expect(parseCatalogFile(JSON.parse(JSON.stringify([product])))).toEqual([product]);
+    const unknownStock = aProduct({ id: "fakestore-0003", stock: null });
+
+    expect(parseCatalogFile(JSON.parse(JSON.stringify([product, unknownStock])))).toEqual([
+      product,
+      unknownStock,
+    ]);
   });
 
   it("fails loudly on a product the app does not understand", () => {
@@ -24,6 +29,7 @@ describe("parseCatalogFile", () => {
     expect(() => parseCatalogFile([{ ...aProduct(), priceInCents: "9.99" }])).toThrow(
       '"priceInCents"',
     );
+    expect(() => parseCatalogFile([{ ...aProduct(), stock: "many" }])).toThrow('"stock"');
     expect(() => parseCatalogFile({ products: [] })).toThrow("expected an array");
   });
 });

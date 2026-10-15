@@ -15,7 +15,8 @@
       "long-lasting"
     ],
     "image": "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp",
-    "brand": "Essence"
+    "brand": "Essence",
+    "stock": 99
   },
   {
     "id": "dummyjson-0002",
@@ -33,7 +34,8 @@
       "portable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp",
-    "brand": "Glamour Beauty"
+    "brand": "Glamour Beauty",
+    "stock": 34
   },
   {
     "id": "dummyjson-0003",
@@ -51,7 +53,8 @@
       "lightweight"
     ],
     "image": "https://cdn.dummyjson.com/product-images/beauty/powder-canister/thumbnail.webp",
-    "brand": "Velvet Touch"
+    "brand": "Velvet Touch",
+    "stock": 89
   },
   {
     "id": "dummyjson-0004",
@@ -69,7 +72,8 @@
       "long-lasting"
     ],
     "image": "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/thumbnail.webp",
-    "brand": "Chic Cosmetics"
+    "brand": "Chic Cosmetics",
+    "stock": 91
   },
   {
     "id": "dummyjson-0005",
@@ -85,7 +89,8 @@
     "color": "red",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/beauty/red-nail-polish/thumbnail.webp",
-    "brand": "Nail Couture"
+    "brand": "Nail Couture",
+    "stock": 79
   },
   {
     "id": "dummyjson-0006",
@@ -103,7 +108,8 @@
       "fresh"
     ],
     "image": "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/thumbnail.webp",
-    "brand": "Calvin Klein"
+    "brand": "Calvin Klein",
+    "stock": 29
   },
   {
     "id": "dummyjson-0007",
@@ -121,7 +127,8 @@
       "elegant"
     ],
     "image": "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/thumbnail.webp",
-    "brand": "Chanel"
+    "brand": "Chanel",
+    "stock": 58
   },
   {
     "id": "dummyjson-0008",
@@ -140,7 +147,8 @@
       "floral"
     ],
     "image": "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/thumbnail.webp",
-    "brand": "Dior"
+    "brand": "Dior",
+    "stock": 98
   },
   {
     "id": "dummyjson-0009",
@@ -156,7 +164,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/thumbnail.webp",
-    "brand": "Dolce & Gabbana"
+    "brand": "Dolce & Gabbana",
+    "stock": 4
   },
   {
     "id": "dummyjson-0010",
@@ -174,7 +183,8 @@
       "floral"
     ],
     "image": "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/thumbnail.webp",
-    "brand": "Gucci"
+    "brand": "Gucci",
+    "stock": 91
   },
   {
     "id": "dummyjson-0011",
@@ -193,7 +203,8 @@
       "elegant"
     ],
     "image": "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/thumbnail.webp",
-    "brand": "Annibale Colombo"
+    "brand": "Annibale Colombo",
+    "stock": 88
   },
   {
     "id": "dummyjson-0012",
@@ -209,7 +220,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/thumbnail.webp",
-    "brand": "Annibale Colombo"
+    "brand": "Annibale Colombo",
+    "stock": 60
   },
   {
     "id": "dummyjson-0013",
@@ -225,7 +237,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/thumbnail.webp",
-    "brand": "Furniture Co."
+    "brand": "Furniture Co.",
+    "stock": 64
   },
   {
     "id": "dummyjson-0014",
@@ -243,7 +256,8 @@
       "ergonomic"
     ],
     "image": "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/thumbnail.webp",
-    "brand": "Knoll"
+    "brand": "Knoll",
+    "stock": 26
   },
   {
     "id": "dummyjson-0015",
@@ -261,7 +275,8 @@
       "wooden"
     ],
     "image": "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/thumbnail.webp",
-    "brand": "Bath Trends"
+    "brand": "Bath Trends",
+    "stock": 7
   },
   {
     "id": "dummyjson-0016",
@@ -280,7 +295,8 @@
       "fruit"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/apple/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 8
   },
   {
     "id": "dummyjson-0017",
@@ -298,7 +314,8 @@
       "meat"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/beef-steak/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 86
   },
   {
     "id": "dummyjson-0018",
@@ -316,7 +333,8 @@
       "pet-food"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/cat-food/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 46
   },
   {
     "id": "dummyjson-0019",
@@ -335,7 +353,8 @@
       "meat"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/chicken-meat/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 97
   },
   {
     "id": "dummyjson-0020",
@@ -351,7 +370,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 10
   },
   {
     "id": "dummyjson-0021",
@@ -369,7 +389,8 @@
       "vegetables"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/cucumber/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 84
   },
   {
     "id": "dummyjson-0022",
@@ -387,7 +408,8 @@
       "pet-food"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/dog-food/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 71
   },
   {
     "id": "dummyjson-0023",
@@ -406,7 +428,8 @@
       "dairy"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/eggs/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 9
   },
   {
     "id": "dummyjson-0024",
@@ -422,7 +445,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/groceries/fish-steak/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 74
   },
   {
     "id": "dummyjson-0025",
@@ -441,7 +465,8 @@
       "vegetables"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/green-bell-pepper/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 33
   },
   {
     "id": "dummyjson-0026",
@@ -459,7 +484,8 @@
       "vegetables"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/green-chili-pepper/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 3
   },
   {
     "id": "dummyjson-0027",
@@ -477,7 +503,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/honey-jar/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 34
   },
   {
     "id": "dummyjson-0028",
@@ -493,7 +520,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/groceries/ice-cream/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 27
   },
   {
     "id": "dummyjson-0029",
@@ -512,7 +540,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/juice/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 50
   },
   {
     "id": "dummyjson-0030",
@@ -530,7 +559,8 @@
       "fruit"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/kiwi/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 99
   },
   {
     "id": "dummyjson-0031",
@@ -549,7 +579,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/lemon/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 31
   },
   {
     "id": "dummyjson-0032",
@@ -568,7 +599,8 @@
       "dairy"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/milk/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 27
   },
   {
     "id": "dummyjson-0033",
@@ -586,7 +618,8 @@
       "fruit"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/mulberry/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 99
   },
   {
     "id": "dummyjson-0034",
@@ -604,7 +637,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/nescafe-coffee/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 57
   },
   {
     "id": "dummyjson-0035",
@@ -622,7 +656,8 @@
       "vegetables"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/potatoes/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 13
   },
   {
     "id": "dummyjson-0036",
@@ -638,7 +673,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/groceries/protein-powder/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 80
   },
   {
     "id": "dummyjson-0037",
@@ -656,7 +692,8 @@
       "vegetables"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/red-onions/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 82
   },
   {
     "id": "dummyjson-0038",
@@ -672,7 +709,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/groceries/rice/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 59
   },
   {
     "id": "dummyjson-0039",
@@ -690,7 +728,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/soft-drinks/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 53
   },
   {
     "id": "dummyjson-0040",
@@ -708,7 +747,8 @@
       "fruit"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/strawberry/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 46
   },
   {
     "id": "dummyjson-0041",
@@ -724,7 +764,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/groceries/tissue-paper-box/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 86
   },
   {
     "id": "dummyjson-0042",
@@ -742,7 +783,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/groceries/water/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 53
   },
   {
     "id": "dummyjson-0043",
@@ -758,7 +800,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 47
   },
   {
     "id": "dummyjson-0044",
@@ -774,7 +817,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/home-decoration/family-tree-photo-frame/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 77
   },
   {
     "id": "dummyjson-0045",
@@ -790,7 +834,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 28
   },
   {
     "id": "dummyjson-0046",
@@ -806,7 +851,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 59
   },
   {
     "id": "dummyjson-0047",
@@ -822,7 +868,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/home-decoration/table-lamp/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 9
   },
   {
     "id": "dummyjson-0048",
@@ -840,7 +887,8 @@
       "wooden"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/bamboo-spatula/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 37
   },
   {
     "id": "dummyjson-0049",
@@ -859,7 +907,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-aluminium-cup/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 75
   },
   {
     "id": "dummyjson-0050",
@@ -877,7 +926,8 @@
       "ergonomic"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-whisk/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 73
   },
   {
     "id": "dummyjson-0051",
@@ -895,7 +945,8 @@
       "compact"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 9
   },
   {
     "id": "dummyjson-0052",
@@ -913,7 +964,8 @@
       "steel"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/carbon-steel-wok/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 40
   },
   {
     "id": "dummyjson-0053",
@@ -931,7 +983,8 @@
       "durable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/chopping-board/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 14
   },
   {
     "id": "dummyjson-0054",
@@ -949,7 +1002,8 @@
       "fruit"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/citrus-squeezer-yellow/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 22
   },
   {
     "id": "dummyjson-0055",
@@ -965,7 +1019,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/egg-slicer/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 40
   },
   {
     "id": "dummyjson-0056",
@@ -983,7 +1038,8 @@
       "portable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 21
   },
   {
     "id": "dummyjson-0057",
@@ -999,7 +1055,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/fine-mesh-strainer/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 85
   },
   {
     "id": "dummyjson-0058",
@@ -1018,7 +1075,8 @@
       "durable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/fork/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 7
   },
   {
     "id": "dummyjson-0059",
@@ -1038,7 +1096,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/glass/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 46
   },
   {
     "id": "dummyjson-0060",
@@ -1056,7 +1115,8 @@
       "vegetables"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/grater-black/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 84
   },
   {
     "id": "dummyjson-0061",
@@ -1074,7 +1134,8 @@
       "compact"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/hand-blender/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 84
   },
   {
     "id": "dummyjson-0062",
@@ -1092,7 +1153,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/ice-cube-tray/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 13
   },
   {
     "id": "dummyjson-0063",
@@ -1108,7 +1170,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/kitchen-sieve/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 68
   },
   {
     "id": "dummyjson-0064",
@@ -1126,7 +1189,8 @@
       "ergonomic"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/knife/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 7
   },
   {
     "id": "dummyjson-0065",
@@ -1144,7 +1208,8 @@
       "portable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/lunch-box/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 94
   },
   {
     "id": "dummyjson-0066",
@@ -1162,7 +1227,8 @@
       "compact"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 59
   },
   {
     "id": "dummyjson-0067",
@@ -1178,7 +1244,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/mug-tree-stand/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 88
   },
   {
     "id": "dummyjson-0068",
@@ -1194,7 +1261,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/pan/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 90
   },
   {
     "id": "dummyjson-0069",
@@ -1212,7 +1280,8 @@
       "durable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/plate/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 66
   },
   {
     "id": "dummyjson-0070",
@@ -1228,7 +1297,8 @@
     "color": "red",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/red-tongs/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 82
   },
   {
     "id": "dummyjson-0071",
@@ -1246,7 +1316,8 @@
       "glass"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/silver-pot-with-glass-cap/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 40
   },
   {
     "id": "dummyjson-0072",
@@ -1262,7 +1333,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/slotted-turner/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 88
   },
   {
     "id": "dummyjson-0073",
@@ -1278,7 +1350,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/spice-rack/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 79
   },
   {
     "id": "dummyjson-0074",
@@ -1297,7 +1370,8 @@
       "durable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/spoon/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 59
   },
   {
     "id": "dummyjson-0075",
@@ -1315,7 +1389,8 @@
       "drinks"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/tray/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 71
   },
   {
     "id": "dummyjson-0076",
@@ -1333,7 +1408,8 @@
       "wooden"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/wooden-rolling-pin/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 80
   },
   {
     "id": "dummyjson-0077",
@@ -1352,7 +1428,8 @@
       "vegetables"
     ],
     "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/yellow-peeler/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 35
   },
   {
     "id": "dummyjson-0078",
@@ -1370,7 +1447,8 @@
       "retina"
     ],
     "image": "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 24
   },
   {
     "id": "dummyjson-0079",
@@ -1386,7 +1464,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/thumbnail.webp",
-    "brand": "Asus"
+    "brand": "Asus",
+    "stock": 45
   },
   {
     "id": "dummyjson-0080",
@@ -1402,7 +1481,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/thumbnail.webp",
-    "brand": "Huawei"
+    "brand": "Huawei",
+    "stock": 75
   },
   {
     "id": "dummyjson-0081",
@@ -1418,7 +1498,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/thumbnail.webp",
-    "brand": "Lenovo"
+    "brand": "Lenovo",
+    "stock": 40
   },
   {
     "id": "dummyjson-0082",
@@ -1436,7 +1517,8 @@
       "compact"
     ],
     "image": "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/thumbnail.webp",
-    "brand": "Dell"
+    "brand": "Dell",
+    "stock": 74
   },
   {
     "id": "dummyjson-0083",
@@ -1455,7 +1537,8 @@
       "men"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/thumbnail.webp",
-    "brand": "Fashion Trends"
+    "brand": "Fashion Trends",
+    "stock": 38
   },
   {
     "id": "dummyjson-0084",
@@ -1474,7 +1557,8 @@
       "men"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/thumbnail.webp",
-    "brand": "Gigabyte"
+    "brand": "Gigabyte",
+    "stock": 90
   },
   {
     "id": "dummyjson-0085",
@@ -1493,7 +1577,8 @@
       "men"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/thumbnail.webp",
-    "brand": "Classic Wear"
+    "brand": "Classic Wear",
+    "stock": 82
   },
   {
     "id": "dummyjson-0086",
@@ -1511,7 +1596,8 @@
       "men"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/thumbnail.webp",
-    "brand": "Casual Comfort"
+    "brand": "Casual Comfort",
+    "stock": 2
   },
   {
     "id": "dummyjson-0087",
@@ -1530,7 +1616,8 @@
       "men"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/thumbnail.webp",
-    "brand": "Urban Chic"
+    "brand": "Urban Chic",
+    "stock": 95
   },
   {
     "id": "dummyjson-0088",
@@ -1549,7 +1636,8 @@
       "basketball"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/thumbnail.webp",
-    "brand": "Nike"
+    "brand": "Nike",
+    "stock": 7
   },
   {
     "id": "dummyjson-0089",
@@ -1568,7 +1656,8 @@
       "baseball"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/thumbnail.webp",
-    "brand": "Nike"
+    "brand": "Nike",
+    "stock": 12
   },
   {
     "id": "dummyjson-0090",
@@ -1586,7 +1675,8 @@
       "casual"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/thumbnail.webp",
-    "brand": "Puma"
+    "brand": "Puma",
+    "stock": 90
   },
   {
     "id": "dummyjson-0091",
@@ -1604,7 +1694,8 @@
       "sport"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/thumbnail.webp",
-    "brand": "Off White"
+    "brand": "Off White",
+    "stock": 17
   },
   {
     "id": "dummyjson-0092",
@@ -1623,7 +1714,8 @@
       "sport"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/thumbnail.webp",
-    "brand": "Off White"
+    "brand": "Off White",
+    "stock": 62
   },
   {
     "id": "dummyjson-0093",
@@ -1641,7 +1733,8 @@
       "leather"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/thumbnail.webp",
-    "brand": "Fashion Timepieces"
+    "brand": "Fashion Timepieces",
+    "stock": 32
   },
   {
     "id": "dummyjson-0094",
@@ -1660,7 +1753,8 @@
       "elegant"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/thumbnail.webp",
-    "brand": "Longines"
+    "brand": "Longines",
+    "stock": 100
   },
   {
     "id": "dummyjson-0095",
@@ -1678,7 +1772,8 @@
       "luxury"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/thumbnail.webp",
-    "brand": "Rolex"
+    "brand": "Rolex",
+    "stock": 40
   },
   {
     "id": "dummyjson-0096",
@@ -1696,7 +1791,8 @@
       "luxury"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/thumbnail.webp",
-    "brand": "Rolex"
+    "brand": "Rolex",
+    "stock": 36
   },
   {
     "id": "dummyjson-0097",
@@ -1714,7 +1810,8 @@
       "luxury"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/thumbnail.webp",
-    "brand": "Rolex"
+    "brand": "Rolex",
+    "stock": 86
   },
   {
     "id": "dummyjson-0098",
@@ -1732,7 +1829,8 @@
       "luxury"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/thumbnail.webp",
-    "brand": "Rolex"
+    "brand": "Rolex",
+    "stock": 55
   },
   {
     "id": "dummyjson-0099",
@@ -1750,7 +1848,8 @@
       "smart"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp",
-    "brand": "Amazon"
+    "brand": "Amazon",
+    "stock": 61
   },
   {
     "id": "dummyjson-0100",
@@ -1769,7 +1868,8 @@
       "portable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 67
   },
   {
     "id": "dummyjson-0101",
@@ -1787,7 +1887,8 @@
       "wireless"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 59
   },
   {
     "id": "dummyjson-0102",
@@ -1805,7 +1906,8 @@
       "wireless"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 1
   },
   {
     "id": "dummyjson-0103",
@@ -1824,7 +1926,8 @@
       "smart"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-homepod-mini-cosmic-grey/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 27
   },
   {
     "id": "dummyjson-0104",
@@ -1840,7 +1943,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-iphone-charger/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 31
   },
   {
     "id": "dummyjson-0105",
@@ -1859,7 +1963,8 @@
       "magsafe"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-magsafe-battery-pack/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 1
   },
   {
     "id": "dummyjson-0106",
@@ -1877,7 +1982,8 @@
       "retina"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-watch-series-4-gold/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 33
   },
   {
     "id": "dummyjson-0107",
@@ -1895,7 +2001,8 @@
       "wireless"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/beats-flex-wireless-earphones/thumbnail.webp",
-    "brand": "Beats"
+    "brand": "Beats",
+    "stock": 50
   },
   {
     "id": "dummyjson-0108",
@@ -1913,7 +2020,8 @@
       "magsafe"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/iphone-12-silicone-case-with-magsafe-plum/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 69
   },
   {
     "id": "dummyjson-0109",
@@ -1931,7 +2039,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/monopod/thumbnail.webp",
-    "brand": "TechGear"
+    "brand": "TechGear",
+    "stock": 48
   },
   {
     "id": "dummyjson-0110",
@@ -1949,7 +2058,8 @@
       "portable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/selfie-lamp-with-iphone/thumbnail.webp",
-    "brand": "GadgetMaster"
+    "brand": "GadgetMaster",
+    "stock": 58
   },
   {
     "id": "dummyjson-0111",
@@ -1965,7 +2075,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/selfie-stick-monopod/thumbnail.webp",
-    "brand": "SnapTech"
+    "brand": "SnapTech",
+    "stock": 11
   },
   {
     "id": "dummyjson-0112",
@@ -1983,7 +2094,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/tv-studio-camera-pedestal/thumbnail.webp",
-    "brand": "ProVision"
+    "brand": "ProVision",
+    "stock": 15
   },
   {
     "id": "dummyjson-0113",
@@ -1999,7 +2111,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/motorcycle/generic-motorcycle/thumbnail.webp",
-    "brand": "Generic Motors"
+    "brand": "Generic Motors",
+    "stock": 34
   },
   {
     "id": "dummyjson-0114",
@@ -2015,7 +2128,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/motorcycle/kawasaki-z800/thumbnail.webp",
-    "brand": "Kawasaki"
+    "brand": "Kawasaki",
+    "stock": 52
   },
   {
     "id": "dummyjson-0115",
@@ -2031,7 +2145,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/motorcycle/motogp-ci.h1/thumbnail.webp",
-    "brand": "MotoGP"
+    "brand": "MotoGP",
+    "stock": 10
   },
   {
     "id": "dummyjson-0116",
@@ -2047,7 +2162,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/motorcycle/scooter-motorcycle/thumbnail.webp",
-    "brand": "ScootMaster"
+    "brand": "ScootMaster",
+    "stock": 84
   },
   {
     "id": "dummyjson-0117",
@@ -2063,7 +2179,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/motorcycle/sportbike-motorcycle/thumbnail.webp",
-    "brand": "SpeedMaster"
+    "brand": "SpeedMaster",
+    "stock": 0
   },
   {
     "id": "dummyjson-0118",
@@ -2081,7 +2198,8 @@
       "fresh"
     ],
     "image": "https://cdn.dummyjson.com/product-images/skin-care/attitude-super-leaves-hand-soap/thumbnail.webp",
-    "brand": "Attitude"
+    "brand": "Attitude",
+    "stock": 94
   },
   {
     "id": "dummyjson-0119",
@@ -2099,7 +2217,8 @@
       "luxury"
     ],
     "image": "https://cdn.dummyjson.com/product-images/skin-care/olay-ultra-moisture-shea-butter-body-wash/thumbnail.webp",
-    "brand": "Olay"
+    "brand": "Olay",
+    "stock": 34
   },
   {
     "id": "dummyjson-0120",
@@ -2118,7 +2237,8 @@
       "men"
     ],
     "image": "https://cdn.dummyjson.com/product-images/skin-care/vaseline-men-body-and-face-lotion/thumbnail.webp",
-    "brand": "Vaseline"
+    "brand": "Vaseline",
+    "stock": 95
   },
   {
     "id": "dummyjson-0121",
@@ -2136,7 +2256,8 @@
       "compact"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/iphone-5s/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 25
   },
   {
     "id": "dummyjson-0122",
@@ -2152,7 +2273,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/iphone-6/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 60
   },
   {
     "id": "dummyjson-0123",
@@ -2170,7 +2292,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 56
   },
   {
     "id": "dummyjson-0124",
@@ -2186,7 +2309,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/iphone-x/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 37
   },
   {
     "id": "dummyjson-0125",
@@ -2202,7 +2326,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/oppo-a57/thumbnail.webp",
-    "brand": "Oppo"
+    "brand": "Oppo",
+    "stock": 19
   },
   {
     "id": "dummyjson-0126",
@@ -2220,7 +2345,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/oppo-f19-pro-plus/thumbnail.webp",
-    "brand": "Oppo"
+    "brand": "Oppo",
+    "stock": 78
   },
   {
     "id": "dummyjson-0127",
@@ -2236,7 +2362,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/oppo-k1/thumbnail.webp",
-    "brand": "Oppo"
+    "brand": "Oppo",
+    "stock": 55
   },
   {
     "id": "dummyjson-0128",
@@ -2252,7 +2379,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/realme-c35/thumbnail.webp",
-    "brand": "Realme"
+    "brand": "Realme",
+    "stock": 48
   },
   {
     "id": "dummyjson-0129",
@@ -2270,7 +2398,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/realme-x/thumbnail.webp",
-    "brand": "Realme"
+    "brand": "Realme",
+    "stock": 12
   },
   {
     "id": "dummyjson-0130",
@@ -2288,7 +2417,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/realme-xt/thumbnail.webp",
-    "brand": "Realme"
+    "brand": "Realme",
+    "stock": 80
   },
   {
     "id": "dummyjson-0131",
@@ -2306,7 +2436,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s7/thumbnail.webp",
-    "brand": "Samsung"
+    "brand": "Samsung",
+    "stock": 67
   },
   {
     "id": "dummyjson-0132",
@@ -2324,7 +2455,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s8/thumbnail.webp",
-    "brand": "Samsung"
+    "brand": "Samsung",
+    "stock": 0
   },
   {
     "id": "dummyjson-0133",
@@ -2342,7 +2474,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s10/thumbnail.webp",
-    "brand": "Samsung"
+    "brand": "Samsung",
+    "stock": 19
   },
   {
     "id": "dummyjson-0134",
@@ -2360,7 +2493,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/vivo-s1/thumbnail.webp",
-    "brand": "Vivo"
+    "brand": "Vivo",
+    "stock": 50
   },
   {
     "id": "dummyjson-0135",
@@ -2378,7 +2512,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/vivo-v9/thumbnail.webp",
-    "brand": "Vivo"
+    "brand": "Vivo",
+    "stock": 82
   },
   {
     "id": "dummyjson-0136",
@@ -2396,7 +2531,8 @@
       "camera"
     ],
     "image": "https://cdn.dummyjson.com/product-images/smartphones/vivo-x21/thumbnail.webp",
-    "brand": "Vivo"
+    "brand": "Vivo",
+    "stock": 7
   },
   {
     "id": "dummyjson-0137",
@@ -2414,7 +2550,8 @@
       "sport"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/american-football/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 53
   },
   {
     "id": "dummyjson-0138",
@@ -2435,7 +2572,8 @@
       "baseball"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-ball/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 100
   },
   {
     "id": "dummyjson-0139",
@@ -2454,7 +2592,8 @@
       "baseball"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-glove/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 22
   },
   {
     "id": "dummyjson-0140",
@@ -2473,7 +2612,8 @@
       "basketball"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/basketball/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 75
   },
   {
     "id": "dummyjson-0141",
@@ -2492,7 +2632,8 @@
       "basketball"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/basketball-rim/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 43
   },
   {
     "id": "dummyjson-0142",
@@ -2512,7 +2653,8 @@
       "cricket"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-ball/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 30
   },
   {
     "id": "dummyjson-0143",
@@ -2532,7 +2674,8 @@
       "cricket"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-bat/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 98
   },
   {
     "id": "dummyjson-0144",
@@ -2551,7 +2694,8 @@
       "cricket"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 10
   },
   {
     "id": "dummyjson-0145",
@@ -2570,7 +2714,8 @@
       "cricket"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-wicket/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 25
   },
   {
     "id": "dummyjson-0146",
@@ -2588,7 +2733,8 @@
       "sport"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/feather-shuttlecock/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 95
   },
   {
     "id": "dummyjson-0147",
@@ -2606,7 +2752,8 @@
       "sport"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/football/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 96
   },
   {
     "id": "dummyjson-0148",
@@ -2625,7 +2772,8 @@
       "golf"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/golf-ball/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 84
   },
   {
     "id": "dummyjson-0149",
@@ -2644,7 +2792,8 @@
       "golf"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/iron-golf/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 90
   },
   {
     "id": "dummyjson-0150",
@@ -2665,7 +2814,8 @@
       "baseball"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/metal-baseball-bat/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 16
   },
   {
     "id": "dummyjson-0151",
@@ -2684,7 +2834,8 @@
       "tennis"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/tennis-ball/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 28
   },
   {
     "id": "dummyjson-0152",
@@ -2703,7 +2854,8 @@
       "tennis"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/tennis-racket/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 6
   },
   {
     "id": "dummyjson-0153",
@@ -2721,7 +2873,8 @@
       "sport"
     ],
     "image": "https://cdn.dummyjson.com/product-images/sports-accessories/volleyball/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 0
   },
   {
     "id": "dummyjson-0154",
@@ -2737,7 +2890,8 @@
     "color": "black",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/sunglasses/black-sun-glasses/thumbnail.webp",
-    "brand": "Fashion Shades"
+    "brand": "Fashion Shades",
+    "stock": 60
   },
   {
     "id": "dummyjson-0155",
@@ -2753,7 +2907,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/sunglasses/classic-sun-glasses/thumbnail.webp",
-    "brand": "Fashion Shades"
+    "brand": "Fashion Shades",
+    "stock": 1
   },
   {
     "id": "dummyjson-0156",
@@ -2769,7 +2924,8 @@
     "color": "green",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/sunglasses/green-and-black-glasses/thumbnail.webp",
-    "brand": "Fashion Shades"
+    "brand": "Fashion Shades",
+    "stock": 24
   },
   {
     "id": "dummyjson-0157",
@@ -2785,7 +2941,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/sunglasses/party-glasses/thumbnail.webp",
-    "brand": "Fashion Fun"
+    "brand": "Fashion Fun",
+    "stock": 86
   },
   {
     "id": "dummyjson-0158",
@@ -2801,7 +2958,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/sunglasses/sunglasses/thumbnail.webp",
-    "brand": "Fashion Shades"
+    "brand": "Fashion Shades",
+    "stock": 27
   },
   {
     "id": "dummyjson-0159",
@@ -2820,7 +2978,8 @@
       "retina"
     ],
     "image": "https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/thumbnail.webp",
-    "brand": "Apple"
+    "brand": "Apple",
+    "stock": 47
   },
   {
     "id": "dummyjson-0160",
@@ -2836,7 +2995,8 @@
     "color": "grey",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-s8-plus-grey/thumbnail.webp",
-    "brand": "Samsung"
+    "brand": "Samsung",
+    "stock": 62
   },
   {
     "id": "dummyjson-0161",
@@ -2854,7 +3014,8 @@
       "long-lasting"
     ],
     "image": "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-white/thumbnail.webp",
-    "brand": "Samsung"
+    "brand": "Samsung",
+    "stock": 92
   },
   {
     "id": "dummyjson-0162",
@@ -2870,7 +3031,8 @@
     "color": "blue",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/tops/blue-frock/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 52
   },
   {
     "id": "dummyjson-0163",
@@ -2888,7 +3050,8 @@
       "lightweight"
     ],
     "image": "https://cdn.dummyjson.com/product-images/tops/girl-summer-dress/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 43
   },
   {
     "id": "dummyjson-0164",
@@ -2904,7 +3067,8 @@
     "color": "grey",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/tops/gray-dress/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 55
   },
   {
     "id": "dummyjson-0165",
@@ -2922,7 +3086,8 @@
       "casual"
     ],
     "image": "https://cdn.dummyjson.com/product-images/tops/short-frock/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 22
   },
   {
     "id": "dummyjson-0166",
@@ -2938,7 +3103,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/tops/tartan-dress/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 73
   },
   {
     "id": "dummyjson-0167",
@@ -2956,7 +3122,8 @@
       "luxury"
     ],
     "image": "https://cdn.dummyjson.com/product-images/vehicle/300-touring/thumbnail.webp",
-    "brand": "Chrysler"
+    "brand": "Chrysler",
+    "stock": 54
   },
   {
     "id": "dummyjson-0168",
@@ -2974,7 +3141,8 @@
       "sport"
     ],
     "image": "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/thumbnail.webp",
-    "brand": "Dodge"
+    "brand": "Dodge",
+    "stock": 57
   },
   {
     "id": "dummyjson-0169",
@@ -2992,7 +3160,8 @@
       "compact"
     ],
     "image": "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/thumbnail.webp",
-    "brand": "Dodge"
+    "brand": "Dodge",
+    "stock": 82
   },
   {
     "id": "dummyjson-0170",
@@ -3008,7 +3177,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/thumbnail.webp",
-    "brand": "Dodge"
+    "brand": "Dodge",
+    "stock": 95
   },
   {
     "id": "dummyjson-0171",
@@ -3024,7 +3194,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/thumbnail.webp",
-    "brand": "Chrysler"
+    "brand": "Chrysler",
+    "stock": 53
   },
   {
     "id": "dummyjson-0172",
@@ -3042,7 +3213,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-bags/blue-women's-handbag/thumbnail.webp",
-    "brand": "Fashionista"
+    "brand": "Fashionista",
+    "stock": 76
   },
   {
     "id": "dummyjson-0173",
@@ -3063,7 +3235,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-bags/heshe-women's-leather-bag/thumbnail.webp",
-    "brand": "Heshe"
+    "brand": "Heshe",
+    "stock": 99
   },
   {
     "id": "dummyjson-0174",
@@ -3082,7 +3255,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-bags/prada-women-bag/thumbnail.webp",
-    "brand": "Prada"
+    "brand": "Prada",
+    "stock": 75
   },
   {
     "id": "dummyjson-0175",
@@ -3103,7 +3277,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-bags/white-faux-leather-backpack/thumbnail.webp",
-    "brand": "Urban Chic"
+    "brand": "Urban Chic",
+    "stock": 39
   },
   {
     "id": "dummyjson-0176",
@@ -3121,7 +3296,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-bags/women-handbag-black/thumbnail.webp",
-    "brand": "Elegance Collection"
+    "brand": "Elegance Collection",
+    "stock": 11
   },
   {
     "id": "dummyjson-0177",
@@ -3140,7 +3316,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-dresses/black-women's-gown/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 25
   },
   {
     "id": "dummyjson-0178",
@@ -3158,7 +3335,8 @@
       "leather"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-dresses/corset-leather-with-skirt/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 30
   },
   {
     "id": "dummyjson-0179",
@@ -3174,7 +3352,8 @@
     "color": "black",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/womens-dresses/corset-with-black-skirt/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 33
   },
   {
     "id": "dummyjson-0180",
@@ -3192,7 +3371,8 @@
       "casual"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-dresses/dress-pea/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 6
   },
   {
     "id": "dummyjson-0181",
@@ -3208,7 +3388,8 @@
     "color": "red",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/womens-dresses/marni-red-&-black-suit/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 62
   },
   {
     "id": "dummyjson-0182",
@@ -3224,7 +3405,8 @@
     "color": "green",
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/womens-jewellery/green-crystal-earring/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 54
   },
   {
     "id": "dummyjson-0183",
@@ -3242,7 +3424,8 @@
       "casual"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-jewellery/green-oval-earring/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 73
   },
   {
     "id": "dummyjson-0184",
@@ -3258,7 +3441,8 @@
     "color": null,
     "tags": [],
     "image": "https://cdn.dummyjson.com/product-images/womens-jewellery/tropical-earring/thumbnail.webp",
-    "brand": null
+    "brand": null,
+    "stock": 1
   },
   {
     "id": "dummyjson-0185",
@@ -3276,7 +3460,8 @@
       "casual"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-shoes/black-&-brown-slipper/thumbnail.webp",
-    "brand": "Comfort Trends"
+    "brand": "Comfort Trends",
+    "stock": 3
   },
   {
     "id": "dummyjson-0186",
@@ -3294,7 +3479,8 @@
       "elegant"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-shoes/calvin-klein-heel-shoes/thumbnail.webp",
-    "brand": "Calvin Klein"
+    "brand": "Calvin Klein",
+    "stock": 93
   },
   {
     "id": "dummyjson-0187",
@@ -3313,7 +3499,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-shoes/golden-shoes-woman/thumbnail.webp",
-    "brand": "Fashion Diva"
+    "brand": "Fashion Diva",
+    "stock": 88
   },
   {
     "id": "dummyjson-0188",
@@ -3331,7 +3518,8 @@
       "casual"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-shoes/pampi-shoes/thumbnail.webp",
-    "brand": "Pampi"
+    "brand": "Pampi",
+    "stock": 49
   },
   {
     "id": "dummyjson-0189",
@@ -3350,7 +3538,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-shoes/red-shoes/thumbnail.webp",
-    "brand": "Fashion Express"
+    "brand": "Fashion Express",
+    "stock": 7
   },
   {
     "id": "dummyjson-0190",
@@ -3370,7 +3559,8 @@
       "durable"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-watches/iwc-ingenieur-automatic-steel/thumbnail.webp",
-    "brand": "IWC"
+    "brand": "IWC",
+    "stock": 90
   },
   {
     "id": "dummyjson-0191",
@@ -3388,7 +3578,8 @@
       "luxury"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-watches/rolex-cellini-moonphase/thumbnail.webp",
-    "brand": "Rolex"
+    "brand": "Rolex",
+    "stock": 52
   },
   {
     "id": "dummyjson-0192",
@@ -3407,7 +3598,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-watches/rolex-datejust-women/thumbnail.webp",
-    "brand": "Rolex"
+    "brand": "Rolex",
+    "stock": 4
   },
   {
     "id": "dummyjson-0193",
@@ -3426,7 +3618,8 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-watches/watch-gold-for-women/thumbnail.webp",
-    "brand": "Fashion Gold"
+    "brand": "Fashion Gold",
+    "stock": 0
   },
   {
     "id": "dummyjson-0194",
@@ -3445,6 +3638,7 @@
       "women"
     ],
     "image": "https://cdn.dummyjson.com/product-images/womens-watches/women's-wrist-watch/thumbnail.webp",
-    "brand": "Fashion Co."
+    "brand": "Fashion Co.",
+    "stock": 12
   }
 ]

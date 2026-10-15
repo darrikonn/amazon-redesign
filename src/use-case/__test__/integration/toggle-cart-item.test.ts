@@ -78,4 +78,16 @@ describe("ToggleCartItem", () => {
     );
     expect(fakes.cartLines.storedLines()).toEqual([]);
   });
+
+  it("never adds a sold-out product", async () => {
+    // Arrange
+    fakes.products.seedProduct(aProduct({ id: "volleyball", stock: 0 }));
+
+    // Act
+    const cart = await container.toggleCartItem.execute({ productId: "volleyball" });
+
+    // Assert
+    expect(cart).toEqual({ productIds: [], itemCount: 0 });
+    expect(fakes.cartLines.storedLines()).toEqual([]);
+  });
 });

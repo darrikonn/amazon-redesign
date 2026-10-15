@@ -54,6 +54,7 @@ describe("buildCatalog from DummyJSON", () => {
         tags: [],
         image: "https://cdn.dummyjson.com/watch/thumbnail.webp",
         brand: "Fashion Timepieces",
+        stock: 4,
       },
     ]);
   });
@@ -66,7 +67,6 @@ describe("buildCatalog from DummyJSON", () => {
       description: "A classic watch with a genuine leather strap. Water resistant.",
       images: ["https://cdn.dummyjson.com/watch/1.webp", "https://cdn.dummyjson.com/watch/2.webp"],
       availability: "low-stock",
-      stock: 4,
       shipping: "Ships in 3-5 business days",
       warranty: "1 year warranty",
       returnPolicy: null,
@@ -173,13 +173,13 @@ describe("buildCatalog from FakeStore", () => {
       reviewCount: 500,
       deliveryDays: NORMALISATION_RULES.fakeStoreDeliveryDays,
       brand: null,
+      stock: null,
     });
     expect(catalog.details[0]).toEqual({
       productId: "fakestore-0003",
       description: "Great outerwear.",
       images: ["https://fakestoreapi.com/img/jacket.jpg"],
       availability: null,
-      stock: null,
       shipping: null,
       warranty: null,
       returnPolicy: null,

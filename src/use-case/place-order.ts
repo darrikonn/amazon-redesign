@@ -1,4 +1,4 @@
-import { newOrder, orderIdFor, orderItemsFor } from "@/component";
+import { newOrder, orderIdFor, orderItemsFor, quantityLimitFor } from "@/component";
 import type {
   CartLine,
   CartLineRepository,
@@ -6,6 +6,7 @@ import type {
   Order,
   OrderId,
   OrderRepository,
+  Product,
   ProductDetailsRepository,
   ProductRepository,
   SessionStore,
@@ -15,6 +16,7 @@ import { currentShopper } from "./session-shopper";
 
 export type PlaceOrderResult =
   | { status: "placed"; orderId: OrderId }
+  | { status: "unavailable"; productNames: readonly string[] }
   | { status: "signed-out" }
   | { status: "empty-cart" };
 
@@ -33,21 +35,24 @@ export class PlaceOrder {
     const shopper = await currentShopper(this.sessions);
     if (shopper === null) return { status: "signed-out" };
     const cartLines = await this.cartLines.listByOwner(shopper.id);
-    const order = await this.orderFromCart(shopper, cartLines);
-    if (order === null) return { status: "empty-cart" };
+    const products = await this.products.getMany(cartLines.map((line) => line.productId));
+    if (products.length === 0) return { status: "empty-cart" };
+    const unavailable = unavailableProducts(cartLines, products);
+    if (unavailable.length > 0) {
+      return { status: "unavailable", productNames: unavailable.map((product) => product.name) };
+    }
+    const order = await this.orderFromCart(shopper, cartLines, products);
     await this.orders.save(order);
     await this.emptyCart(shopper, cartLines);
     return { status: "placed", orderId: order.id };
   }
 
-  // Null when nothing in the cart is still in the catalogue.
   private async orderFromCart(
     shopper: Shopper,
     cartLines: readonly CartLine[],
-  ): Promise<Order | null> {
+    products: readonly Product[],
+  ): Promise<Order> {
     const productIds = cartLines.map((line) => line.productId);
-    const products = await this.products.getMany(productIds);
-    if (products.length === 0) return null;
     const placedAt = this.clock.now();
     const earlierOrders = await this.orders.listByOwner(shopper.id);
     return newOrder({
@@ -64,4 +69,16 @@ export class PlaceOrder {
   private async emptyCart(shopper: Shopper, cartLines: readonly CartLine[]): Promise<void> {
     for (const cartLine of cartLines) await this.cartLines.remove(shopper.id, cartLine.productId);
   }
+}
+
+// Sold out, or wanted in more units than are left: the whole order waits, rather than
+// arriving short of what the shopper chose.
+function unavailableProducts(
+  cartLines: readonly CartLine[],
+  products: readonly Product[],
+): Product[] {
+  return products.filter((product) => {
+    const line = cartLines.find((candidate) => candidate.productId === product.id);
+    return line !== undefined && line.quantity > quantityLimitFor(product);
+  });
 }

@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import type { ProductId } from "@/core";
-import type { CartLineView, CartView } from "@/use-case";
+import type { CartLineView, CartView, PlaceOrderResult } from "@/use-case";
 import { useAnnounce } from "./announcer-context";
 import { useBrowsing } from "./browsing-context";
 import { useCart } from "./cart-context";
 import styles from "./cart-page-view.module.css";
 import { useContainer } from "./container-context";
 import { EmptyState } from "./empty-state";
+import { FieldError } from "./field-error";
 import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
@@ -76,7 +77,6 @@ export function CartPageView() {
                 <CartLine
                   key={line.productId}
                   line={line}
-                  maximumQuantity={view.maximumQuantity}
                   onChangeQuantity={(quantity) => {
                     changeQuantity(line, quantity).catch(reportError);
                   }}
@@ -113,13 +113,12 @@ function quantityIdFor(productId: ProductId): string {
 
 type CartLineProps = {
   line: CartLineView;
-  maximumQuantity: number;
   onChangeQuantity: (quantity: number) => void;
 };
 
-function CartLine({ line, maximumQuantity, onChangeQuantity }: CartLineProps) {
+function CartLine({ line, onChangeQuantity }: CartLineProps) {
   const { openProduct } = useBrowsing();
-  const quantities = Array.from({ length: maximumQuantity }, (_, index) => index + 1);
+  const quantities = Array.from({ length: line.maximumQuantity }, (_, index) => index + 1);
   const quantityId = quantityIdFor(line.productId);
   return (
     <li className={styles.line}>
@@ -139,9 +138,15 @@ function CartLine({ line, maximumQuantity, onChangeQuantity }: CartLineProps) {
             {line.name}
           </Link>
         </h2>
-        <span className={styles.lineDelivery}>
-          FREE delivery {deliveryLabel(line.deliveryDays)}
-        </span>
+        {line.shortage === null ? (
+          <span className={styles.lineDelivery}>
+            FREE delivery {deliveryLabel(line.deliveryDays)}
+          </span>
+        ) : (
+          <span className={styles.lineShortage}>
+            {line.shortage}: change or delete it to check out
+          </span>
+        )}
         <div className={styles.lineActions}>
           <label htmlFor={quantityId} className="visually-hidden">
             Quantity of {line.name}
@@ -194,6 +199,8 @@ function Checkout({ cart, onPlaced }: CheckoutProps) {
   const { shopper } = useSession();
   const router = useRouter();
   const [isPlacing, setIsPlacing] = useState(false);
+  const [refusal, setRefusal] = useState<string | null>(null);
+  const refusalId = useId();
   const subtotal = `Subtotal (${pluralize(cart.itemCount, "item", "items")}): ${splitPrice(cart.subtotalInCents).spoken}`;
 
   async function placeOrder() {
@@ -205,6 +212,7 @@ function Checkout({ cart, onPlaced }: CheckoutProps) {
       return;
     }
     setIsPlacing(false);
+    setRefusal(checkoutRefusal(result));
   }
 
   return (
@@ -230,9 +238,23 @@ function Checkout({ cart, onPlaced }: CheckoutProps) {
           >
             {isPlacing ? "Placing your order" : "Place your order"}
           </button>
+          {refusal !== null && <FieldError id={refusalId} message={refusal} />}
           <p className={styles.fine}>This is a demo shop: no payment is taken and nothing ships.</p>
         </>
       )}
     </aside>
   );
+}
+
+type CheckoutRefusal = Exclude<PlaceOrderResult, { status: "placed" }>;
+
+function checkoutRefusal(result: CheckoutRefusal): string {
+  switch (result.status) {
+    case "unavailable":
+      return `Change or delete what cannot be ordered as it is, then check out: ${result.productNames.join(", ")}.`;
+    case "signed-out":
+      return "You were signed out. Sign in again to check out.";
+    case "empty-cart":
+      return "Your cart is empty.";
+  }
 }

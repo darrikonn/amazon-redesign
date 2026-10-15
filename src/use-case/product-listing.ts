@@ -1,4 +1,4 @@
-import { cardDetailsFor, categoryLabel } from "@/component";
+import { canBuy, cardDetailsFor, categoryLabel } from "@/component";
 import type { CategoryId, Color, Product, ProductId } from "@/core";
 
 // A product card, wherever it is shown: search, buy again, deals, the saved list.
@@ -13,6 +13,7 @@ export type ProductListing = {
   priceInCents: number;
   deliveryDays: number;
   image: string | null;
+  canBuy: boolean;
   isBestMatch: boolean;
   highlightLabel: string | null;
   deal: DealPriceView | null;
@@ -44,6 +45,7 @@ export function toProductListing(product: Product, extras: ListingExtras = {}): 
     priceInCents: product.priceInCents,
     deliveryDays: product.deliveryDays,
     image: product.image,
+    canBuy: canBuy(product),
     isBestMatch: extras.isBestMatch ?? false,
     highlightLabel: extras.highlightLabel ?? null,
     deal: extras.deal ?? null,
