@@ -11,8 +11,8 @@ export function readSearchParameters(raw: RawSearchParameters): RequestedSearch 
   return { text: firstValue(raw.q) ?? "", sort: firstValue(raw.sort) ?? "" };
 }
 
-const DEFAULT_SORT: SearchSort = "best-match";
-const PRODUCT_PARAMETER = "product";
+export const DEFAULT_SORT: SearchSort = "best-match";
+export const PRODUCT_PARAMETER = "product";
 
 type SearchLocation = {
   text: string;

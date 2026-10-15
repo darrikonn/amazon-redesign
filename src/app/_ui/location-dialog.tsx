@@ -3,7 +3,7 @@
 import { type FormEvent, useId, useRef, useState } from "react";
 import { Icon } from "./icon";
 import styles from "./location-dialog.module.css";
-import { useShop } from "./shop-context";
+import { useSession } from "./session-context";
 import { useModalDialog } from "./use-modal-dialog";
 
 type LocationDialogProps = {
@@ -12,7 +12,7 @@ type LocationDialogProps = {
 };
 
 export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
-  const { shopper, changeDeliveryLocation } = useShop();
+  const { shopper, changeDeliveryLocation } = useSession();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputId = useId();
   const errorId = useId();

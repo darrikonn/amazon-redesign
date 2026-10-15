@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback } from "react";
+import { useContainer } from "./container-context";
 import { formatDayAndDate } from "./format";
 import { ProductShelf } from "./product-shelf";
-import { useShop } from "./shop-context";
 import page from "./shop-page.module.css";
 import { useLoaded } from "./use-loaded";
 
 export function DealsView() {
-  const { container } = useShop();
+  const container = useContainer();
   const load = useCallback(() => container.viewDeals.execute(), [container]);
   const deals = useLoaded(load);
   return (

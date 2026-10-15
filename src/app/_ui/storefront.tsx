@@ -4,12 +4,14 @@ import { type RefObject, useCallback, useEffect, useRef, useState } from "react"
 import type { Container } from "@/composition";
 import type { ProductId, SearchSort } from "@/core";
 import type { SearchOutcome, Storefront as StorefrontData } from "@/use-case";
+import { useBrowsing, useInPlaceSearch } from "./browsing-context";
+import { useCart } from "./cart-context";
 import { Collapsible } from "./collapsible";
+import { useContainer } from "./container-context";
 import { scrollToTop } from "./motion";
 import { RESULTS_HEADLINE_ID, ResultSection } from "./result-section";
 import { SearchPanel } from "./search-panel";
 import { searchUrl } from "./search-url";
-import { useShop } from "./shop-context";
 import { ShortcutList } from "./shortcut-list";
 import { StarterQueryList } from "./starter-query-list";
 import styles from "./storefront.module.css";
@@ -23,7 +25,9 @@ type StorefrontProps = {
 };
 
 export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
-  const { container, cart, productModal, openProduct, toggleCart, searchHandlerRef } = useShop();
+  const container = useContainer();
+  const { cart, toggleCart } = useCart();
+  const { productModal, openProduct } = useBrowsing();
   const { text, searchText, type, apply } = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
   const { outcome, lastResults } = useSearchOutcome(container, initialOutcome, searchText, sort);
@@ -58,7 +62,8 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   );
 
   useFocusRecovery(chosenTextRef, isShowingResults, text, outcome.text, inputRef);
-  useHeaderSearch(searchHandlerRef, choose);
+  // While the home page is open, the header's department menu and logo search in place.
+  useInPlaceSearch(choose);
 
   const pickSort = useCallback(
     (nextSort: SearchSort, nextText: string) => {
@@ -184,19 +189,6 @@ function useFocusRecovery(
       : inputRef.current;
     target?.focus({ preventScroll: true });
   }, [chosenTextRef, isShowingResults, text, searchedText, inputRef]);
-}
-
-// While the home page is open, the header's department menu and logo search in place.
-function useHeaderSearch(
-  handlerRef: RefObject<((text: string) => void) | null>,
-  choose: (text: string) => void,
-) {
-  useEffect(() => {
-    handlerRef.current = choose;
-    return () => {
-      handlerRef.current = null;
-    };
-  }, [handlerRef, choose]);
 }
 
 function Hero() {

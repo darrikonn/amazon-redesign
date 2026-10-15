@@ -3,6 +3,8 @@
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import type { ProductId } from "@/core";
 import type { ProductView, ViewProduct } from "@/use-case";
+import { useBrowsing } from "./browsing-context";
+import { useContainer } from "./container-context";
 import { deliveryLabel } from "./format";
 import { Icon } from "./icon";
 import { type CarouselControl, ImageCarousel } from "./image-carousel";
@@ -14,38 +16,18 @@ import type { ProductPreview } from "./product-preview";
 import { StarRating } from "./star-rating";
 import { useModalDialog } from "./use-modal-dialog";
 
-type ProductModalProps = {
-  productId: ProductId | null;
-  preview: ProductPreview | null;
-  viewProduct: ViewProduct;
-  cartProductIds: readonly ProductId[];
-  savedProductIds: readonly ProductId[];
-  isSignedIn: boolean;
-  onToggleCart: (productId: ProductId) => void;
-  onToggleSaved: (productId: ProductId) => void;
-  onClose: () => void;
-};
-
 // A native modal dialog: the page behind is inert, focus stays inside, Escape closes it,
 // and focus returns to the product that opened it (ADR 0029). It shows what was on
 // screen at once and fills in the details when they arrive. The details come first in
 // the DOM, so the dialog focuses the close button on opening and screen readers hear the
 // name before the photos; the grid still draws the photos on the left.
-export function ProductModal({
-  productId,
-  preview,
-  viewProduct,
-  cartProductIds,
-  savedProductIds,
-  isSignedIn,
-  onToggleCart,
-  onToggleSaved,
-  onClose,
-}: ProductModalProps) {
+export function ProductModal() {
+  const { productModal, productPreview: preview } = useBrowsing();
+  const { productId, close: onClose } = productModal;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const carouselRef = useRef<CarouselControl>(null);
   const titleId = useId();
-  const view = useProductView(viewProduct, productId, onClose);
+  const view = useProductView(useContainer().viewProduct, productId, onClose);
   useModalDialog(dialogRef, productId !== null);
   const shownPreview = preview !== null && preview.id === productId ? preview : null;
   const summary = view ?? shownPreview;
@@ -112,19 +94,11 @@ export function ProductModal({
                   )}
                 </div>
                 <div className={styles.actions}>
-                  <SaveButton
-                    productId={summary.id}
-                    name={summary.name}
-                    isSignedIn={isSignedIn}
-                    isSaved={savedProductIds.includes(summary.id)}
-                    onToggleSaved={onToggleSaved}
-                  />
+                  <SaveButton productId={summary.id} name={summary.name} />
                   <CartButton
                     productId={summary.id}
                     name={summary.name}
                     availability={cartAvailability(view)}
-                    isInCart={cartProductIds.includes(summary.id)}
-                    onToggleCart={onToggleCart}
                   />
                 </div>
               </footer>

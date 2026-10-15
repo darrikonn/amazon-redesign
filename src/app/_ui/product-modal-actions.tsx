@@ -1,30 +1,27 @@
 import Link from "next/link";
 import type { ProductId } from "@/core";
 import type { ProductView } from "@/use-case";
+import { useCart } from "./cart-context";
 import { Icon } from "./icon";
 import styles from "./product-modal.module.css";
+import { useSavedList } from "./saved-list-context";
 import { withProduct } from "./search-url";
+import { useSession } from "./session-context";
 import { signInHref } from "./sign-in-href";
 import { useCurrentAddress } from "./use-current-address";
 
-type SaveButtonProps = {
+type ActionProps = {
   productId: ProductId;
   name: string;
-  isSignedIn: boolean;
-  isSaved: boolean;
-  onToggleSaved: (productId: ProductId) => void;
 };
 
 // Signed out, it asks for sign-in and comes back to this product.
-export function SaveButton({
-  productId,
-  name,
-  isSignedIn,
-  isSaved,
-  onToggleSaved,
-}: SaveButtonProps) {
+export function SaveButton({ productId, name }: ActionProps) {
   const address = useCurrentAddress();
-  if (!isSignedIn) {
+  const { shopper } = useSession();
+  const { savedProductIds, toggleSaved } = useSavedList();
+  const isSaved = savedProductIds.includes(productId);
+  if (shopper === null) {
     return (
       <Link
         href={signInHref(withProduct(address, productId))}
@@ -40,7 +37,9 @@ export function SaveButton({
       type="button"
       className={isSaved ? styles.saveButtonSaved : styles.saveButton}
       aria-label={isSaved ? `Remove ${name} from your list` : `Save ${name} to your list`}
-      onClick={() => onToggleSaved(productId)}
+      onClick={() => {
+        toggleSaved(productId).catch(reportError);
+      }}
     >
       <Icon name="heart" size={22} strokeWidth={2.2} />
     </button>
@@ -55,21 +54,13 @@ export function cartAvailability(view: ProductView | null): CartAvailability {
   return view.availability?.canBuy === false ? "sold-out" : "buyable";
 }
 
-type CartButtonProps = {
-  productId: ProductId;
-  name: string;
+type CartButtonProps = ActionProps & {
   availability: CartAvailability;
-  isInCart: boolean;
-  onToggleCart: (productId: ProductId) => void;
 };
 
-export function CartButton({
-  productId,
-  name,
-  availability,
-  isInCart,
-  onToggleCart,
-}: CartButtonProps) {
+export function CartButton({ productId, name, availability }: CartButtonProps) {
+  const { cart, toggleCart } = useCart();
+  const isInCart = cart.productIds.includes(productId);
   if (availability === "sold-out" && !isInCart) {
     return (
       <button type="button" className={styles.cartButton} disabled>
@@ -83,7 +74,9 @@ export function CartButton({
       className={isInCart ? styles.cartButtonAdded : styles.cartButton}
       aria-label={isInCart ? `Remove ${name} from cart` : `Add ${name} to cart`}
       disabled={availability === "loading" && !isInCart}
-      onClick={() => onToggleCart(productId)}
+      onClick={() => {
+        toggleCart(productId).catch(reportError);
+      }}
     >
       <Icon name={isInCart ? "check" : "add-to-cart"} size={22} strokeWidth={2.4} />
       {isInCart ? "In cart" : "Add to cart"}

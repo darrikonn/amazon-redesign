@@ -4,12 +4,12 @@ import Link from "next/link";
 import { type FormEvent, useCallback, useId, useState } from "react";
 import type { ProductId } from "@/core";
 import type { OrderView } from "@/use-case";
+import { useContainer } from "./container-context";
 import { deliveryLocationLabel, formatDayAndDate, formatOrderDate, splitPrice } from "./format";
 import styles from "./order-detail-view.module.css";
 import { orderStatus } from "./order-status";
 import { ProductThumbnail } from "./product-thumbnail";
 import { returnStatus } from "./return-status";
-import { useShop } from "./shop-context";
 import page from "./shop-page.module.css";
 import { useLoaded } from "./use-loaded";
 
@@ -19,7 +19,7 @@ type OrderDetailViewProps = {
 };
 
 export function OrderDetailView({ orderId, isJustPlaced }: OrderDetailViewProps) {
-  const { container } = useShop();
+  const container = useContainer();
   const load = useCallback(() => container.viewOrder.execute({ orderId }), [container, orderId]);
   const order = useLoaded(load);
 
@@ -137,7 +137,7 @@ type ReturnFormProps = {
 };
 
 function ReturnForm({ order, onReturned }: ReturnFormProps) {
-  const { container } = useShop();
+  const container = useContainer();
   const reasonId = useId();
   const [chosen, setChosen] = useState<readonly ProductId[]>([]);
   const [message, setMessage] = useState<string | null>(null);

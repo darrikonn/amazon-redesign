@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { useCallback } from "react";
 import type { ProductListing } from "@/use-case";
+import { useContainer } from "./container-context";
 import { ProductShelf } from "./product-shelf";
-import { useShop } from "./shop-context";
+import { useSavedList } from "./saved-list-context";
 import page from "./shop-page.module.css";
 import { useLoaded } from "./use-loaded";
 
 export function SavedListView() {
-  const { container, savedProductIds, toggleSaved } = useShop();
+  const container = useContainer();
+  const { savedProductIds, toggleSaved } = useSavedList();
   const load = useCallback(() => container.viewSavedList.execute(), [container]);
   const list = useLoaded(load);
   // This page can only unsave what it shows (here or in the product modal), so the shown

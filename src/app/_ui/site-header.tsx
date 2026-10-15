@@ -6,12 +6,14 @@ import { type MouseEvent, useState } from "react";
 import type { Department } from "@/use-case";
 import { AccountMenu } from "./account-menu";
 import { AmazonLogo } from "./amazon-logo";
+import { useBrowsing } from "./browsing-context";
+import { useCart } from "./cart-context";
 import { DepartmentMenu } from "./department-menu";
 import { deliveryLocationLabel, pluralize } from "./format";
 import { Icon } from "./icon";
 import { LocationDialog } from "./location-dialog";
 import { isPlainClick } from "./plain-click";
-import { useShop } from "./shop-context";
+import { useSession } from "./session-context";
 import { signInHref } from "./sign-in-href";
 import styles from "./site-header.module.css";
 import { useCurrentAddress } from "./use-current-address";
@@ -21,7 +23,9 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ departments }: SiteHeaderProps) {
-  const { shopper, cart, search } = useShop();
+  const { shopper } = useSession();
+  const { cart } = useCart();
+  const { search } = useBrowsing();
   const pathname = usePathname();
   const signIn = signInHref(useCurrentAddress());
   const [isChoosingLocation, setIsChoosingLocation] = useState(false);

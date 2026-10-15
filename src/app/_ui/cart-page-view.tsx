@@ -5,17 +5,20 @@ import { useRouter } from "next/navigation";
 import { useCallback, useId, useState } from "react";
 import type { ProductId } from "@/core";
 import type { CartLineView, CartView } from "@/use-case";
+import { useCart } from "./cart-context";
 import styles from "./cart-page-view.module.css";
+import { useContainer } from "./container-context";
 import { deliveryLabel, deliveryLocationLabel, pluralize, splitPrice } from "./format";
 import { Icon } from "./icon";
 import { ProductThumbnail } from "./product-thumbnail";
-import { useShop } from "./shop-context";
+import { useSession } from "./session-context";
 import page from "./shop-page.module.css";
 import { signInHref } from "./sign-in-href";
 import { useLoaded } from "./use-loaded";
 
 export function CartPageView() {
-  const { container, showCart } = useShop();
+  const container = useContainer();
+  const { replaceCart: showCart } = useCart();
   const load = useCallback(() => container.viewCart.execute(), [container]);
   const cart = useLoaded(load);
   const view = cart.value;
@@ -134,7 +137,8 @@ type CheckoutProps = {
 
 // Signed out, checkout is a sign-in that comes back here; the cart moves along (ADR 0030).
 function Checkout({ cart, onPlaced }: CheckoutProps) {
-  const { container, shopper } = useShop();
+  const container = useContainer();
+  const { shopper } = useSession();
   const router = useRouter();
   const [isPlacing, setIsPlacing] = useState(false);
   const subtotal = `Subtotal (${pluralize(cart.itemCount, "item", "items")}): ${splitPrice(cart.subtotalInCents).spoken}`;

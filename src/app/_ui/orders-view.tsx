@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useCallback } from "react";
 import type { OrderFilter, OrderSummaryView } from "@/use-case";
+import { useCart } from "./cart-context";
+import { useContainer } from "./container-context";
 import { formatOrderDate, pluralize, splitPrice } from "./format";
 import { orderStatus } from "./order-status";
 import styles from "./orders-view.module.css";
 import { ProductThumbnail } from "./product-thumbnail";
-import { useShop } from "./shop-context";
 import page from "./shop-page.module.css";
 import { useLoaded } from "./use-loaded";
 
@@ -21,7 +22,7 @@ const TABS: readonly { show: OrderFilter; label: string; href: string }[] = [
 ];
 
 export function OrdersView({ show }: OrdersViewProps) {
-  const { container } = useShop();
+  const container = useContainer();
   const load = useCallback(() => container.listOrders.execute({ show }), [container, show]);
   const list = useLoaded(load);
   const shown = list.value?.show ?? show;
@@ -62,7 +63,7 @@ export function OrdersView({ show }: OrdersViewProps) {
 }
 
 export function OrderCard({ order }: { order: OrderSummaryView }) {
-  const { toggleCart, cart } = useShop();
+  const { toggleCart, cart } = useCart();
   const hasReturnable = order.lines.some((line) => line.isReturnable);
   return (
     <article className={styles.order} aria-labelledby={`order-${order.id}`}>

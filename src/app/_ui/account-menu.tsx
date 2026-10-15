@@ -5,7 +5,7 @@ import { useId, useRef, useState } from "react";
 import styles from "./account-menu.module.css";
 import { deliveryLocationLabel } from "./format";
 import { Icon } from "./icon";
-import { useShop } from "./shop-context";
+import { useSession } from "./session-context";
 import { signInHref } from "./sign-in-href";
 import { useCurrentAddress } from "./use-current-address";
 import { useDismissal } from "./use-dismissal";
@@ -26,7 +26,7 @@ const ACCOUNT_LINKS = [
 // location, since the location decides what can be delivered. It opens the account's
 // places, the location to change, and signing in or out.
 export function AccountMenu({ onChangeLocation }: AccountMenuProps) {
-  const { shopper, signOut } = useShop();
+  const { shopper, signOut } = useSession();
   const signIn = signInHref(useCurrentAddress());
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();

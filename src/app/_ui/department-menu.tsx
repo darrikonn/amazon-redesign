@@ -2,10 +2,10 @@
 
 import { useId, useRef, useState } from "react";
 import type { Department } from "@/use-case";
+import { useBrowsing } from "./browsing-context";
 import { Collapsible } from "./collapsible";
 import styles from "./department-menu.module.css";
 import { Icon } from "./icon";
-import { useShop } from "./shop-context";
 import { useDismissal } from "./use-dismissal";
 
 type DepartmentMenuProps = {
@@ -13,7 +13,7 @@ type DepartmentMenuProps = {
 };
 
 export function DepartmentMenu({ departments }: DepartmentMenuProps) {
-  const { search } = useShop();
+  const { search } = useBrowsing();
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
   const containerRef = useRef<HTMLDivElement>(null);

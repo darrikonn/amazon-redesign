@@ -6,7 +6,7 @@ import styles from "./account-view.module.css";
 import { deliveryLocationLabel } from "./format";
 import { Icon, type IconName } from "./icon";
 import { LocationDialog } from "./location-dialog";
-import { useShop } from "./shop-context";
+import { useSession } from "./session-context";
 import page from "./shop-page.module.css";
 
 type AccountCard = {
@@ -30,7 +30,7 @@ const CARDS: readonly AccountCard[] = [
 ];
 
 export function AccountView() {
-  const { shopper, signOut } = useShop();
+  const { shopper, signOut } = useSession();
   const [isChoosingLocation, setIsChoosingLocation] = useState(false);
   if (shopper === null) return null;
   const location = deliveryLocationLabel(shopper);

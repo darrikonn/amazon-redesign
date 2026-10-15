@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useCallback } from "react";
+import { useContainer } from "./container-context";
 import { ProductShelf } from "./product-shelf";
-import { useShop } from "./shop-context";
 import page from "./shop-page.module.css";
 import { useLoaded } from "./use-loaded";
 
 export function BuyAgainView() {
-  const { container } = useShop();
+  const container = useContainer();
   const load = useCallback(() => container.viewBuyAgain.execute(), [container]);
   const shelf = useLoaded(load);
   return (

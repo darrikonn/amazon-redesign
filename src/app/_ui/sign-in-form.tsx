@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { type FormEvent, useId, useState } from "react";
 import { AmazonLogo } from "./amazon-logo";
-import { useShop } from "./shop-context";
+import { useSession } from "./session-context";
 import page from "./shop-page.module.css";
 import styles from "./sign-in-form.module.css";
 
@@ -12,7 +12,7 @@ type SignInFormProps = {
 };
 
 export function SignInForm({ returnPath }: SignInFormProps) {
-  const { signIn } = useShop();
+  const { signIn } = useSession();
   const router = useRouter();
   const inputId = useId();
   const errorId = useId();
