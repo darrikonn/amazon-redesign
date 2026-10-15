@@ -2,22 +2,20 @@ import { useRef } from "react";
 import type { ProductId, SearchSort } from "@/core";
 import type { SearchOutcome, SortOptionView } from "@/use-case";
 import { BrowseNavigation } from "./browse-navigation";
+import { useBrowsing } from "./browsing-context";
+import { useCart } from "./cart-context";
 import { resultCountLabel } from "./format";
 import { scrollToTop } from "./motion";
 import { ProductCard } from "./product-card";
-import type { ProductPreview } from "./product-preview";
 import styles from "./result-section.module.css";
 import { searchUrl } from "./search-url";
 
 type ResultSectionProps = {
   outcome: SearchOutcome;
   isUpdating: boolean;
-  cartProductIds: readonly ProductId[];
   onSearch: (text: string) => void;
   onBrowse: (text: string) => void;
   onPickSort: (sort: SearchSort, text: string) => void;
-  onOpenProduct: (preview: ProductPreview) => void;
-  onToggleCart: (productId: ProductId) => void;
 };
 
 export const RESULTS_HEADLINE_ID = "results-headline";
@@ -27,13 +25,12 @@ const CLOSEST_HEADING_ID = "closest-matches-heading";
 export function ResultSection({
   outcome,
   isUpdating,
-  cartProductIds,
   onSearch,
   onBrowse,
   onPickSort,
-  onOpenProduct,
-  onToggleCart,
 }: ResultSectionProps) {
+  const { cart, toggleCart } = useCart();
+  const { openProduct } = useBrowsing();
   const mainRef = useRef<HTMLDivElement>(null);
 
   function productHref(productId: ProductId): string {
@@ -52,9 +49,11 @@ export function ResultSection({
           <ProductCard
             listing={listing}
             href={productHref(listing.id)}
-            isInCart={cartProductIds.includes(listing.id)}
-            onOpen={onOpenProduct}
-            onToggleCart={onToggleCart}
+            isInCart={cart.productIds.includes(listing.id)}
+            onOpen={openProduct}
+            onToggleCart={(productId) => {
+              toggleCart(productId).catch(reportError);
+            }}
           />
         </li>
       ))}
@@ -103,7 +102,6 @@ export function ResultSection({
           sort={outcome.requestedSort}
           productHref={productHref}
           onBrowse={browse}
-          onOpenProduct={onOpenProduct}
         />
       </div>
     </section>

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import {
   createContext,
   type ReactNode,
-  type RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -23,8 +22,12 @@ export type Browsing = {
   productPreview: ProductPreview | null;
   openProduct: (preview: ProductPreview) => void;
   search: (text: string) => void;
-  inPlaceSearchRef: RefObject<SearchHandler | null>;
 };
+
+// Only useInPlaceSearch reaches the handler, so no other page can take the header's search.
+type InPlaceSearchRegistry = (handler: SearchHandler) => () => void;
+
+const InPlaceSearchContext = createContext<InPlaceSearchRegistry | null>(null);
 
 const BrowsingContext = createContext<Browsing | null>(null);
 
@@ -55,11 +58,22 @@ export function BrowsingProvider({ children }: { children: ReactNode }) {
     [router],
   );
 
+  const register = useCallback<InPlaceSearchRegistry>((handler) => {
+    inPlaceSearchRef.current = handler;
+    return () => {
+      inPlaceSearchRef.current = null;
+    };
+  }, []);
+
   const value = useMemo<Browsing>(
-    () => ({ productModal, productPreview, openProduct, search, inPlaceSearchRef }),
+    () => ({ productModal, productPreview, openProduct, search }),
     [productModal, productPreview, openProduct, search],
   );
-  return <BrowsingContext value={value}>{children}</BrowsingContext>;
+  return (
+    <BrowsingContext value={value}>
+      <InPlaceSearchContext value={register}>{children}</InPlaceSearchContext>
+    </BrowsingContext>
+  );
 }
 
 export function useBrowsing(): Browsing {
@@ -70,11 +84,7 @@ export function useBrowsing(): Browsing {
 
 // While the page that calls it is open, searches from the header run through `handler`.
 export function useInPlaceSearch(handler: SearchHandler) {
-  const { inPlaceSearchRef } = useBrowsing();
-  useEffect(() => {
-    inPlaceSearchRef.current = handler;
-    return () => {
-      inPlaceSearchRef.current = null;
-    };
-  }, [inPlaceSearchRef, handler]);
+  const register = useContext(InPlaceSearchContext);
+  if (register === null) throw new Error("useInPlaceSearch is used outside the ShopProvider");
+  useEffect(() => register(handler), [register, handler]);
 }

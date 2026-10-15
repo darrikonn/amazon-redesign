@@ -5,7 +5,6 @@ import type { ProductId, SearchSort } from "@/core";
 import type { SearchOutcome, Storefront as StorefrontData } from "@/use-case";
 import { replaceAddress } from "./address-history";
 import { useBrowsing, useInPlaceSearch } from "./browsing-context";
-import { useCart } from "./cart-context";
 import { Collapsible } from "./collapsible";
 import { useContainer } from "./container-context";
 import { scrollToTop } from "./motion";
@@ -30,8 +29,7 @@ type StorefrontProps = {
 
 export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
   const container = useContainer();
-  const { cart, toggleCart } = useCart();
-  const { productModal, openProduct } = useBrowsing();
+  const { productModal } = useBrowsing();
   const { text, searchText, type, apply } = useSearchText(initialOutcome.text);
   const [sort, setSort] = useState(initialOutcome.requestedSort);
   const { outcome, lastResults } = useSearchOutcome(container, initialOutcome, searchText, sort);
@@ -60,16 +58,15 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
         <Hero />
       </Collapsible>
       <SearchPanel
-        inputRef={inputRef}
-        text={text}
-        results={lastResults}
-        isShowingResults={isShowingResults}
-        isUpdating={keepsTypedText}
-        placeholder={demo.placeholder}
-        onType={type}
-        onApply={apply}
-        onPick={pick}
-        onTryExample={() => choose(demo.example)}
+        bar={{
+          inputRef,
+          text,
+          placeholder: demo.placeholder,
+          onType: type,
+          onApply: apply,
+          onTryExample: () => choose(demo.example),
+        }}
+        rows={{ results: lastResults, isShowingResults, isUpdating: keepsTypedText, onPick: pick }}
       />
       <Collapsible isOpen={!isShowingResults}>
         <div className={styles.home}>
@@ -88,14 +85,9 @@ export function Storefront({ initialOutcome, storefront }: StorefrontProps) {
           <ResultSection
             outcome={lastResults}
             isUpdating={isUpdating}
-            cartProductIds={cart.productIds}
             onSearch={pick}
             onBrowse={choose}
             onPickSort={pickSort}
-            onOpenProduct={openProduct}
-            onToggleCart={(productId) => {
-              toggleCart(productId).catch(reportError);
-            }}
           />
         )}
       </Collapsible>

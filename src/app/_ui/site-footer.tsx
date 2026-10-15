@@ -8,10 +8,6 @@ type FooterColumn = {
   links: readonly { label: string; href: string }[];
 };
 
-function linkTo(place: ShopPlace) {
-  return { label: place.title, href: place.href };
-}
-
 const COLUMNS: readonly FooterColumn[] = [
   {
     heading: "Shop",
@@ -63,4 +59,8 @@ export function SiteFooter() {
       </div>
     </footer>
   );
+}
+
+function linkTo(place: ShopPlace) {
+  return { label: place.title, href: place.href };
 }

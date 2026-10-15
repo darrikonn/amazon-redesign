@@ -8,6 +8,7 @@ import type {
   ProductTeaserView,
 } from "@/use-case";
 import styles from "./browse-navigation.module.css";
+import { useBrowsing } from "./browsing-context";
 import { Collapsible } from "./collapsible";
 import {
   followNavigation,
@@ -21,7 +22,6 @@ import { splitPrice } from "./format";
 import { Icon } from "./icon";
 import { isPlainClick } from "./plain-click";
 import { ProductPhoto } from "./product-photo";
-import type { ProductPreview } from "./product-preview";
 import { searchUrl } from "./search-url";
 
 type BrowseNavigationProps = {
@@ -29,7 +29,14 @@ type BrowseNavigationProps = {
   sort: SearchSort;
   productHref: (productId: ProductId) => string;
   onBrowse: (text: string, anchor: HTMLElement) => void;
-  onOpenProduct: (preview: ProductPreview) => void;
+};
+
+// What every entry needs to link somewhere: the sort to keep, the address of a product,
+// and what browsing to a department does.
+type BrowseTarget = {
+  sort: SearchSort;
+  productHref: (productId: ProductId) => string;
+  onBrowse: (text: string, anchor: HTMLElement) => void;
 };
 
 export function BrowseNavigation({
@@ -37,8 +44,8 @@ export function BrowseNavigation({
   sort,
   productHref,
   onBrowse,
-  onOpenProduct,
 }: BrowseNavigationProps) {
+  const target: BrowseTarget = { sort, productHref, onBrowse };
   const [panel, setPanel] = useState(() => startPanel(navigation));
   const [isShowingAll, setIsShowingAll] = useState(false);
   const followed = followNavigation(panel, navigation);
@@ -55,12 +62,9 @@ export function BrowseNavigation({
             key={department.link.text}
             department={department}
             popular={popularFor(followed, department)}
-            sort={sort}
             isOpen={isDepartmentOpen(followed, department)}
-            productHref={productHref}
+            target={target}
             onToggle={() => setPanel((current) => toggleDepartment(current, department))}
-            onBrowse={onBrowse}
-            onOpenProduct={onOpenProduct}
           />
         ))}
       </ul>
@@ -83,24 +87,13 @@ export function BrowseNavigation({
 type DepartmentItemProps = {
   department: NavigationDepartmentView;
   popular: readonly ProductTeaserView[];
-  sort: SearchSort;
   isOpen: boolean;
-  productHref: (productId: ProductId) => string;
+  target: BrowseTarget;
   onToggle: () => void;
-  onBrowse: (text: string, anchor: HTMLElement) => void;
-  onOpenProduct: (preview: ProductPreview) => void;
 };
 
-function DepartmentItem({
-  department,
-  popular,
-  sort,
-  isOpen,
-  productHref,
-  onToggle,
-  onBrowse,
-  onOpenProduct,
-}: DepartmentItemProps) {
+function DepartmentItem({ department, popular, isOpen, target, onToggle }: DepartmentItemProps) {
+  const { sort, productHref, onBrowse } = target;
   const contentsId = useId();
   const { link, containsResults, groups } = department;
   const hasContents = groups.length > 0 || popular.length > 0;
@@ -150,7 +143,6 @@ function DepartmentItem({
                 departmentLabel={link.label}
                 products={popular}
                 productHref={productHref}
-                onOpenProduct={onOpenProduct}
               />
             )}
           </div>
@@ -164,15 +156,10 @@ type PopularProductsProps = {
   departmentLabel: string;
   products: readonly ProductTeaserView[];
   productHref: (productId: ProductId) => string;
-  onOpenProduct: (preview: ProductPreview) => void;
 };
 
-function PopularProducts({
-  departmentLabel,
-  products,
-  productHref,
-  onOpenProduct,
-}: PopularProductsProps) {
+function PopularProducts({ departmentLabel, products, productHref }: PopularProductsProps) {
+  const { openProduct } = useBrowsing();
   const headingId = useId();
   return (
     <section className={styles.popular} aria-labelledby={headingId}>
@@ -189,7 +176,7 @@ function PopularProducts({
               onClick={(event) => {
                 if (!isPlainClick(event)) return;
                 event.preventDefault();
-                onOpenProduct(product);
+                openProduct(product);
               }}
             >
               <span className={styles.teaserImage}>

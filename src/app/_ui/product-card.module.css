@@ -123,7 +123,7 @@
 }
 
 .detail,
-.thirdDetail {
+.phoneHiddenDetail {
   white-space: nowrap;
 }
 
@@ -242,7 +242,7 @@
     -webkit-line-clamp: 2;
   }
 
-  .thirdDetail {
+  .phoneHiddenDetail {
     display: none;
   }
 

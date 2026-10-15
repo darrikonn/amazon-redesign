@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, type ReactNode, useCallback, useContext, useState } from "react";
 
 type Announce = (message: string) => void;
 
@@ -19,9 +19,8 @@ export function AnnouncerProvider({ children }: { children: ReactNode }) {
   const announce = useCallback((message: string) => {
     setAnnouncement((current) => ({ message, count: current.count + 1 }));
   }, []);
-  const value = useMemo(() => announce, [announce]);
   return (
-    <AnnouncerContext value={value}>
+    <AnnouncerContext value={announce}>
       {children}
       <p role="status" className="visually-hidden">
         <span key={announcement.count}>{announcement.message}</span>

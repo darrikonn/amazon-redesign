@@ -35,10 +35,10 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
     const result = await changeDeliveryLocation(typeof postalCode === "string" ? postalCode : "");
     if (result.status === "changed") {
       close();
-    } else {
-      setError("Enter a five-digit US ZIP code, such as 10001.");
-      inputRef.current?.focus();
+      return;
     }
+    setError(LOCATION_REFUSALS[result.status]);
+    inputRef.current?.focus();
   }
 
   return (
@@ -85,3 +85,8 @@ export function LocationDialog({ isOpen, onClose }: LocationDialogProps) {
     </dialog>
   );
 }
+
+const LOCATION_REFUSALS = {
+  "invalid-postal-code": "Enter a five-digit US ZIP code, such as 10001.",
+  "signed-out": "Sign in again to choose where your orders go.",
+} as const;

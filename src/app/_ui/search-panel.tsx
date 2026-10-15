@@ -12,31 +12,32 @@ import { Icon } from "./icon";
 import styles from "./search-panel.module.css";
 import { useRetained } from "./use-retained";
 
-type SearchPanelProps = {
+// The text field and what it does.
+export type SearchBarControl = {
   inputRef: RefObject<HTMLTextAreaElement | null>;
   text: string;
-  results: SearchOutcome | null;
-  isShowingResults: boolean;
-  isUpdating: boolean;
   placeholder: string;
   onType: (text: string) => void;
   onApply: (text: string) => void;
-  onPick: (text: string) => void;
   onTryExample: () => void;
 };
 
-export function SearchPanel({
-  inputRef,
-  text,
-  results,
-  isShowingResults,
-  isUpdating,
-  placeholder,
-  onType,
-  onApply,
-  onPick,
-  onTryExample,
-}: SearchPanelProps) {
+// The rows under the field: what the last search understood, and what to add.
+export type SearchRowsControl = {
+  results: SearchOutcome | null;
+  isShowingResults: boolean;
+  isUpdating: boolean;
+  onPick: (text: string) => void;
+};
+
+type SearchPanelProps = {
+  bar: SearchBarControl;
+  rows: SearchRowsControl;
+};
+
+export function SearchPanel({ bar, rows }: SearchPanelProps) {
+  const { inputRef, text, placeholder, onType, onApply, onTryExample } = bar;
+  const { results, isShowingResults, isUpdating, onPick } = rows;
   const inputId = useId();
   const hasQuery = text.trim() !== "";
   useAutoGrow(inputRef, text);

@@ -55,7 +55,12 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
         </h3>
         <p className={styles.details}>
           {listing.details.map((detail, index) => (
-            <span key={detail} className={index === 2 ? styles.thirdDetail : styles.detail}>
+            <span
+              key={detail}
+              className={
+                index >= DETAILS_SHOWN_ON_PHONES ? styles.phoneHiddenDetail : styles.detail
+              }
+            >
               {index > 0 && " · "}
               {detail}
             </span>
@@ -104,6 +109,9 @@ export function ProductCard({ listing, href, isInCart, onOpen, onToggleCart }: P
     </article>
   );
 }
+
+// A phone card has room for two details; the rest wait for a wider screen.
+const DETAILS_SHOWN_ON_PHONES = 2;
 
 // Glyph colours for each product colour; white is drawn off-white so it shows on the well.
 const INK: Record<Color, string> = {
