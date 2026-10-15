@@ -21,8 +21,8 @@ describe("suggestRelaxations", () => {
     const text = "red bag between 10 and 30";
 
     expect(suggestRelaxations(catalog, text, interpretQuery(text))).toEqual([
-      { droppedLabel: "Red", text: "bag between 10 and 30", resultCount: 2 },
-      { droppedLabel: "Bags", text: "red between 10 and 30", resultCount: 1 },
+      { droppedLabel: "Red", text: "bag between 10 and 30", resultCount: 2, keepsCategory: true },
+      { droppedLabel: "Bags", text: "red between 10 and 30", resultCount: 1, keepsCategory: false },
     ]);
   });
 
@@ -30,7 +30,12 @@ describe("suggestRelaxations", () => {
     const text = "gift bag for a lover";
 
     expect(suggestRelaxations(catalog, text, interpretQuery(text))).toEqual([
-      { droppedLabel: "“gift” and “lover”", text: "bag for a", resultCount: 2 },
+      {
+        droppedLabel: "“gift” and “lover”",
+        text: "bag for a",
+        resultCount: 2,
+        keepsCategory: true,
+      },
     ]);
   });
 
@@ -47,6 +52,22 @@ describe("findClosestMatches", () => {
       droppedLabel: "Red",
       products: [catalog[1], catalog[0]],
     });
+  });
+
+  it("keeps what the shopper asked for over a wider match that drops it", () => {
+    // Arrange
+    const redThings = Array.from({ length: 3 }, (_, i) =>
+      aProduct({ id: `red-mug-${i}`, category: "kitchenware", color: "red" }),
+    );
+    const shop = [...catalog, ...redThings];
+    const relaxations = suggestRelaxations(shop, "red bag", interpretQuery("red bag"));
+
+    // Act
+    const closest = findClosestMatches(shop, relaxations);
+
+    // Assert
+    expect(relaxations.map((relaxation) => relaxation.resultCount)).toEqual([2, 4]);
+    expect(closest?.droppedLabel).toBe("Red");
   });
 
   it("returns nothing without relaxations", () => {

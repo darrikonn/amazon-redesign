@@ -56,6 +56,6 @@ None of it has a backend. The session is a cookie holding the email and ZIP code
 
 There is no real AI behind the search. The assistant is simulated. The search bar parses what the shopper writes against the catalogue's own tagging system: categories, tags, colours, prices, delivery, and rating. It then finds the best matching products and suggests the next filters with exact result counts.
 
-When unknown words leave a search with nothing to show, the "Assistant" row suggests the closest wording the catalogue understands, by spelling ("wireles headphnes" becomes "wireless headphones"). The "Drop" suggestions offer the way back. All of it is deterministic code in `src/component/`, with no model, API key, or network call. ADR 0026 records the decision.
+When unknown words leave a search with nothing to show, the "Assistant" row suggests the closest wording the catalogue understands, by spelling ("wireles headphnes" becomes "wireless headphones"). The "Drop" suggestions offer the way back. Below them, closest matches show what one drop brings back, preferring a drop that keeps the department asked for, so "red laptop under $1500" shows laptops rather than red lipstick. All of it is deterministic code in `src/component/`, with no model, API key, or network call. ADR 0026 records the decision.
 
 If you want to see how I work with LLMs, take a look at [mintoagent.com](https://mintoagent.com) and [snaphost.ai](https://snaphost.ai). I'm behind both products and their sole developer.

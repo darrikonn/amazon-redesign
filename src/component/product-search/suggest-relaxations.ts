@@ -14,6 +14,7 @@ export type Relaxation = {
   droppedLabel: string;
   text: string;
   resultCount: number;
+  keepsCategory: boolean;
 };
 
 export type ClosestMatches = {
@@ -34,15 +35,26 @@ export function suggestRelaxations(
     const next = candidate.phrases.reduce(removePhrase, text);
     if (next === "") return [];
     const resultCount = countResults(catalog, next);
-    return resultCount > 0 ? [{ droppedLabel: candidate.label, text: next, resultCount }] : [];
+    if (resultCount === 0) return [];
+    return [
+      {
+        droppedLabel: candidate.label,
+        text: next,
+        resultCount,
+        keepsCategory: !candidate.dropsCategory,
+      },
+    ];
   });
 }
 
+// A shopper who asked for a laptop wants laptops, so a relaxation that keeps the category
+// wins over a wider one that drops it (red lipstick is no answer to "red laptop").
 export function findClosestMatches(
   catalog: readonly Product[],
   relaxations: readonly Relaxation[],
 ): ClosestMatches | null {
-  const widest = widestRelaxation(relaxations);
+  const keepingCategory = relaxations.filter((relaxation) => relaxation.keepsCategory);
+  const widest = widestRelaxation(keepingCategory.length > 0 ? keepingCategory : relaxations);
   if (widest === null) return null;
   const products = sortProducts(
     filterProducts(catalog, interpretQuery(widest.text).intent),
@@ -57,10 +69,15 @@ export function findClosestMatches(
 type RelaxationCandidate = {
   label: string;
   phrases: readonly string[];
+  dropsCategory: boolean;
 };
 
 function singleTermCandidates(interpretation: Interpretation): RelaxationCandidate[] {
-  return interpretation.terms.map((term) => ({ label: term.label, phrases: [term.phrase] }));
+  return interpretation.terms.map((term) => ({
+    label: term.label,
+    phrases: [term.phrase],
+    dropsCategory: term.kind === "category",
+  }));
 }
 
 // Dropping one unknown word rarely helps when the shopper typed several, so offer them together.
@@ -71,6 +88,7 @@ function unknownWordsCandidate(interpretation: Interpretation): RelaxationCandid
     {
       label: joinWithAnd(keywords.map((term) => term.label)),
       phrases: keywords.map((term) => term.phrase),
+      dropsCategory: false,
     },
   ];
 }

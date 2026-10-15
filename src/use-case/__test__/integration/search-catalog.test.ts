@@ -96,11 +96,11 @@ describe("SearchCatalog", () => {
       { label: "Drop “Red”", text: "laptop under $1500", resultCount: 3 },
       { label: "Drop “Laptops”", text: "red under $1500", resultCount: 7 },
     ]);
-    expect(outcome.closestMatchesHeading).toBe("Closest matches, ignoring “Laptops”");
-    expect(outcome.listings).toHaveLength(4);
+    expect(outcome.closestMatchesHeading).toBe("Closest matches, ignoring “Red”");
+    expect(outcome.listings).toHaveLength(3);
     expect(
       outcome.listings.every(
-        (listing) => listing.color === "red" && listing.highlightLabel === null,
+        (listing) => listing.category === "laptops" && listing.highlightLabel === null,
       ),
     ).toBe(true);
   });

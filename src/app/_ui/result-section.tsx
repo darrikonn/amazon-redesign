@@ -87,7 +87,7 @@ export function ResultSection({
                 {outcome.closestMatchesHeading}
               </h3>
               <p className={styles.closestLede}>
-                Nothing matches everything you asked for, so these leave that one thing out.
+                Nothing matches everything you asked for, so these leave some of it out.
               </p>
             </div>
             {grid}
