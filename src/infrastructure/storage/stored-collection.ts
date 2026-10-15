@@ -1,5 +1,4 @@
 import type { ShopperId } from "@/core";
-import { requireArray } from "@/core";
 import type { KeyValueStorage } from "./key-value-storage";
 
 type ItemParser<Item> = (value: unknown, context: string) => Item;
@@ -9,9 +8,9 @@ type Owned = {
 };
 
 // One owner's list of records under one key. What the browser hands back is checked on
-// every read; a list that no longer parses (an old format, a hand edit) reads as empty so
-// the shop starts that list afresh instead of breaking, and a row naming another owner is
-// never returned (ADR 0012).
+// every read. A row that no longer parses (a hand edit) is skipped on its own, so one bad
+// row never costs the owner the rest of the list, and a row naming another owner is never
+// returned (ADR 0012).
 export class StoredCollection<Item extends Owned> {
   constructor(
     private readonly storage: KeyValueStorage,
@@ -22,14 +21,10 @@ export class StoredCollection<Item extends Owned> {
   list(ownerId: ShopperId): Item[] {
     const key = this.keyFor(ownerId);
     const stored = this.storage.read(key);
-    if (stored === null) return [];
-    try {
-      return requireArray(stored, key)
-        .map((item, index) => this.parseItem(item, `${key}[${index}]`))
-        .filter((item) => item.ownerId === ownerId);
-    } catch {
-      return [];
-    }
+    if (!Array.isArray(stored)) return [];
+    return stored
+      .flatMap((item, index) => this.parsedOrSkipped(item, `${key}[${index}]`))
+      .filter((item) => item.ownerId === ownerId);
   }
 
   replace(ownerId: ShopperId, items: readonly Item[]): void {
@@ -54,6 +49,14 @@ export class StoredCollection<Item extends Owned> {
 
   private keyFor(ownerId: ShopperId): string {
     return `${KEY_PREFIX}:${this.name}:${ownerId}`;
+  }
+
+  private parsedOrSkipped(value: unknown, context: string): Item[] {
+    try {
+      return [this.parseItem(value, context)];
+    } catch {
+      return [];
+    }
   }
 }
 
