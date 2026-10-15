@@ -1,7 +1,7 @@
 import type { Product } from "@/core";
 import { countOccurrences } from "../collection";
 
-export const RARE_TAG_RULES = {
+const RARE_TAG_RULES = {
   // A tag on a single product would offer a chip that leads to one result.
   minimumProductsPerTag: 2,
 } as const;

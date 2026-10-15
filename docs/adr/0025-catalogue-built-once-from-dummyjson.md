@@ -21,9 +21,9 @@ The hand-written sample catalogue had 26 products in four categories. A believab
 | Generated product details (photos, facts, reviews), validated on load by `parseProductDetailsFile` (ADR 0029) | `src/infrastructure/product/data/product-details.json`, built by `catalog-enrichment/product-details.ts` |
 | Generated vocabulary (live categories, tags with counts, colours) | `src/component/catalog-vocabulary/vocabulary.json` |
 | Category groups, labels, synonyms, source mapping | `src/component/catalog-vocabulary/category-map.ts` |
-| Keyword to tag rules | `src/component/catalog-vocabulary/tag-rules.ts` |
+| Keyword to tag rules | `src/component/catalog-vocabulary/tag-rule.ts` |
 | Colour words | `src/component/catalog-vocabulary/color-word.ts` |
-| Pure enrichment rules | `src/component/product-fact/` (category, colour, tags, delivery, name, rating, availability), assembled by `buildCatalog` in `src/component/catalog-enrichment/enrich.ts` |
+| Pure enrichment rules | `src/component/product-fact/` (category, colour, tags, delivery, name, rating, availability), assembled by `buildCatalog` in `src/component/catalog-enrichment/build-catalog.ts` |
 | Hand corrections, each with a `reason` | `src/component/catalog-enrichment/override.json` |
 
 - The closed lists of category ids, tags, and colours live in `src/core`, so they stay literal unions (ADR 0003). The dictionaries in the component layer are `Record`s keyed by those ids, so the compiler insists that every id is defined.
@@ -34,7 +34,7 @@ The hand-written sample catalogue had 26 products in four categories. A believab
 - Images are the source's own thumbnails, served through `next/image` from the hosts listed in `next.config.ts`. A missing or failing image falls back to a drawn category glyph.
 
 - The request named `pnpm`, `src/lib`, `src/data`, and a decimal `price`. This repository uses yarn only (CLAUDE.md), the files sit in the layers in the table above, and prices are `priceInCents`. The file names follow ADR 0009 and ADR 0011: `override.json`, not `overrides.json`, and `vocabulary.json`, not `vocab.json`.
-- `yarn shots` renders the five reference states (home, results, a headphones search, a laptops search, and zero results) plus each of the other example sentences, at 1440px and 390px, into `docs/screenshots/`.
+- `yarn shots` renders the reference states (home, results, a headphones search, a laptops search, zero results, an open product, deals, sign-in, and the cart) plus each of the other example sentences, at 1440px and 390px, into `docs/screenshots/`.
 
 ## Consequences
 

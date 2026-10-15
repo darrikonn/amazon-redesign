@@ -1,12 +1,12 @@
 import type { Order } from "@/core";
-import { DAY_IN_MILLISECONDS, HOUR_IN_MILLISECONDS } from "../calendar";
+import { addMilliseconds, DAY_IN_MILLISECONDS, HOUR_IN_MILLISECONDS } from "../calendar";
 
-export const TRACKING_RULES = {
+const TRACKING_RULES = {
   hoursUntilShipped: 20,
   hoursOutForDeliveryBeforeArrival: 9,
 } as const;
 
-export const TRACKING_STAGES = ["ordered", "shipped", "out-for-delivery", "delivered"] as const;
+const TRACKING_STAGES = ["ordered", "shipped", "out-for-delivery", "delivered"] as const;
 
 export type TrackingStage = (typeof TRACKING_STAGES)[number];
 
@@ -36,8 +36,8 @@ export function trackOrder(order: Delivery, now: Date): OrderTracking {
 // morning it arrives, and arrives after its delivery estimate.
 function stageTimes(order: Delivery): Record<TrackingStage, Date> {
   const ordered = new Date(order.placedAt);
-  const delivered = later(ordered, order.deliveryDays * DAY_IN_MILLISECONDS);
-  const shipped = later(
+  const delivered = addMilliseconds(ordered, order.deliveryDays * DAY_IN_MILLISECONDS);
+  const shipped = addMilliseconds(
     ordered,
     Math.min(
       TRACKING_RULES.hoursUntilShipped * HOUR_IN_MILLISECONDS,
@@ -59,10 +59,6 @@ export function isDelivered(order: Delivery, now: Date): boolean {
 
 export function isOnTheWay(order: Delivery, now: Date): boolean {
   return !isDelivered(order, now);
-}
-
-function later(date: Date, milliseconds: number): Date {
-  return new Date(date.getTime() + milliseconds);
 }
 
 function step(stage: TrackingStage, at: Date, now: Date): TrackingStep {

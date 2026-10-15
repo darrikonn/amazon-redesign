@@ -1,1 +1,1 @@
-export { ASSISTANCE_RULES, type Rewrite, suggestRewrite } from "./query-assistance";
+export { ASSISTANCE_RULES, type Rewrite, suggestRewrite } from "./suggest-rewrite";

@@ -2,12 +2,12 @@ import type { Product, ProductDetails, ProductSource } from "@/core";
 import type { CatalogVocabulary } from "../catalog-vocabulary";
 import { compareText } from "../text";
 import { applyOverrides } from "./apply-override";
+import { buildVocabulary } from "./build-vocabulary";
 import { normaliseProducts } from "./normalise";
 import type { CatalogOverrides } from "./override";
 import { buildProductDetails } from "./product-details";
 import { dropRareTags } from "./rare-tag";
 import { parseSource } from "./raw-source";
-import { buildVocabulary } from "./vocabulary";
 
 export type Catalog = {
   products: readonly Product[];

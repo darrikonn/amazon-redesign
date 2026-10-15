@@ -7,16 +7,10 @@ import type {
   UnderstoodTerm,
   UnderstoodTermKind,
 } from "@/core";
-import { colorLabel, tagLabel } from "../catalog-vocabulary";
+import { colorLabel, departmentLabel, tagLabel } from "../catalog-vocabulary";
 import { wholePhrasePattern } from "../text";
-import { formatDollars, parseAmountInCents } from "./money";
-import {
-  CATEGORY_PHRASES,
-  COLOR_PHRASES,
-  categoryChipLabel,
-  STOP_WORDS,
-  TAG_PHRASES,
-} from "./vocabulary";
+import { CATEGORY_PHRASES, COLOR_PHRASES, STOP_WORDS, TAG_PHRASES } from "./known-phrase";
+import { formatDollars, numberWordsBetween, parseAmountInCents } from "./money";
 
 export const INTERPRETATION_RULES = {
   topRatedMinimum: 4.5,
@@ -38,10 +32,10 @@ export function interpretQuery(text: string): Interpretation {
   return { intent: draft.intent(), terms: inReadingOrder(draft.terms, text) };
 }
 
-const UNIT_WORD = "(?:one|two|three|four|five|six|seven|eight|nine)";
-const TEEN_WORD =
-  "(?:ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)";
-const TENS_WORD = `(?:(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ]${UNIT_WORD})?)`;
+// Spelled from the same words the amounts are read with (money.ts), so the two never differ.
+const UNIT_WORD = `(?:${numberWordsBetween(1, 9).join("|")})`;
+const TEEN_WORD = `(?:${numberWordsBetween(10, 19).join("|")})`;
+const TENS_WORD = `(?:(?:${numberWordsBetween(20, 90).join("|")})(?:[- ]${UNIT_WORD})?)`;
 const UNDER_HUNDRED_WORD = `(?:${TENS_WORD}|${TEEN_WORD}|${UNIT_WORD})`;
 const LARGE_NUMBER_WORD = String.raw`(?:(?:(?:a|one)\s+)?hundred(?:\s+(?:and\s+)?${UNDER_HUNDRED_WORD})?|${TENS_WORD}|${TEEN_WORD})(?![a-z0-9])`;
 const CURRENCY_WORD = String.raw`(?:\s*(?:dollars?|bucks|usd))?`;
@@ -168,7 +162,7 @@ class IntentDraft {
 
   inCategory(category: CategoryId, phrase: string): void {
     this.category = category;
-    this.understand("category", categoryChipLabel(category), phrase);
+    this.understand("category", departmentLabel(category), phrase);
   }
 
   hasKeyword(word: string): boolean {

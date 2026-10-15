@@ -6,6 +6,13 @@ export function parseAmountInCents(amount: string | undefined): number {
   return dollarsToCents(dollars);
 }
 
+// The number words worth between `lowest` and `highest`, as the price patterns spell them.
+export function numberWordsBetween(lowest: number, highest: number): string[] {
+  return [...NUMBER_WORDS.entries()]
+    .filter(([word, value]) => word !== "a" && value >= lowest && value <= highest)
+    .map(([word]) => word);
+}
+
 export function formatDollars(cents: number): string {
   const dollars = centsToDollars(cents);
   const fractionDigits = Number.isInteger(dollars) ? 0 : 2;

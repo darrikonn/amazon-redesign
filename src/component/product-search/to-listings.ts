@@ -2,7 +2,7 @@ import type { Product, SearchIntent, SearchSort, Tag } from "@/core";
 import { categoryLabel, colorLabel, tagLabel } from "../catalog-vocabulary";
 import { capitalize } from "../text";
 
-export const LISTING_RULES = {
+const LISTING_RULES = {
   maximumExtraDetails: 2,
   minimumMatchesToHighlight: 2,
 } as const;

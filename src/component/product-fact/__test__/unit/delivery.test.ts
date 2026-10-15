@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { deliveryDaysFrom, PRODUCT_FACT_RULES } from "@/component";
+import { DELIVERY_FACT_RULES, deliveryDaysFrom } from "@/component";
 
 describe("deliveryDaysFrom", () => {
   it("turns shipping text into days", () => {
@@ -12,6 +12,6 @@ describe("deliveryDaysFrom", () => {
   });
 
   it("falls back to a week for text it cannot read", () => {
-    expect(deliveryDaysFrom("Ships when ready")).toBe(PRODUCT_FACT_RULES.unparsedDeliveryDays);
+    expect(deliveryDaysFrom("Ships when ready")).toBe(DELIVERY_FACT_RULES.unparsedDeliveryDays);
   });
 });

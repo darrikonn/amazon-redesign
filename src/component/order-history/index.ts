@@ -20,8 +20,6 @@ export {
   isDelivered,
   isOnTheWay,
   type OrderTracking,
-  TRACKING_RULES,
-  TRACKING_STAGES,
   type TrackingStage,
   type TrackingStep,
   trackOrder,

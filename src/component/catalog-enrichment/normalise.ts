@@ -9,7 +9,7 @@ import {
   trimName,
 } from "../product-fact";
 import type { ParsedSource, RawDummyJsonProduct, RawFakeStoreProduct } from "./raw-source";
-import { blankToNull, productIdFor } from "./source-text";
+import { blankToNull, productIdFor } from "./source-field";
 
 export const NORMALISATION_RULES = {
   // FakeStore states no shipping, so its products get a typical estimate.

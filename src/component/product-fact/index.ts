@@ -1,8 +1,7 @@
 export { availabilityFrom } from "./availability";
 export { mapCategory } from "./category";
 export { extractColor } from "./color";
-export { deliveryDaysFrom } from "./delivery";
-export { trimName } from "./name";
-export { PRODUCT_FACT_RULES } from "./product-fact-rule";
-export { ratingFrom } from "./rating";
+export { DELIVERY_FACT_RULES, deliveryDaysFrom } from "./delivery";
+export { NAME_FACT_RULES, trimName } from "./name";
+export { RATING_FACT_RULES, ratingFrom } from "./rating";
 export { deriveTags } from "./tag";

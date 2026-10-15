@@ -60,7 +60,7 @@ export function parseSource(source: ProductSource, json: unknown): ParsedSource 
     : { source, products: parseFakeStoreResponse(json) };
 }
 
-export function parseDummyJsonResponse(json: unknown): RawDummyJsonProduct[] {
+function parseDummyJsonResponse(json: unknown): RawDummyJsonProduct[] {
   const root = requireRecord(json, "DummyJSON response");
   return requireArray(root.products, "DummyJSON products").map((item, index) => {
     const context = `DummyJSON product ${index}`;
@@ -99,7 +99,7 @@ function parseReview(value: unknown, context: string): RawReview {
   };
 }
 
-export function parseFakeStoreResponse(json: unknown): RawFakeStoreProduct[] {
+function parseFakeStoreResponse(json: unknown): RawFakeStoreProduct[] {
   return requireArray(json, "FakeStoreAPI response").map((item, index) => {
     const context = `FakeStoreAPI product ${index}`;
     const record = requireRecord(item, context);

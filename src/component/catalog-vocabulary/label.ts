@@ -1,7 +1,7 @@
 import type { CategoryId, Color, Tag } from "@/core";
 import { capitalize } from "../text";
 import { CATEGORY_MAP } from "./category-map";
-import { TAG_RULES } from "./tag-rules";
+import { TAG_RULES } from "./tag-rule";
 
 export function categoryLabel(category: CategoryId): string {
   return CATEGORY_MAP[category].label;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addDays, dayNumber } from "@/component";
+import { addDays, addMilliseconds, calendarDate, dayNumber } from "@/component";
 
 describe("addDays", () => {
   it("moves a moment by whole days, forwards or back", () => {
@@ -18,5 +18,12 @@ describe("dayNumber", () => {
     expect(dayNumber(new Date("2026-10-15T00:00:00Z"))).toBe(
       dayNumber(new Date("2026-10-14T00:00:00Z")) + 1,
     );
+  });
+
+  it("moves a moment by milliseconds and names its calendar date in UTC", () => {
+    const moment = new Date("2026-10-14T23:30:00.000Z");
+
+    expect(addMilliseconds(moment, 60 * 60 * 1000).toISOString()).toBe("2026-10-15T00:30:00.000Z");
+    expect(calendarDate(moment)).toBe("2026-10-14");
   });
 });

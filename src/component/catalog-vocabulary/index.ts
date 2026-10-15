@@ -20,4 +20,4 @@ export {
   tagPhrase,
 } from "./label";
 export { KNOWN_COLORS, LIVE_CATEGORIES, LIVE_TAGS } from "./live-vocabulary";
-export { TAG_RULES, type TagRule } from "./tag-rules";
+export { TAG_RULES, type TagRule } from "./tag-rule";

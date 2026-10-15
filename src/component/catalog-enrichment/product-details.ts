@@ -7,7 +7,7 @@ import type {
   RawFakeStoreProduct,
   RawReview,
 } from "./raw-source";
-import { blankToNull, productIdFor } from "./source-text";
+import { blankToNull, productIdFor } from "./source-field";
 
 export function buildProductDetails(parsed: ParsedSource): ProductDetails[] {
   const details =

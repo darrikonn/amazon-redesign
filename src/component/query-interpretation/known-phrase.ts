@@ -2,7 +2,6 @@ import type { CategoryId, Color, Tag } from "@/core";
 import {
   CATEGORY_MAP,
   COLOR_WORDS,
-  departmentLabel,
   KNOWN_COLORS,
   LIVE_CATEGORIES,
   LIVE_TAGS,
@@ -95,10 +94,6 @@ export const STOP_WORDS: ReadonlySet<string> = new Set([
   "you",
   "any",
 ]);
-
-export function categoryChipLabel(category: CategoryId): string {
-  return departmentLabel(category);
-}
 
 function longestFirst<Id>(phrases: readonly VocabularyPhrase<Id>[]): VocabularyPhrase<Id>[] {
   return [...phrases].sort((first, second) => second.phrase.length - first.phrase.length);
